@@ -99,6 +99,7 @@ class ClientAdmin(AdminAuditableMixin, admin.ModelAdmin):
         'created_by',
         'modified_by',
     )
+    search_fields = ('full_name',)
 
 
 @admin.register(Broker)
@@ -129,6 +130,7 @@ class BrokerAdmin(AdminAuditableMixin, admin.ModelAdmin):
         'created_by',
         'modified_by',
     )
+    search_fields = ('full_name',)
 
 
 @admin.register(Contract)

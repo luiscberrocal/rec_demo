@@ -16,6 +16,10 @@ class Company(Auditable, TimeStampedModel):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = _('Company')
+        verbose_name_plural = _('Companies')
+
 
 class RealEstateProject(Auditable, TimeStampedModel):
     name = models.CharField(_('Name'), max_length=80)
