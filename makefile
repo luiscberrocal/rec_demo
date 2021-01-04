@@ -43,7 +43,7 @@ backup-prod:
 backup-staging:
 	python ./scripts/backup.py --env=staging
 
-backup: backup-staging backup-prod
+backup: backup-staging
 
 stop-containers:
 	docker stop $$(docker ps -qa)
