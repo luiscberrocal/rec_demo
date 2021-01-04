@@ -23,7 +23,8 @@ class CompanyAdmin(AdminAuditableMixin, admin.ModelAdmin):
     search_fields = ('name',)
 
 
-
+class RealEstateSpaceInline(AdminAuditableMixin, admin.TabularInline):
+    model = RealEstateSpace
 
 @admin.register(RealEstateProject)
 class RealEstateProjectAdmin(AdminAuditableMixin, admin.ModelAdmin):
@@ -44,6 +45,7 @@ class RealEstateProjectAdmin(AdminAuditableMixin, admin.ModelAdmin):
         'modified_by',
 
     )
+    inlines = (RealEstateSpaceInline,)
     search_fields = ('name',)
 
 
