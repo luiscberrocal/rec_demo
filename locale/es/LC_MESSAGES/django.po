@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-04 11:13-0500\n"
+"POT-Creation-Date: 2021-01-04 15:53-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: config/settings/base.py:318
+#: config/settings/base.py:319
 msgid "English"
 msgstr ""
 
-#: config/settings/base.py:319
+#: config/settings/base.py:320
 msgid "Spanish"
 msgstr ""
 
@@ -40,63 +40,149 @@ msgstr ""
 
 #: rec_demo/core/models.py:12
 msgid "Male"
-msgstr ""
+msgstr "Masculino"
 
 #: rec_demo/core/models.py:13
 msgid "Female"
-msgstr ""
+msgstr "Femenino"
 
-#: rec_demo/core/models.py:22
+#: rec_demo/core/models.py:21
 msgid "National Id"
 msgstr ""
 
-#: rec_demo/core/models.py:23
-msgid "Resident Id"
-msgstr ""
-
-#: rec_demo/core/models.py:24
+#: rec_demo/core/models.py:22
 msgid "Drivers License"
 msgstr ""
 
-#: rec_demo/core/models.py:25
+#: rec_demo/core/models.py:23
 msgid "Passport"
 msgstr ""
 
-#: rec_demo/core/models.py:26
+#: rec_demo/core/models.py:24 rec_demo/real_estate/models.py:41
 msgid "Other"
 msgstr ""
 
-#: rec_demo/core/models.py:29
+#: rec_demo/core/models.py:27
 msgid "First name"
 msgstr ""
 
-#: rec_demo/core/models.py:30
+#: rec_demo/core/models.py:28
 msgid "middle name"
 msgstr ""
 
-#: rec_demo/core/models.py:31
+#: rec_demo/core/models.py:29
 msgid "Last name"
 msgstr ""
 
-#: rec_demo/core/models.py:32
+#: rec_demo/core/models.py:30
 msgid "Gender"
 msgstr ""
 
-#: rec_demo/core/models.py:34
+#: rec_demo/core/models.py:32
 msgid "National id type"
 msgstr ""
 
-#: rec_demo/core/models.py:37
+#: rec_demo/core/models.py:34
+msgid "Country for id"
+msgstr ""
+
+#: rec_demo/core/models.py:35
 msgid "Picture"
 msgstr ""
 
-#: rec_demo/core/models.py:38
+#: rec_demo/core/models.py:36
 msgid "Date of birth"
 msgstr ""
 
-#: rec_demo/core/models.py:40
+#: rec_demo/core/models.py:38
 msgid "Religion"
 msgstr ""
+
+#: rec_demo/real_estate/models.py:12 rec_demo/real_estate/models.py:21
+#: rec_demo/real_estate/models.py:45
+msgid "Name"
+msgstr ""
+
+#: rec_demo/real_estate/models.py:13 rec_demo/real_estate/models.py:22
+msgid "Short name"
+msgstr "Nombre corto"
+
+#: rec_demo/real_estate/models.py:14 rec_demo/real_estate/models.py:25
+msgid "Logo"
+msgstr ""
+
+#: rec_demo/real_estate/models.py:23
+msgid "Company"
+msgstr "Companía"
+
+#: rec_demo/real_estate/models.py:38
+msgid "Living space"
+msgstr ""
+
+#: rec_demo/real_estate/models.py:39
+msgid "Parking"
+msgstr "Estacionamiento"
+
+#: rec_demo/real_estate/models.py:40
+msgid "Storage"
+msgstr "Deposito"
+
+#: rec_demo/real_estate/models.py:43
+msgid "Project"
+msgstr "Proyecto"
+
+#: rec_demo/real_estate/models.py:46
+msgid "Space type"
+msgstr "Tipo de espacio"
+
+#: rec_demo/real_estate/models.py:48
+msgid "Area"
+msgstr "Área"
+
+#: rec_demo/real_estate/models.py:49
+msgid "Price"
+msgstr "Precio"
+
+#: rec_demo/real_estate/models.py:50 rec_demo/real_estate/models.py:99
+#: rec_demo/real_estate/models.py:105
+msgid "Contract"
+msgstr "Contrato"
+
+#: rec_demo/real_estate/models.py:61 rec_demo/real_estate/models.py:79
+msgid "Natural person"
+msgstr "Persona natural"
+
+#: rec_demo/real_estate/models.py:62 rec_demo/real_estate/models.py:80
+msgid "Juridical person"
+msgstr "Persona jurídica"
+
+#: rec_demo/real_estate/models.py:64 rec_demo/real_estate/models.py:82
+msgid "Full name"
+msgstr "Nombre completo"
+
+#: rec_demo/real_estate/models.py:65 rec_demo/real_estate/models.py:83
+msgid "Client type"
+msgstr "Tipo de cliente"
+
+#: rec_demo/real_estate/models.py:94
+msgid "Date"
+msgstr ""
+
+#: rec_demo/real_estate/models.py:98
+msgid "Client"
+msgstr ""
+
+#: rec_demo/real_estate/models.py:100
+msgid "Is principal"
+msgstr ""
+
+#: rec_demo/real_estate/models.py:104
+msgid "Broker"
+msgstr ""
+
+#: rec_demo/real_estate/models.py:106
+msgid "Is active"
+msgstr "Está activo"
 
 #: rec_demo/templates/account/account_inactive.html:5
 #: rec_demo/templates/account/account_inactive.html:8
