@@ -1,0 +1,15 @@
+#header{
+  background: red;
+}
+
+.module h2, .module caption, .inline-group h2 .selector-chosen h2 {
+  background: #d01717;
+}
+
+div.breadcrumbs {
+  background: #d01717;
+}
+
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+  background:  #d01717;
+}

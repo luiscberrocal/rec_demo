@@ -1,0 +1,14 @@
+#header{
+  background: dodgerblue;
+}
+
+.module h2, .module caption, .inline-group h2, .selector-chosen h2 {
+  background: #3c4ee2;
+}
+
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+  background: #3c4ee2;
+}
+div.breadcrumbs {
+  background: #3c4ee2;
+}
