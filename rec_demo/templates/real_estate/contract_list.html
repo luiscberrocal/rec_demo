@@ -3,7 +3,14 @@
 {% load i18n %}
 
 {% block content %}
-   <h2>{% trans 'Contracts' %}</h2>
+    <h2>{% trans 'Contracts' %}</h2>
+    {% for contract in contract_list %}
+        <div class="row">
+            <div class="md-2">{{ contract.id }}</div>
+            <div class="md-2">{{ contract.date }}</div>
+            <div class="md-4">{{ contract.project.name }}</div>
+        </div>
+    {% endfor %}
 
 
 {% endblock %}

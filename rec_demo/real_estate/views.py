@@ -1,35 +1,27 @@
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView, DetailView
 
 from .forms import ContractForm
 from .models import Contract
+from ..core.mixins import AuditableViewMixin
 
 
-class ContractCreateView(LoginRequiredMixin, CreateView):
+class ContractCreateView(AuditableViewMixin, LoginRequiredMixin, CreateView):
     model = Contract
     form_class = ContractForm
     success_url = reverse_lazy('real_estate:list-contract')
-
-    def get_form_kwargs(self):
-        kwargs = super(ContractCreateView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
 
 
 contract_create_view = ContractCreateView.as_view()
 
 
-class ContractUpdateView(LoginRequiredMixin, UpdateView):
+class ContractUpdateView(AuditableViewMixin, LoginRequiredMixin, UpdateView):
     model = Contract
     form_class = ContractForm
     success_url = reverse_lazy('real_estate:list-contract')
-
-    def get_form_kwargs(self):
-        kwargs = super(ContractUpdateView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
 
 
 contract_update_view = ContractUpdateView.as_view()
