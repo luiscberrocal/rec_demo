@@ -26,6 +26,11 @@ class ContractUpdateView(LoginRequiredMixin, UpdateView):
     form_class = ContractForm
     success_url = reverse_lazy('real_estate:list-contract')
 
+    def get_form_kwargs(self):
+        kwargs = super(ContractUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
 
 contract_update_view = ContractUpdateView.as_view()
 
