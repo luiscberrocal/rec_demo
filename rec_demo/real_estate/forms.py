@@ -76,6 +76,9 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
 
         if commit:
             instance.save()
+            qs = ContractClient.objects.filter(contract=instance)
+            if qs.count() != 0:
+                qs.delete()
             for client_data in self.cleaned_data["clients"]:
                 client_data['contract'] = instance
                 ContractClient.objects.create(**client_data)

@@ -6,9 +6,15 @@
     <h2>{% trans 'Contracts' %}</h2>
     {% for contract in contract_list %}
         <div class="row">
-            <div class="md-2">{{ contract.id }}</div>
-            <div class="md-2">{{ contract.date }}</div>
-            <div class="md-4">{{ contract.project.name }}</div>
+            <div class="col-2">{{ contract.id }}</div>
+            <div class="col-2">{{ contract.date }}</div>
+            <div class="col-4">{{ contract.project.name }}</div>
+            <div class="col-4">
+                {% for client in contract.contract_clients.all %}
+                    {{ client.full_name }},
+                {% endfor %}
+            </div>
+
         </div>
     {% endfor %}
 
