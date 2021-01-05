@@ -10,11 +10,10 @@
             <div class="col-2">{{ contract.date }}</div>
             <div class="col-4">{{ contract.project.name }}</div>
             <div class="col-4">
-                {% for client in contract.contract_clients.all %}
-                    {{ client.full_name }},
+                {% for contract_client in contract.contract_clients.all %}
+                    {{ contract_client.client.full_name }}<br/>
                 {% endfor %}
             </div>
-
         </div>
     {% endfor %}
 

@@ -67,6 +67,7 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
                 clients.append(client_data)
             i += 1
             client_field_name = f'contract_client_client_{i}'
+            is_principal_field_name = f'contract_client_is_principal_{i}'
 
         cleaned_data["clients"] = clients
         return cleaned_data
@@ -81,6 +82,8 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
                 qs.delete()
             for client_data in self.cleaned_data["clients"]:
                 client_data['contract'] = instance
+                client_data['created_by'] = self.user
+                client_data['modified_by'] = self.user
                 ContractClient.objects.create(**client_data)
         return instance
 
