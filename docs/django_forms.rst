@@ -18,7 +18,7 @@ One to many example
 https://dev.to/zxenia/django-inline-formsets-with-class-based-views-and-crispy-forms-14o6
 
 Manual formset
-
+I used this one
 https://www.caktusgroup.com/blog/2018/05/07/creating-dynamic-forms-django/
 
 

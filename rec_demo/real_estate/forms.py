@@ -23,23 +23,30 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
         contract_clients = ContractClient.objects.filter(
             contract=self.instance
         )
+        self.client_fields = dict()
         i = 0
         qs = Client.objects.all()
         for contract_client in contract_clients:
+            self.client_fields[i] = list()
             field_name = f'contract_client_client_{i}'
             self.fields[field_name] = forms.ModelChoiceField(qs, required=False, label=_('Client'))
             self.initial[field_name] = contract_client.client
+            self.client_fields[i].append(field_name)
             field_name = f'contract_client_is_principal_{i}'
             self.fields[field_name] = forms.BooleanField(required=False, label=_('Is principal'))
             self.initial[field_name] = contract_client.is_principal
+            self.client_fields[i].append(field_name)
             i += 1
         for k in range(extras):
+            self.client_fields[i] = list()
             field_name = f'contract_client_client_{i}'
             self.fields[field_name] = forms.ModelChoiceField(qs, required=False, label=_('Client'))
             self.initial[field_name] = None
+            self.client_fields[i].append(field_name)
             field_name = f'contract_client_is_principal_{i}'
             self.fields[field_name] = forms.BooleanField(required=False, label=_('Is principal'))
             self.initial[field_name] = False
+            self.client_fields[i].append(field_name)
             i += 1
 
     class Meta:
@@ -87,14 +94,6 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
                 ContractClient.objects.create(**client_data)
         return instance
 
-    # def save(self, commit=True):
-    #     contract = super(ContractForm, self).save(commit=False)
-    #     #contract.date = self.cleaned_data["date"]
-    #     #contract.project = self.cleaned_data["project"]
-    #     if commit:
-    #         contract.save()
-    #         ContractClient.objects.filter(contract=contract).delete()
-    #         for client_data in self.cleaned_data["clients"]:
-    #             client_data['contract'] = contract
-    #             ContractClient.objects.create(**client_data)
-    #     return contract
+    def get_client_fields(self):
+        for key in self.client_fields.keys():
+            yield self[self.client_fields[key][0]], self[self.client_fields[key][1]]
