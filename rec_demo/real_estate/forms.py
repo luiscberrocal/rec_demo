@@ -96,4 +96,4 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
 
     def get_client_fields(self):
         for key in self.client_fields.keys():
-            yield self[self.client_fields[key][0]], self[self.client_fields[key][1]]
+            yield key, self[self.client_fields[key][0]], self[self.client_fields[key][1]]

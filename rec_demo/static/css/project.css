@@ -1,17 +1,24 @@
 /* These styles are generated from project.scss. */
 
 .alert-debug {
-  color: black;
-  background-color: white;
-  border-color: #d6e9c6;
+    color: black;
+    background-color: white;
+    border-color: #d6e9c6;
 }
 
 .alert-error {
-  color: #b94a48;
-  background-color: #f2dede;
-  border-color: #eed3d7;
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #eed3d7;
 }
 
-.principal-client{
-  font-weight: bold;
+.principal-client {
+    font-weight: bold;
+}
+
+.form-subtitle {
+    font-size: 1.25rem;
+    background: dodgerblue;
+    padding: .5rem;
+    color: whitesmoke;
 }
