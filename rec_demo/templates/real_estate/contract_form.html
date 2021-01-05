@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+    {% if form.instance.id %}
+        <h2>{% trans 'Contract' %}</h2>
+    {% else %}
+        <h2>{% trans 'New Contract' %}</h2>
+    {% endif %}
+
+
+    <form class="form-horizontal" method="post" action="">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="control-group">
+            <div class="controls">
+                <a href="{% url 'real_estate:list-contract' %}" class="btn btn-primary">{% trans 'Cancel' %}</a>
+                <button type="submit" class="btn btn-primary" id="save_button">{% trans 'Save' %}</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+
+{% endblock %}
