@@ -17,3 +17,12 @@ https://medium.com/@MicroPyramid/understanding-djangos-model-fromsets-in-detail-
 One to many example
 https://dev.to/zxenia/django-inline-formsets-with-class-based-views-and-crispy-forms-14o6
 
+Manual formset
+
+https://www.caktusgroup.com/blog/2018/05/07/creating-dynamic-forms-django/
+
+
+Django Vue.js
+==============
+Uses Auth0 service.
+https://auth0.com/blog/building-modern-applications-with-django-and-vuejs/

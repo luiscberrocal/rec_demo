@@ -15,3 +15,17 @@ class AdminAuditableMixin(object):
             obj.created_by = request.user
         obj.modified_by = request.user
         super().save_model(request, obj, form, change)
+
+
+class AuditableFormMixin(object):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super(AuditableFormMixin, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        clean_data = super(AuditableFormMixin, self).clean()
+        if self.instance is None:
+            clean_data['created_by'] = self.user
+        clean_data['modified_by'] = self.user
+        return clean_data

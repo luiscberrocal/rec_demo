@@ -1,13 +1,10 @@
 from django import forms
 
 from .models import Company
+from ..core.mixins import AuditableFormMixin
 
 
-class CompanyForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
-        super(CompanyForm, self).__init__(*args, **kwargs)
-
+class CompanyForm(AuditableFormMixin, forms.ModelForm):
     class Meta:
         model = Company
         fields = (
@@ -16,11 +13,7 @@ class CompanyForm(forms.Form):
             'logo'
         )
 
-    def clean(self):
-        clean_data = super(CompanyForm, self).clean()
-        if self.instance is None:
-            clean_data['created_by'] = self.user
-        clean_data['updated_by'] = self.user
-        return clean_data
 
-
+class ContractForm(AuditableFormMixin, forms.ModelForm):
+    class Meta:
+        fields = ('date', 'project')
