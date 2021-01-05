@@ -150,7 +150,7 @@ class ContractAdmin(AdminAuditableMixin, admin.ModelAdmin):
         'modified_by',
         'date',
     )
-
+    inlines = (RealEstateSpaceInline,)
 
 @admin.register(ContractClient)
 class ContractClientAdmin(AdminAuditableMixin, admin.ModelAdmin):
