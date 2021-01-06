@@ -31,8 +31,7 @@
                         {{ is_principal_field|as_crispy_field }}
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-primary delete-contract-client"
-                                id="delete-contract-client-{{ key }}">{% trans 'Delete' %}</button>
+                        <a class="btn btn-primary delete-contract-client" href="#">{% trans 'Delete' %}</a>
                     </div>
                 </div>
             {% endfor %}
@@ -56,13 +55,32 @@
                 $(this).parent().parent().remove();
             })
             $('#add-client').on('click', function () {
-                let $clone = $("#contract-clients div.row").last();
-                let name = $clone.attr('id')
-                let n = parseInt(name.split('-')[2]) + 1
-                name = 'contract_client_client_' + n
-                console.log('Id', name)
+                let $clone = $("#contract-clients div.row").last().clone();
+                let row_id = $clone.attr('id')
+                let n = parseInt(row_id.split('-')[2]) + 1
+                row_id = 'contract-client-' + n
                 console.log($clone)
-                $clone.css("background-color", "rose");
+                $clone.attr('id', row_id);
+                ///div_id_contract_client_client_2
+                //let groupDiv = $clone.find('div');
+                //groupDiv.attr('id', 'div_id_contract_client_client_' + n)
+
+                let clientCombo = $clone.children().eq(0).find('select');
+                clientCombo.attr('id', 'id_contract_client_client_' + n)
+                clientCombo.attr('name', 'contract_client_client_' + n)
+                let clientComboLabel = $clone.children().eq(0).find('label');
+                clientComboLabel.attr('for', 'id_contract_client_client_' + n);
+
+                let isPrincipalCheckBox = $clone.children().eq(1).find('input');
+                isPrincipalCheckBox.attr('id', 'id_contract_client_is_principal_' + n);
+                isPrincipalCheckBox.attr('name', 'contract_client_is_principal_' + n);
+                let isPrincipalLabel = $clone.children().eq(1).find('label');
+                isPrincipalLabel.attr('for', 'id_contract_client_is_principal_' + n);
+
+                $clone.appendTo($("#contract-clients"))
+                //$this.off('input', arguments.callee)
+                //$clone.on('input', arguments.callee)
+
             })
 
         });
