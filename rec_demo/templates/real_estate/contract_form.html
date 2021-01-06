@@ -21,23 +21,27 @@
             </div>
         </div>
         <h3 class="form-subtitle">{% trans 'Clients' %}</h3>
-        {% for key, client_field, is_principal_field in form.get_client_fields %}
-            <div class="row gy-2 gx-3 align-items-center" id="contract-client-{{ key }}">
-                <div class="form-group col-md-6 mb-0">
-                    {{ client_field|as_crispy_field }}
+        <div id="contract-clients">
+            {% for key, client_field, is_principal_field in form.get_client_fields %}
+                <div class="row gy-2 gx-3 align-items-center" id="contract-client-{{ key }}">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ client_field|as_crispy_field }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ is_principal_field|as_crispy_field }}
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary delete-contract-client"
+                                id="delete-contract-client-{{ key }}">{% trans 'Delete' %}</button>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    {{ is_principal_field|as_crispy_field }}
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-primary delete-contract-client" id="delete-contract-client-{{ key }}">{% trans 'Delete' %}</button>
-                </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
         <div class="control-group">
             <div class="controls">
                 <a href="{% url 'real_estate:list-contract' %}" class="btn btn-primary">{% trans 'Cancel' %}</a>
                 <button type="submit" class="btn btn-primary" id="save_button">{% trans 'Save' %}</button>
+                <a class="btn btn-primary" id="add-client" href="#">{% trans 'Add client' %}</a>
             </div>
         </div>
     </form>
@@ -47,9 +51,18 @@
     {{ block.super }}
     <script>
         $(document).ready(function () {
-            $('.delete-contract-client').on('click', function (){
+            $('.delete-contract-client').on('click', function () {
                 //console.log('Removing row id:', $(this).parent().parent().attr('id'));
-                $(this).parent().parent().remove()
+                $(this).parent().parent().remove();
+            })
+            $('#add-client').on('click', function () {
+                let $clone = $("#contract-clients div.row").last();
+                let name = $clone.attr('id')
+                let n = parseInt(name.split('-')[2]) + 1
+                name = 'contract_client_client_' + n
+                console.log('Id', name)
+                console.log($clone)
+                $clone.css("background-color", "rose");
             })
 
         });
