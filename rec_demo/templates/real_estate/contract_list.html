@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+    <h2>{% trans 'Contracts' %}</h2>
+    {% for contract in contract_list %}
+        <div class="row">
+            <div class="col-2"><a href="{% url 'real_estate:update-contract' contract.id %}">{{ contract.id }}</a>
+            </div>
+            <div class="col-2">{{ contract.date }}</div>
+            <div class="col-4">{{ contract.project.name }}</div>
+            <div class="col-4">
+                {% for contract_client in contract.contract_clients.all %}
+                    {% if contract_client.is_principal %}<span class="principal-client">{% endif %}
+                {{ contract_client.client.full_name }}{% if contract_client.is_principal %}</span>{% endif %}<br/>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+
+{% endblock %}

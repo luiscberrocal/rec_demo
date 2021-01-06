@@ -25,6 +25,7 @@ urlpatterns += i18n_patterns(
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
     path("users/", include("rec_demo.users.urls", namespace="users")),
+    path("real-estate/", include("rec_demo.real_estate.urls", namespace="real_estate")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

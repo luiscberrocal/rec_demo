@@ -4,10 +4,11 @@ from django.contrib import admin
 from .forms import CompanyForm
 from .models import Company, RealEstateProject, RealEstateSpace, Client, Broker, Contract, ContractClient, \
     ContractBroker
+from ..core.mixins import AdminAuditableMixin
 
 
 @admin.register(Company)
-class CompanyAdmin(admin.ModelAdmin):
+class CompanyAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
         'id',
         'name',
@@ -20,19 +21,13 @@ class CompanyAdmin(admin.ModelAdmin):
     )
     list_filter = ('created', 'modified', 'created_by', 'modified_by')
     search_fields = ('name',)
-    readonly_fields = ['created_by', 'modified_by']
-
-    def save_model(self, request, obj, form, change):
-        if not obj.pk:
-            # Only set added_by during the first save.
-            obj.created_by = request.user
-        obj.modified_by = request.user
-        super().save_model(request, obj, form, change)
 
 
+class RealEstateSpaceInline(AdminAuditableMixin, admin.TabularInline):
+    model = RealEstateSpace
 
 @admin.register(RealEstateProject)
-class RealEstateProjectAdmin(admin.ModelAdmin):
+class RealEstateProjectAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
         'id',
         'name',
@@ -50,11 +45,12 @@ class RealEstateProjectAdmin(admin.ModelAdmin):
         'modified_by',
 
     )
+    inlines = (RealEstateSpaceInline,)
     search_fields = ('name',)
 
 
 @admin.register(RealEstateSpace)
-class RealEstateSpaceAdmin(admin.ModelAdmin):
+class RealEstateSpaceAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
         'id',
         'project',
@@ -76,7 +72,7 @@ class RealEstateSpaceAdmin(admin.ModelAdmin):
 
 
 @admin.register(Client)
-class ClientAdmin(admin.ModelAdmin):
+class ClientAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
         'id',
         'first_name',
@@ -103,10 +99,11 @@ class ClientAdmin(admin.ModelAdmin):
         'created_by',
         'modified_by',
     )
+    search_fields = ('full_name',)
 
 
 @admin.register(Broker)
-class BrokerAdmin(admin.ModelAdmin):
+class BrokerAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
         'id',
         'first_name',
@@ -133,10 +130,11 @@ class BrokerAdmin(admin.ModelAdmin):
         'created_by',
         'modified_by',
     )
+    search_fields = ('full_name',)
 
 
 @admin.register(Contract)
-class ContractAdmin(admin.ModelAdmin):
+class ContractAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
         'id',
         'created',
@@ -152,10 +150,10 @@ class ContractAdmin(admin.ModelAdmin):
         'modified_by',
         'date',
     )
-
+    inlines = (RealEstateSpaceInline,)
 
 @admin.register(ContractClient)
-class ContractClientAdmin(admin.ModelAdmin):
+class ContractClientAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
         'id',
         'created',
@@ -178,7 +176,7 @@ class ContractClientAdmin(admin.ModelAdmin):
 
 
 @admin.register(ContractBroker)
-class ContractBrokerAdmin(admin.ModelAdmin):
+class ContractBrokerAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
         'id',
         'broker',

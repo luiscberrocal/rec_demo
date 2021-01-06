@@ -16,6 +16,10 @@ class Company(Auditable, TimeStampedModel):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = _('Company')
+        verbose_name_plural = _('Companies')
+
 
 class RealEstateProject(Auditable, TimeStampedModel):
     name = models.CharField(_('Name'), max_length=80)
@@ -92,11 +96,15 @@ class Broker(Auditable, Human):
 
 class Contract(Auditable, TimeStampedModel):
     date = models.DateField(_('Date'))
+    project = models.ForeignKey(RealEstateProject, verbose_name=_('Project'), related_name='contracts',
+                                on_delete=models.CASCADE)
 
 
 class ContractClient(Auditable, TimeStampedModel):
-    client = models.ForeignKey(Client, verbose_name=_('Client'), related_name='contract_clients', on_delete=models.CASCADE)
-    contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='contract_clients', on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, verbose_name=_('Client'), related_name='contract_clients',
+                               on_delete=models.CASCADE)
+    contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='contract_clients',
+                                 on_delete=models.CASCADE)
     is_principal = models.BooleanField(_('Is principal'), default=True)
 
 

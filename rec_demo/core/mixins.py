@@ -1,21 +1,30 @@
-import json
-
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.urls import reverse
-from rest_framework.test import APIClient
-from rolepermissions.roles import assign_role
-
-from .exceptions import EMRPracticeCoreException
-
-
 class AuditableViewMixin(object, ):
-    def form_valid(self, form, ):
-        if not form.instance.created_by:
-            form.instance.created_by = self.request.user
-        form.instance.modified_by = self.request.user
-        return super(AuditableViewMixin, self).form_valid(form)
+    def get_form_kwargs(self):
+        kwargs = super(AuditableViewMixin, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 
+class AdminAuditableMixin(object):
+    readonly_fields = ['created_by', 'modified_by']
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            # Only set added_by during the first save.
+            obj.created_by = request.user
+        obj.modified_by = request.user
+        super().save_model(request, obj, form, change)
 
 
+class AuditableFormMixin(object):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super(AuditableFormMixin, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        clean_data = super(AuditableFormMixin, self).clean()
+        if self.instance is None:
+            clean_data['created_by'] = self.user
+        clean_data['modified_by'] = self.user
+        return clean_data

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+    {% if form.instance.id %}
+        <h2>{% trans 'Contract' %}</h2>
+    {% else %}
+        <h2>{% trans 'New Contract' %}</h2>
+    {% endif %}
+
+
+    <form class="form-horizontal" method="post" action="">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.date|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+                {{ form.project|as_crispy_field }}
+            </div>
+        </div>
+        <h3 class="form-subtitle">{% trans 'Clients' %}</h3>
+        <div id="contract-clients">
+            {% for key, client_field, is_principal_field in form.get_client_fields %}
+                <div class="row gy-2 gx-3 align-items-center" id="contract-client-{{ key }}">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ client_field|as_crispy_field }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ is_principal_field|as_crispy_field }}
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-primary delete-contract-client" href="#">{% trans 'Delete' %}</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <a href="{% url 'real_estate:list-contract' %}" class="btn btn-primary">{% trans 'Cancel' %}</a>
+                <button type="submit" class="btn btn-primary" id="save_button">{% trans 'Save' %}</button>
+                <a class="btn btn-primary" id="add-client" href="#">{% trans 'Add client' %}</a>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function () {
+            $('.delete-contract-client').on('click', function () {
+                //console.log('Removing row id:', $(this).parent().parent().attr('id'));
+                $(this).parent().parent().remove();
+            })
+            $('#add-client').on('click', function () {
+                let $clone = $("#contract-clients div.row").last().clone();
+                let row_id = $clone.attr('id')
+                let n = parseInt(row_id.split('-')[2]) + 1
+                row_id = 'contract-client-' + n
+                console.log($clone)
+                $clone.attr('id', row_id);
+                ///div_id_contract_client_client_2
+                //let groupDiv = $clone.find('div');
+                //groupDiv.attr('id', 'div_id_contract_client_client_' + n)
+
+                let clientCombo = $clone.children().eq(0).find('select');
+                clientCombo.attr('id', 'id_contract_client_client_' + n)
+                clientCombo.attr('name', 'contract_client_client_' + n)
+                let clientComboLabel = $clone.children().eq(0).find('label');
+                clientComboLabel.attr('for', 'id_contract_client_client_' + n);
+
+                let isPrincipalCheckBox = $clone.children().eq(1).find('input');
+                isPrincipalCheckBox.attr('id', 'id_contract_client_is_principal_' + n);
+                isPrincipalCheckBox.attr('name', 'contract_client_is_principal_' + n);
+                let isPrincipalLabel = $clone.children().eq(1).find('label');
+                isPrincipalLabel.attr('for', 'id_contract_client_is_principal_' + n);
+
+                $clone.appendTo($("#contract-clients"))
+                //$this.off('input', arguments.callee)
+                //$clone.on('input', arguments.callee)
+
+            })
+
+        });
+    </script>
+
+{% endblock %}
