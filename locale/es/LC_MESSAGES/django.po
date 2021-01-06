@@ -170,11 +170,11 @@ msgstr ""
 
 #: rec_demo/real_estate/models.py:98
 msgid "Client"
-msgstr ""
+msgstr "Cliente"
 
 #: rec_demo/real_estate/models.py:100
 msgid "Is principal"
-msgstr ""
+msgstr "Es principal"
 
 #: rec_demo/real_estate/models.py:104
 msgid "Broker"
