@@ -41,22 +41,23 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
             self.initial[field_name] = contract_client.is_principal
             self.client_fields[i].append(field_name)
             i += 1
-        client_regexp = re.compile(r'contract_client_client_(\d+)')
-        is_principal_regexp = re.compile(r'contract_client_is_principal_(\d+)')
-        for data_key in kwargs['data'].keys():
-            match = client_regexp.match(data_key)
-            if match:
-                new_index = int(match.group(1))
-                if new_index > i:
-                    i = new_index
-                self.fields[data_key] = forms.ModelChoiceField(qs, required=False, label=_('Client'))
+        if kwargs.get('data'):
+            client_regexp = re.compile(r'contract_client_client_(\d+)')
+            is_principal_regexp = re.compile(r'contract_client_is_principal_(\d+)')
+            for data_key in kwargs['data'].keys():
+                match = client_regexp.match(data_key)
+                if match:
+                    new_index = int(match.group(1))
+                    if new_index > i:
+                        i = new_index
+                    self.fields[data_key] = forms.ModelChoiceField(qs, required=False, label=_('Client'))
 
-            match = is_principal_regexp.match(data_key)
-            if match:
-                new_index = int(match.group(1))
-                if new_index > i:
-                    i = new_index
-                self.fields[data_key] = forms.BooleanField(required=False, label=_('Is principal'))
+                match = is_principal_regexp.match(data_key)
+                if match:
+                    new_index = int(match.group(1))
+                    if new_index > i:
+                        i = new_index
+                    self.fields[data_key] = forms.BooleanField(required=False, label=_('Is principal'))
 
         for k in range(extras):
             self.client_fields[i] = list()
