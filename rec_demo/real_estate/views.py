@@ -30,7 +30,7 @@ contract_update_view = ContractUpdateView.as_view()
 class ContractListView(LoginRequiredMixin, ListView):
     model = Contract
     context_object_name = 'contract_list'
-    paginate_by = 10
+    #paginate_by = 10
 
 
 contract_list_view = ContractListView.as_view()

@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -16,6 +18,8 @@ class CompanyForm(AuditableFormMixin, forms.ModelForm):
 
 
 class ContractForm(AuditableFormMixin, forms.ModelForm):
+    CLIENT_PATTERN = 'contract_client_client_{}'
+    IS_PRINCIPAL_PATTERN = 'contract_client_is_principal_{}'
 
     def __init__(self, *args, **kwargs):
         extras = kwargs.get('extras', 1)
@@ -37,6 +41,24 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
             self.initial[field_name] = contract_client.is_principal
             self.client_fields[i].append(field_name)
             i += 1
+        if kwargs.get('data'):
+            client_regexp = re.compile(r'contract_client_client_(\d+)')
+            is_principal_regexp = re.compile(r'contract_client_is_principal_(\d+)')
+            for data_key in kwargs['data'].keys():
+                match = client_regexp.match(data_key)
+                if match:
+                    new_index = int(match.group(1))
+                    if new_index > i:
+                        i = new_index
+                    self.fields[data_key] = forms.ModelChoiceField(qs, required=False, label=_('Client'))
+
+                match = is_principal_regexp.match(data_key)
+                if match:
+                    new_index = int(match.group(1))
+                    if new_index > i:
+                        i = new_index
+                    self.fields[data_key] = forms.BooleanField(required=False, label=_('Is principal'))
+
         for k in range(extras):
             self.client_fields[i] = list()
             field_name = f'contract_client_client_{i}'
@@ -63,7 +85,7 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
         while cleaned_data.get(client_field_name):
             client_data = dict()
             client_data['client'] = cleaned_data[client_field_name]
-            client_data['is_principal'] = cleaned_data[is_principal_field_name]
+            client_data['is_principal'] = cleaned_data.get(is_principal_field_name, False)
             if client_field_name in client_fields:
                 self.add_error(client_field_name, 'Duplicate')
             elif is_principal_field_name in client_fields:
