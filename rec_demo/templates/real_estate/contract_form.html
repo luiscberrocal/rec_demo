@@ -55,11 +55,11 @@
                 $(this).parent().parent().remove();
             })
             $('#add-client').on('click', function () {
-                let $clone = $("#contract-clients div.row").last().clone();
+                let $clone = $("#contract-clients div.row").last().clone(true);
                 let row_id = $clone.attr('id')
                 let n = parseInt(row_id.split('-')[2]) + 1
                 row_id = 'contract-client-' + n
-                console.log($clone)
+                //console.log($clone)
                 $clone.attr('id', row_id);
                 ///div_id_contract_client_client_2
                 //let groupDiv = $clone.find('div');
