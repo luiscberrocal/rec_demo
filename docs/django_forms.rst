@@ -26,3 +26,9 @@ Django Vue.js
 ==============
 Uses Auth0 service.
 https://auth0.com/blog/building-modern-applications-with-django-and-vuejs/
+
+ListViews Filtering and Pagination
+=====================================
+
+Example of filtering
+https://www.caktusgroup.com/blog/2018/10/18/filtering-and-pagination-django/
