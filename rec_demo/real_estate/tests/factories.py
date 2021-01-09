@@ -10,6 +10,7 @@ from factory.fuzzy import FuzzyText
 from faker import Factory as FakerFactory
 from pytz import timezone
 
+from ..exceptions import RealEstateException
 from ..models import Company, RealEstateProject, RealEstateSpace, Client, Broker, Contract, ContractClient, \
     ContractBroker
 from ...users.tests.factories import UserFactory
@@ -44,6 +45,37 @@ class RealEstateProjectFactory(DjangoModelFactory):
     @lazy_attribute
     def modified_by(self):
         return self.created_by
+
+    @classmethod
+    def create_with_spaces(cls, floors, apartment_per_floor=4, **kwargs):
+        #Kwargs
+        areas = kwargs.pop('areas', list())
+        default_area = kwargs.pop('default_area', Decimal('100.00'))
+        price_per_sq_meter = kwargs.pop('price_per_sq_meter', Decimal('1200.00'))
+
+        apartment_letters = 'ABCDEFGHI'
+        if len(areas) == 0:
+            for i in range(apartment_per_floor):
+                areas.append(default_area)
+        elif len(areas) != 0 and len(areas) != apartment_per_floor:
+            raise RealEstateException('Number of apartment per floor must match len of areas')
+
+        project = cls.create(**kwargs)
+        space_list = list()
+
+        for floor in range(1, floors + 1):
+            for i in range(apartment_per_floor):
+                space_data = dict()
+                space_data['project'] = project
+                space_data['space_type'] = RealEstateSpace.LIVING_SPACE
+                space_data['created_by'] = project.created_by
+                space_data['name'] = f'{i}-{apartment_letters[1]}'
+                space_data['area'] = areas[i]
+                space_data['price'] = areas[i] * price_per_sq_meter
+                real_estate_space = RealEstateSpace(**space_data)
+                space_list.append(real_estate_space)
+        RealEstateSpace.objects.bulk_create(space_list)
+        return project
 
 
 class RealEstateSpaceFactory(DjangoModelFactory):

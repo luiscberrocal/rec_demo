@@ -1,2 +1,2 @@
-class rec_demoException(Exception):
+class RealEstateException(Exception):
     pass
