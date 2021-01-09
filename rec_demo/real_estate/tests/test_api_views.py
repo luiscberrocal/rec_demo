@@ -1,11 +1,10 @@
-from django.urls import reverse
 from test_plus import TestCase
 
 from .factories import RealEstateProjectFactory
 from ...users.tests.factories import SimpleUserFactory
 
 
-class TestRealEstateSpaceListAPIView( TestCase):
+class TestRealEstateSpaceListAPIView(TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -13,19 +12,24 @@ class TestRealEstateSpaceListAPIView( TestCase):
         cls.project = RealEstateProjectFactory.create_with_spaces(4, created_by=cls.app_user)
 
     def test_get(self):
-        # url = reverse('real_estate_api:list-real-estate-space')
-        # user = SimpleUserFactory.create()
-
         with self.login(self.app_user):
             response = self.get('real_estate_api:list-real-estate-space')
             self.response_200(response)
             results = response.data
             self.assertEqual(len(results), 16)
 
+    def test_get_filtered(self):
+        with self.login(self.app_user):
+            project = RealEstateProjectFactory.create_with_spaces(2, apartment_per_floor=3,
+                                                                  created_by=self.app_user, name='PH La Suerte')
+            response = self.get('real_estate_api:list-real-estate-space-by-project', project_id=project.id) #data={'project_id': project.id})
+            self.response_200(response)
+            results = response.data
+            self.assertEqual(len(results), 6)
+
     def test_get_no_login(self):
         response = self.get('real_estate_api:list-real-estate-space')
         self.response_403(response)
-
 
 # class TestRealEstateSpaceDetailAPIView(JWTTestMixin, TestCase):
 #

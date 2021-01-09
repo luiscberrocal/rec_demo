@@ -8,7 +8,11 @@ class RealEstateSpaceListAPIView(ListAPIView):
     serializer_class = RealEstateSpaceSerializer
 
     def get_queryset(self):
-        return RealEstateSpace.objects.all()
+        project_id = self.kwargs.get('project_id', None)
+        if project_id is None:
+            return RealEstateSpace.objects.all()
+        else:
+            return RealEstateSpace.objects.filter(project_id=project_id)
 
 
 real_estate_space_list_api_view = RealEstateSpaceListAPIView.as_view()
