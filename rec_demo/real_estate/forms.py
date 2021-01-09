@@ -116,6 +116,27 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(ContractForm, self).clean()
+        cleaned_data["clients"] = self._clean_client_fields(cleaned_data)
+        cleaned_data["real_estate_spaces"] = self._clean_real_estate_spaces_fields(cleaned_data)
+
+        return cleaned_data
+
+    def _clean_real_estate_spaces_fields(self, cleaned_data):
+        real_estate_spaces = list()
+        real_estate_spaces_fields = set()
+        i = 0
+        while cleaned_data.get(self.REAL_ESTATE_SPACE_PATTERN.format(i)):
+            field_name = self.REAL_ESTATE_SPACE_PATTERN.format(i)
+
+            if field_name in real_estate_spaces_fields:
+                self.add_error(field_name, 'Duplicate')
+            else:
+                real_estate_spaces_fields.add(field_name)
+                real_estate_spaces.append(cleaned_data[field_name])
+            i += 1
+        return real_estate_spaces
+
+    def _clean_client_fields(self, cleaned_data):
         clients = list()
         client_fields = set()
         i = 0
@@ -136,9 +157,7 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
             i += 1
             client_field_name = f'contract_client_client_{i}'
             is_principal_field_name = f'contract_client_is_principal_{i}'
-
-        cleaned_data["clients"] = clients
-        return cleaned_data
+        return clients
 
     def save(self, commit=True):
         instance = super(ContractForm, self).save(commit=False)
@@ -153,6 +172,19 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
                 client_data['created_by'] = self.user
                 client_data['modified_by'] = self.user
                 ContractClient.objects.create(**client_data)
+                
+            qs = RealEstateSpace.objects.filter(contract=instance)
+            if qs.count() != 0:
+                qs.update(contract=None)
+            real_estate_space_data = dict()
+            real_estate_space_list = list()
+            real_estate_space_data['contract'] = instance
+            real_estate_space_data['modified_by'] = self.user
+            for real_estate_space in self.cleaned_data['real_estate_spaces']:
+                real_estate_space_list.append(real_estate_space.id)
+
+            RealEstateSpace.objects.filter(pk__in=real_estate_space_list).update(**real_estate_space_data)
+
         return instance
 
     def get_client_fields(self):
