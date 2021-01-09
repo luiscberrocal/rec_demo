@@ -4,20 +4,74 @@
 
 {% block content %}
     <h2>{% trans 'Contracts' %}</h2>
-    {% for contract in contract_list %}
-        <div class="row">
-            <div class="col-2"><a href="{% url 'real_estate:update-contract' contract.id %}">{{ contract.id }}</a>
-            </div>
-            <div class="col-2">{{ contract.date }}</div>
-            <div class="col-4">{{ contract.project.name }}</div>
-            <div class="col-4">
-                {% for contract_client in contract.contract_clients.all %}
-                    {% if contract_client.is_principal %}<span class="principal-client">{% endif %}
-                {{ contract_client.client.full_name }}{% if contract_client.is_principal %}</span>{% endif %}<br/>
-                {% endfor %}
-            </div>
-        </div>
-    {% endfor %}
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>{% trans 'id' %}</th>
+            <th>{% trans 'Date' %}</th>
+            <th>{% trans 'Project' %}</th>
+            <th>{% trans 'Clients' %}</th>
+            <th>{% trans 'Broker' %}</th>
+            <th>{% trans 'Created by' %}</th>
+            <th>{% trans 'Actions' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for contract in contract_list %}
+            <tr>
+                <td> {{ contract.id }}</td>
+                <td>{{ contract.date | date:"d-M-Y" }}</td>
+                <td>{{ contract.project }}</td>
+                <td>{% for client in contract.contract_clients.all %}{{ client.client.full_name }}<br>{% endfor %}</td>
+                <td>Broker1</td>
+                <td>{{ contract.created_by }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                       href="{% url 'real_estate:detail-contract' contract.id %}">{% trans 'View' %}</a>
+                    <a class="btn btn-primary btn-sm"
+                       href="{% url 'real_estate:update-contract' contract.id %}">{% trans 'Edit' %}</a>
+                    <a class="btn btn-danger btn-sm"
+                       href="{% url 'real_estate:delete-contract' contract.id %}">{% trans 'Delete' %}</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %}
+        <nav aria-label="Pagination"></nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}"
+                       aria-label="{% trans 'Previous' %}">
+                        <span area-hidden="true">&laquo;</span>
+                        <span class="sr-only">{% trans 'Previous' %}</span>
+                    </a>
+
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span area-hidden="true">&laquo;</span>
+                    <span class="sr-only">{% trans 'Previous' %}</span>
+                </li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    {% endif %}
 
 
 {% endblock %}

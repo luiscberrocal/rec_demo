@@ -2,8 +2,8 @@ from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
 from django.urls import include, path
+from django.utils.translation import ugettext_lazy as _
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
@@ -37,6 +37,7 @@ urlpatterns += [
     # DRF auth token
     path("auth-token/", obtain_auth_token),
     path('api/v1/app-data/', app_data, name='app_data'),
+    path("api/v1/real-estate/", include("rec_demo.real_estate.api.urls", namespace="real_estate_api")),
 ]
 
 if settings.DEBUG:

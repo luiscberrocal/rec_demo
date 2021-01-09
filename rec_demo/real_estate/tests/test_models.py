@@ -54,8 +54,9 @@ class TestCaseRealEstateProject(TestCase):
         """
         Test the creation of a RealEstateProject model using a factory
         """
-        real_estate_project = RealEstateProjectFactory.create()
+        real_estate_project = RealEstateProjectFactory.create_with_spaces(4, apartment_per_floor=2)
         self.assertEqual(RealEstateProject.objects.count(), 1)
+        self.assertEqual(real_estate_project.real_estate_spaces.count(), 8)
 
     def test_create_batch(self):
         """

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+    <h1 data-cy="delete-title">{% trans 'Confirm delete' %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            {% blocktrans with id=object.id %}
+                Are you sure you want to delete encounter for contract "{{ id }}"?{% endblocktrans %}</p>
+
+        <div class="control-group">
+            <div class="controls">
+                <a href="{% url 'real_estate:list-contract' %}" class="btn btn-primary">{% trans 'Cancel' %}</a>
+                <input type="submit" value="{% trans 'Confirm' %}" class="btn btn-danger" id="delete-btn" data-cy="submit">
+            </div>
+        </div>
+
+    </form>
+
+{% endblock %}

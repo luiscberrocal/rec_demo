@@ -55,7 +55,7 @@ class RealEstateSpace(Auditable, TimeStampedModel):
                                  null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.get_space_type_display()} {self.name}'
+        return f'{self.project.name} {self.get_space_type_display()} {self.name}'
 
 
 class Client(Auditable, Human):

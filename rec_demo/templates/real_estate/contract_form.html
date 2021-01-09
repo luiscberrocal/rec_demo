@@ -36,6 +36,14 @@
                 </div>
             {% endfor %}
         </div>
+        <h3 class="form-subtitle">{% trans 'Brokers' %}</h3>
+        <div id="contract-brokers">
+            {% for key, real_estate_space_field in form.get_real_estate_space_fields %}
+                <div class="form-group col-md-12 mb-0">
+                    {{ real_estate_space_field|as_crispy_field }}
+                </div>
+            {% endfor %}
+        </div>
         <div class="control-group">
             <div class="controls">
                 <a href="{% url 'real_estate:list-contract' %}" class="btn btn-primary">{% trans 'Cancel' %}</a>
