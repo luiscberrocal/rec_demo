@@ -11,6 +11,7 @@ from faker import Factory as FakerFactory
 from pytz import timezone
 
 from ..exceptions import RealEstateException
+from ..forms import ContractForm
 from ..models import Company, RealEstateProject, RealEstateSpace, Client, Broker, Contract, ContractClient, \
     ContractBroker
 from ...users.tests.factories import UserFactory
@@ -147,6 +148,20 @@ class ClientFactory(DjangoModelFactory):
             return f'{self.last_name}, {self.first_name}'
         else:
             return faker.company()
+
+    @classmethod
+    def create_batch_form_data(cls, *args, **kwargs):
+        client_dict = dict()
+        clients = cls.create_batch(*args, **kwargs )
+        i = 0
+        for client in clients:
+            client_field = ContractForm.CLIENT_PATTERN.format(i)
+            is_principal_field = ContractForm.IS_PRINCIPAL_PATTERN.format(i)
+            client_dict[client_field] = client.id
+            if i == 0:
+                client_dict[is_principal_field] = 'on'
+            i += 1
+        return client_dict
 
 
 class BrokerFactory(ClientFactory):

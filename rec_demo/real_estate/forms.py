@@ -172,7 +172,7 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
                 client_data['created_by'] = self.user
                 client_data['modified_by'] = self.user
                 ContractClient.objects.create(**client_data)
-                
+
             qs = RealEstateSpace.objects.filter(contract=instance)
             if qs.count() != 0:
                 qs.update(contract=None)

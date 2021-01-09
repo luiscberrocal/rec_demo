@@ -20,15 +20,18 @@ class TestContractCreateView(TestCase):
         contract.delete()
 
         # Adding 3 Clients to the contract
-        clients = ClientFactory.create_batch(3, created_by=self.app_user,)
-        i = 0
-        for client in clients:
-            client_field = ContractForm.CLIENT_PATTERN.format(i)
-            is_principal_field = ContractForm.IS_PRINCIPAL_PATTERN.format(i)
-            contract_dict[client_field] = client.id
-            if i == 0:
-                contract_dict[is_principal_field] = 'on'
-            i += 1
+        client_data = ClientFactory.create_batch_form_data(3, created_by=self.app_user)
+        contract_dict = {**contract_dict, **client_data}
+
+        # clients = ClientFactory.create_batch(3, created_by=self.app_user,)
+        # i = 0
+        # for client in clients:
+        #     client_field = ContractForm.CLIENT_PATTERN.format(i)
+        #     is_principal_field = ContractForm.IS_PRINCIPAL_PATTERN.format(i)
+        #     contract_dict[client_field] = client.id
+        #     if i == 0:
+        #         contract_dict[is_principal_field] = 'on'
+        #     i += 1
 
         # Adding one living space to the contract
         living_space = RealEstateSpace.objects.filter(project=self.project).first()
@@ -46,8 +49,8 @@ class TestContractCreateView(TestCase):
         self.assertEqual(contract.real_estate_spaces.count(), 1)
 
     def test_get(self):
-        contract = ContractFactory.create(created_by=self.app_user)
-        contract.delete()
+        # contract = ContractFactory.create(created_by=self.app_user)
+        # contract.delete()
 
         with self.login(self.app_user):
             response = self.get('real_estate:create-contract')
@@ -58,18 +61,19 @@ class TestContractUpdateView(TestCase):
 
     def setUp(self) -> None:
         self.app_user = SimpleUserFactory.create()
+        self.project = RealEstateProjectFactory.create_with_spaces(4, created_by=self.app_user)
 
     def test_get(self):
-        contract = ContractFactory.create(created_by=self.app_user)
+        contract = ContractFactory.create(created_by=self.app_user, project=self.project)
 
         with self.login(self.app_user):
             response = self.post('real_estate:update-contract', pk=contract.pk)
             self.response_200(response)
 
     # def test_post_update_attribute(self):
-    #     contract = ContractFactory.create(created_by=self.app_user)
+    #     contract = ContractFactory.create(created_by=self.app_user, project=self.project)
+    #     contract_dict = model_to_json_dict(contract)
     #
-    #     contract_dict = model_to_dict(contract)
     #     contract_dict['attribute'] = att_value $FIXME
     #
     #     with self.login(self.app_user):

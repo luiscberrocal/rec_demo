@@ -16,3 +16,15 @@ class TestRegexpExtraction(SimpleTestCase):
             self.assertEqual(match.group(1), '2')
         else:
             self.fail('Did not work')
+
+    def test_merge_dict(self):
+        y = {'name': 'Luis', 'last_name': 'Berrocal'}
+        x = {'middle_name': 'Carlos'}
+
+        y = {**y, **x}
+        self.assertEqual(y['middle_name'], 'Carlos')
+        self.assertEqual(y['last_name'], 'Berrocal')
+
+        y = {**y, 'last_name': 'Wayne'}
+        self.assertEqual(y['last_name'], 'Wayne')
+
