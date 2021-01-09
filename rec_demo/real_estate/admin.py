@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from .forms import CompanyForm
 from .models import Company, RealEstateProject, RealEstateSpace, Client, Broker, Contract, ContractClient, \
     ContractBroker
 from ..core.mixins import AdminAuditableMixin
@@ -26,18 +25,11 @@ class CompanyAdmin(AdminAuditableMixin, admin.ModelAdmin):
 class RealEstateSpaceInline(AdminAuditableMixin, admin.TabularInline):
     model = RealEstateSpace
 
+
 @admin.register(RealEstateProject)
 class RealEstateProjectAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
-        'id',
-        'name',
-        'short_name',
-        'company',
-        'logo',
-        'created',
-        'modified',
-        'created_by',
-        'modified_by',
+        'id', 'name', 'short_name', 'company', 'logo', 'created', 'modified', 'created_by', 'modified_by',
     )
     list_filter = (
         'company',
@@ -48,6 +40,9 @@ class RealEstateProjectAdmin(AdminAuditableMixin, admin.ModelAdmin):
     inlines = (RealEstateSpaceInline,)
     search_fields = ('name',)
 
+    def get_queryset(self, request):
+        qs = super(RealEstateProjectAdmin, self).get_queryset(request)
+        return qs.select_related('company', 'created_by', 'modified_by')
 
 @admin.register(RealEstateSpace)
 class RealEstateSpaceAdmin(AdminAuditableMixin, admin.ModelAdmin):
@@ -69,6 +64,10 @@ class RealEstateSpaceAdmin(AdminAuditableMixin, admin.ModelAdmin):
         'contract',
     )
     search_fields = ('name',)
+
+    def get_queryset(self, request):
+        qs = super(RealEstateSpaceAdmin, self).get_queryset(request)
+        return qs.select_related('project', 'created_by', 'modified_by')
 
 
 @admin.register(Client)
@@ -151,6 +150,7 @@ class ContractAdmin(AdminAuditableMixin, admin.ModelAdmin):
         'date',
     )
     inlines = (RealEstateSpaceInline,)
+
 
 @admin.register(ContractClient)
 class ContractClientAdmin(AdminAuditableMixin, admin.ModelAdmin):
