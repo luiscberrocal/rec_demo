@@ -57,7 +57,39 @@
 {% block javascript %}
     {{ block.super }}
     <script>
+
+    </script>
+    <script>
         $(document).ready(function () {
+            function updateRealEstateSpacesoo(projectId) {
+                let url_mask = "{% url 'real_estate-api:list-real-estate-space-by-project' 12345 %}"
+                let url = url_mask.replace(/12345/, projectId);
+                $.ajax({
+                    url: url,
+                    success: function (data) {
+                        console.log(data)
+                    }
+                });
+            }
+
+            function updateRealEstateSpaces(projectId) {
+                let url_mask = "{% url 'real_estate-api:list-real-estate-space-by-project' 12345 %}"
+                let url = url_mask.replace(/12345/, projectId);
+                $("#id_real_estate_space_0").html('')
+                $.ajax({
+                        method: 'GET',
+                        url: url,
+                        data: {},
+                        success: function (data) {
+                            $.each(data, function () {
+                                console.log(this);
+                                $("#id_real_estate_space_0").append('<option value="' + this.id + '">' + this.name + '</option>')
+                            });
+                        }
+                    }
+                )
+            }
+
             $('.delete-contract-client').on('click', function () {
                 //console.log('Removing row id:', $(this).parent().parent().attr('id'));
                 $(this).parent().parent().remove();
@@ -91,6 +123,11 @@
 
             })
 
+            $('#id_project').on('change', function () {
+                let project = $(this).val()
+                console.log('Project ', project);
+                updateRealEstateSpaces(project);
+            })
         });
     </script>
 
