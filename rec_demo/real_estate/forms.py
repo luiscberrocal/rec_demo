@@ -36,7 +36,8 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
         if self.instance.id is not None:
             real_estate_spaces = RealEstateSpace.objects.filter(contract=self.instance)
             self.estate_spaces_fields = dict()
-            qs = RealEstateSpace.objects.filter(contract__isnull=True, project=self.instance.project)
+            #qs = RealEstateSpace.objects.filter(contract__isnull=True, project=self.instance.project)
+            qs = RealEstateSpace.objects.filter(project=self.instance.project)
             for real_estate_space in real_estate_spaces:
                 self._add_real_estate_space_field(i, qs, real_estate_space)
                 i += 1

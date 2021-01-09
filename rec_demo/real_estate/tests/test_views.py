@@ -23,16 +23,6 @@ class TestContractCreateView(TestCase):
         client_data = ClientFactory.create_batch_form_data(3, created_by=self.app_user)
         contract_dict = {**contract_dict, **client_data}
 
-        # clients = ClientFactory.create_batch(3, created_by=self.app_user,)
-        # i = 0
-        # for client in clients:
-        #     client_field = ContractForm.CLIENT_PATTERN.format(i)
-        #     is_principal_field = ContractForm.IS_PRINCIPAL_PATTERN.format(i)
-        #     contract_dict[client_field] = client.id
-        #     if i == 0:
-        #         contract_dict[is_principal_field] = 'on'
-        #     i += 1
-
         # Adding one living space to the contract
         living_space = RealEstateSpace.objects.filter(project=self.project).first()
         living_space_field = ContractForm.REAL_ESTATE_SPACE_PATTERN.format('0')
@@ -73,6 +63,14 @@ class TestContractUpdateView(TestCase):
     # def test_post_update_attribute(self):
     #     contract = ContractFactory.create(created_by=self.app_user, project=self.project)
     #     contract_dict = model_to_json_dict(contract)
+    #     # Adding 3 Clients to the contract
+    #     client_data = ClientFactory.create_batch_form_data(3, created_by=self.app_user)
+    #     contract_dict = {**contract_dict, **client_data}
+    #
+    #     # Adding one living space to the contract
+    #     living_space = RealEstateSpace.objects.filter(project=self.project).first()
+    #     living_space_field = ContractForm.REAL_ESTATE_SPACE_PATTERN.format('0')
+    #     contract_dict[living_space_field] = living_space.id
     #
     #     contract_dict['attribute'] = att_value $FIXME
     #
