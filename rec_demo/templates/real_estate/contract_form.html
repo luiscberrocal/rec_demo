@@ -36,7 +36,12 @@
                 </div>
             {% endfor %}
         </div>
-        <h3 class="form-subtitle">{% trans 'Brokers' %}</h3>
+        <div class="control-group add-buttons">
+            <div class="controls">
+                <a class="btn btn-primary" id="add-client" href="#">{% trans 'Add client' %}</a>
+            </div>
+        </div>
+        <h3 class="form-subtitle">{% trans 'Real Estate Spaces' %}</h3>
         <div id="contract-brokers">
             {% for key, real_estate_space_field in form.get_real_estate_space_fields %}
                 <div class="form-group col-md-12 mb-0">
@@ -48,7 +53,7 @@
             <div class="controls">
                 <a href="{% url 'real_estate:list-contract' %}" class="btn btn-primary">{% trans 'Cancel' %}</a>
                 <button type="submit" class="btn btn-primary" id="save_button">{% trans 'Save' %}</button>
-                <a class="btn btn-primary" id="add-client" href="#">{% trans 'Add client' %}</a>
+
             </div>
         </div>
     </form>
