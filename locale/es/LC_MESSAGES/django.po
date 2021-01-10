@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-10 08:20-0500\n"
+"POT-Creation-Date: 2021-01-10 09:59-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,14 +130,12 @@ msgid "Company"
 msgstr "Companía"
 
 #: rec_demo/real_estate/models.py:21
-#, fuzzy
-#| msgid "Company"
 msgid "Companies"
-msgstr "Companía"
+msgstr "Companías"
 
 #: rec_demo/real_estate/models.py:42
 msgid "Living space"
-msgstr ""
+msgstr "Vivienda"
 
 #: rec_demo/real_estate/models.py:43
 msgid "Parking"
@@ -145,7 +143,7 @@ msgstr "Estacionamiento"
 
 #: rec_demo/real_estate/models.py:44
 msgid "Storage"
-msgstr "Deposito"
+msgstr "Depósito"
 
 #: rec_demo/real_estate/models.py:47 rec_demo/real_estate/models.py:99
 #: rec_demo/templates/real_estate/contract_list.html:12
@@ -497,7 +495,7 @@ msgid ""
 msgstr ""
 
 #: rec_demo/templates/real_estate/contract_confirm_delete.html:15
-#: rec_demo/templates/real_estate/contract_form.html:49
+#: rec_demo/templates/real_estate/contract_form.html:64
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -511,21 +509,26 @@ msgid "Clients"
 msgstr "Clientes"
 
 #: rec_demo/templates/real_estate/contract_form.html:34
+#: rec_demo/templates/real_estate/contract_form.html:52
 #: rec_demo/templates/real_estate/contract_list.html:39
 msgid "Delete"
 msgstr ""
 
-#: rec_demo/templates/real_estate/contract_form.html:39
-msgid "Brokers"
-msgstr ""
-
-#: rec_demo/templates/real_estate/contract_form.html:50
-msgid "Save"
-msgstr ""
-
-#: rec_demo/templates/real_estate/contract_form.html:51
+#: rec_demo/templates/real_estate/contract_form.html:41
 msgid "Add client"
 msgstr "Agregar cliente"
+
+#: rec_demo/templates/real_estate/contract_form.html:44
+msgid "Real Estate Spaces"
+msgstr "Espacios Inmobiliarios"
+
+#: rec_demo/templates/real_estate/contract_form.html:59
+msgid "Add Space"
+msgstr "Agregar espacio"
+
+#: rec_demo/templates/real_estate/contract_form.html:65
+msgid "Save"
+msgstr ""
 
 #: rec_demo/templates/real_estate/contract_list.html:6
 msgid "Contracts"
