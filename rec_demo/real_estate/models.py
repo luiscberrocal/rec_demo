@@ -12,6 +12,7 @@ class Company(Auditable, TimeStampedModel):
     name = models.CharField(_('Name'), max_length=80)
     short_name = models.CharField(_('Short name'), max_length=15)
     logo = models.ImageField(_('Logo'), null=True, blank=True)
+    active = models.BooleanField(_('Active'), default=True)
 
     def __str__(self):
         return self.name
@@ -27,9 +28,14 @@ class RealEstateProject(Auditable, TimeStampedModel):
     company = models.ForeignKey(Company, verbose_name=_('Company'),
                                 related_name='real_estate_projects', on_delete=models.CASCADE)
     logo = models.ImageField(_('Logo'), null=True, blank=True)
+    active = models.BooleanField(_('Active'), default=True)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = _('Real estate project')
+        verbose_name_plural = _('Real estate projects')
 
 
 class RealEstateSpace(Auditable, TimeStampedModel):
@@ -57,6 +63,10 @@ class RealEstateSpace(Auditable, TimeStampedModel):
     def __str__(self):
         return f'{self.project.name} {self.get_space_type_display()} {self.name}'
 
+    class Meta:
+        verbose_name = _('Real estate space')
+        verbose_name_plural = _('Real estate spaces')
+
 
 class Client(Auditable, Human):
     NATURAL_TYPE = 'N'  # Natural
@@ -74,6 +84,10 @@ class Client(Auditable, Human):
             return f'{self.last_name}, {self.first_name}'
         else:
             return f'{self.full_name}'
+
+    class Meta:
+        verbose_name = _('Client')
+        verbose_name_plural = _('Clients')
 
 
 class Broker(Auditable, Human):
@@ -93,11 +107,24 @@ class Broker(Auditable, Human):
         else:
             return f'{self.full_name}'
 
+    class Meta:
+        verbose_name = _('Broker')
+        verbose_name_plural = _('Brokers')
+
 
 class Contract(Auditable, TimeStampedModel):
     date = models.DateField(_('Date'))
     project = models.ForeignKey(RealEstateProject, verbose_name=_('Project'), related_name='contracts',
                                 on_delete=models.CASCADE)
+    broker = models.ForeignKey(Broker, verbose_name=_('Broker'), related_name='contracts',
+                               on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('Contract')
+        verbose_name_plural = _('Contracts')
+
+    def __str__(self):
+        return f'{self.project.name} ({self.id})'
 
 
 class ContractClient(Auditable, TimeStampedModel):
