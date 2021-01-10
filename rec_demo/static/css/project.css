@@ -25,3 +25,7 @@
 .add-buttons {
     padding-bottom: .5rem;
 }
+
+.is-principal {
+    font-weight: bolder;
+}

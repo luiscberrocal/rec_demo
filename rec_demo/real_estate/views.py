@@ -33,7 +33,7 @@ class ContractListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = super(ContractListView, self).get_queryset()
-        return qs.select_related('project',
+        return qs.select_related('project', 'broker',
                                  'created_by').prefetch_related('real_estate_spaces',
                                                                 'contract_clients__client')
 

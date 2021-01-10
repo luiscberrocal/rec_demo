@@ -511,10 +511,8 @@ msgid "Create Contract"
 msgstr "Crear Contrato"
 
 #: rec_demo/templates/pages/home.html:8
-#, fuzzy
-#| msgid "Contract"
 msgid "Contract List"
-msgstr "Lista de Contrato"
+msgstr "Lista de Contratos"
 
 #: rec_demo/templates/real_estate/contract_confirm_delete.html:6
 msgid "Confirm delete"
