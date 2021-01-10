@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-07 09:52-0500\n"
+"POT-Creation-Date: 2021-01-10 08:20-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,13 +98,17 @@ msgstr ""
 msgid "Religion"
 msgstr ""
 
-#: rec_demo/real_estate/forms.py:36 rec_demo/real_estate/forms.py:53
-#: rec_demo/real_estate/forms.py:65 rec_demo/real_estate/models.py:104
+#: rec_demo/real_estate/forms.py:65
+msgid "Real estate space"
+msgstr ""
+
+#: rec_demo/real_estate/forms.py:78 rec_demo/real_estate/forms.py:95
+#: rec_demo/real_estate/forms.py:106 rec_demo/real_estate/models.py:104
 msgid "Client"
 msgstr "Cliente"
 
-#: rec_demo/real_estate/forms.py:40 rec_demo/real_estate/forms.py:60
-#: rec_demo/real_estate/forms.py:69 rec_demo/real_estate/models.py:108
+#: rec_demo/real_estate/forms.py:82 rec_demo/real_estate/forms.py:102
+#: rec_demo/real_estate/forms.py:110 rec_demo/real_estate/models.py:108
 msgid "Is principal"
 msgstr "Es principal"
 
@@ -144,6 +148,7 @@ msgid "Storage"
 msgstr "Deposito"
 
 #: rec_demo/real_estate/models.py:47 rec_demo/real_estate/models.py:99
+#: rec_demo/templates/real_estate/contract_list.html:12
 msgid "Project"
 msgstr "Proyecto"
 
@@ -182,10 +187,12 @@ msgid "Client type"
 msgstr "Tipo de cliente"
 
 #: rec_demo/real_estate/models.py:98
+#: rec_demo/templates/real_estate/contract_list.html:11
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #: rec_demo/real_estate/models.py:112
+#: rec_demo/templates/real_estate/contract_list.html:14
 msgid "Broker"
 msgstr ""
 
@@ -273,6 +280,7 @@ msgid ""
 msgstr ""
 
 #: rec_demo/templates/account/email_confirm.html:20
+#: rec_demo/templates/real_estate/contract_confirm_delete.html:16
 msgid "Confirm"
 msgstr ""
 
@@ -464,13 +472,11 @@ msgstr ""
 
 #: rec_demo/templates/pages/home.html:4
 msgid "Contract Management"
-msgstr ""
+msgstr "Administración de Contratos"
 
 #: rec_demo/templates/pages/home.html:6
-#, fuzzy
-#| msgid "Contract"
-msgid "Contract Create"
-msgstr "Contrato"
+msgid "Create Contract"
+msgstr "Crear Contrato"
 
 #: rec_demo/templates/pages/home.html:8
 #, fuzzy
@@ -478,41 +484,78 @@ msgstr "Contrato"
 msgid "Contract List"
 msgstr "Lista de Contrato"
 
+#: rec_demo/templates/real_estate/contract_confirm_delete.html:6
+msgid "Confirm delete"
+msgstr ""
+
+#: rec_demo/templates/real_estate/contract_confirm_delete.html:10
+#, python-format
+msgid ""
+"\n"
+"                Are you sure you want to delete encounter for contract "
+"\"%(id)s\"?"
+msgstr ""
+
+#: rec_demo/templates/real_estate/contract_confirm_delete.html:15
+#: rec_demo/templates/real_estate/contract_form.html:49
+msgid "Cancel"
+msgstr "Cancelar"
+
 #: rec_demo/templates/real_estate/contract_form.html:9
-#, fuzzy
-#| msgid "Contract"
 msgid "New Contract"
 msgstr "Contrato Nuevo"
 
 #: rec_demo/templates/real_estate/contract_form.html:23
-#, fuzzy
-#| msgid "Client"
+#: rec_demo/templates/real_estate/contract_list.html:13
 msgid "Clients"
 msgstr "Clientes"
 
 #: rec_demo/templates/real_estate/contract_form.html:34
+#: rec_demo/templates/real_estate/contract_list.html:39
 msgid "Delete"
 msgstr ""
 
-#: rec_demo/templates/real_estate/contract_form.html:41
-msgid "Cancel"
-msgstr "Cancelar"
+#: rec_demo/templates/real_estate/contract_form.html:39
+msgid "Brokers"
+msgstr ""
 
-#: rec_demo/templates/real_estate/contract_form.html:42
+#: rec_demo/templates/real_estate/contract_form.html:50
 msgid "Save"
 msgstr ""
 
-#: rec_demo/templates/real_estate/contract_form.html:43
-#, fuzzy
-#| msgid "Client"
+#: rec_demo/templates/real_estate/contract_form.html:51
 msgid "Add client"
 msgstr "Agregar cliente"
 
 #: rec_demo/templates/real_estate/contract_list.html:6
-#, fuzzy
-#| msgid "Contract"
 msgid "Contracts"
 msgstr "Contratos"
+
+#: rec_demo/templates/real_estate/contract_list.html:10
+msgid "id"
+msgstr ""
+
+#: rec_demo/templates/real_estate/contract_list.html:15
+msgid "Created by"
+msgstr "Creado por"
+
+#: rec_demo/templates/real_estate/contract_list.html:16
+msgid "Actions"
+msgstr "Acciones"
+
+#: rec_demo/templates/real_estate/contract_list.html:35
+msgid "View"
+msgstr "Ver"
+
+#: rec_demo/templates/real_estate/contract_list.html:37
+msgid "Edit"
+msgstr "Editar"
+
+#: rec_demo/templates/real_estate/contract_list.html:52
+#: rec_demo/templates/real_estate/contract_list.html:54
+#: rec_demo/templates/real_estate/contract_list.html:61
+msgid "Previous"
+msgstr ""
 
 #: rec_demo/users/apps.py:7
 msgid "Users"
@@ -529,3 +572,8 @@ msgstr ""
 #: rec_demo/users/views.py:34
 msgid "Infos successfully updated"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Contract"
+#~ msgid "Contract Create"
+#~ msgstr "Contrato"
