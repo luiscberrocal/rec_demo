@@ -29,3 +29,8 @@
 .is-principal {
     font-weight: bolder;
 }
+
+.detail-attribute {
+    font-weight: bolder;
+    font-size: larger;
+}

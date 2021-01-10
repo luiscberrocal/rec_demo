@@ -323,8 +323,11 @@ LANGUAGES = (
 ENVIRONMENT_NAME = env('ENVIRONMENT_NAME', default='DEVELOPMENT')
 ENVIRONMENT_ADMIN_CSS = env('ENVIRONMENT_ADMIN_CSS', default='css/admin-dev.css')
 
+USE_THOUSAND_SEPARATOR = True
 es_formats.DATETIME_FORMAT  = 'd-M-Y H:m:s'
 # es_formats.NUMBER_GROUPING
 # es_formats.DATETIME_INPUT_FORMATS
 # es_formats.SHORT_DATETIME_FORMAT
 es_formats.DATE_FORMAT = 'd-M-Y'
+es_formats.DECIMAL_SEPARATOR = '.'
+es_formats.THOUSAND_SEPARATOR = ','

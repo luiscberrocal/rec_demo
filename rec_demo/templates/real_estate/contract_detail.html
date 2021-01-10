@@ -3,5 +3,82 @@
 {% load i18n %}
 
 {% block content %}
-<h2>{% trans 'Contract' %} {{ object.id }}</h2>
+    <h2>{% trans 'Contract' %} {{ object.id }}</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-4 detail-attribute">{% trans 'Date' %}:</div>
+                <div class="col-md-8">{{ object.date }}</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-4 detail-attribute">{% trans 'Project' %}:</div>
+                <div class="col-md-8">{{ object.project.name }}</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-4 detail-attribute">{% trans 'Broker' %}:</div>
+                <div class="col-md-8">{{ object.broker.full_name }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            {% trans 'Clients' %}
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                <th scope="col">{% trans 'Name' %}</th>
+                <th scope="col">{% trans 'Identification' %}</th>
+                <th scope="col">{% trans 'Telefono' %}</th>
+                <th scope="col">{% trans 'Email' %}</th>
+                <th scope="col">{% trans 'Is principal' %}</th>
+                </thead>
+                <tbody>
+                {% for contract_client in object.contract_clients.all %}
+                    <tr>
+                        <td>{{ contract_client.client.full_name }}</td>
+                        <td>{{ contract_client.client.national_id }}</td>
+                        <td>555-90098</td>
+                        <td>batman@gk.com</td>
+                        <td>{{ contract_client.is_principal }}</td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            {% trans 'Real estate spaces' %}
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                <th scope="col">{% trans 'Name' %}</th>
+                <th scope="col">{% trans 'Type' %}</th>
+                <th scope="col">{% trans 'Area' %}</th>
+                <th scope="col">{% trans 'Price' %}</th>
+                </thead>
+                <tbody>
+                {% for real_estate_space in object.real_estate_spaces.all %}
+                    <tr>
+                        <td>{{ real_estate_space.name }}</td>
+                        <td>{{ real_estate_space.get_space_type_display }}</td>
+                        <td>{{ real_estate_space.area }}</td>
+                        <td>{{ real_estate_space.price }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
 {% endblock %}
