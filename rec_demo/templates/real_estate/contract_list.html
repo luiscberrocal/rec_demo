@@ -21,7 +21,12 @@
             <tr>
                 <td> {{ contract.id }}</td>
                 <td>{{ contract.date | date:"d-M-Y" }}</td>
-                <td>{{ contract.project }}</td>
+                <td>
+                    {{ contract.project }}<br>
+                    {% for space in contract.real_estate_spaces.all %}
+                        {{ space.name }} ({{ space.get_space_type_display }} )<br>
+                    {% endfor %}
+                </td>
                 <td>{% for client in contract.contract_clients.all %}{{ client.client.full_name }}<br>{% endfor %}</td>
                 <td>Broker1</td>
                 <td>{{ contract.created_by }}</td>

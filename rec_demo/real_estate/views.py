@@ -1,7 +1,6 @@
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView, DetailView
 
 from .forms import ContractForm
@@ -31,6 +30,12 @@ class ContractListView(LoginRequiredMixin, ListView):
     model = Contract
     context_object_name = 'contract_list'
     paginate_by = 10
+
+    def get_queryset(self):
+        qs = super(ContractListView, self).get_queryset()
+        return qs.select_related('project',
+                                 'created_by').prefetch_related('real_estate_spaces',
+                                                                'contract_clients__client')
 
 
 contract_list_view = ContractListView.as_view()
