@@ -1,9 +1,28 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-    <h2>{% trans 'Contract Management' %}</h2>
-    <a class="btn btn-primary" href="{% url 'real_estate:create-contract' %}"
-       role="button">{% trans 'Create Contract' %}</a>
-    <a class="btn btn-primary" href="{% url 'real_estate:list-contract' %}"
-       role="button">{% trans 'Contract List' %}</a>
+    <div class="card">
+        <div class="card-header">
+            {% trans 'Contract Management' %}
+        </div>
+        <div class="card-body">
+            <a class="btn btn-primary" href="{% url 'real_estate:create-contract' %}"
+               role="button">{% trans 'Create Contract' %}</a>
+            <a class="btn btn-primary" href="{% url 'real_estate:list-contract' %}"
+               role="button">{% trans 'Contract List' %}</a>
+        </div>
+    </div>
+   {% if ADMIN_URL %}
+       <div class="card">
+        <div class="card-header">
+            {% trans 'Super User' %}
+        </div>
+        <div class="card-body">
+            <a class="btn btn-primary" href="{{ ADMIN_URL }}"
+               role="button">{% trans 'Adminitrative Console' %}</a>
+
+        </div>
+    </div>
+    {% endif %}
+
 {% endblock content %}

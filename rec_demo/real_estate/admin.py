@@ -136,20 +136,25 @@ class BrokerAdmin(AdminAuditableMixin, admin.ModelAdmin):
 class ContractAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
         'id',
+        'date',
+        'project',
+        'broker',
         'created',
         'modified',
         'created_by',
         'modified_by',
-        'date',
+
     )
     list_filter = (
+        'broker',
+        'project',
         'created',
         'modified',
         'created_by',
         'modified_by',
         'date',
     )
-    inlines = (RealEstateSpaceInline,)
+    #inlines = (RealEstateSpaceInline,)
 
 
 @admin.register(ContractClient)

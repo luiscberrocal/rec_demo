@@ -31,7 +31,7 @@ class TestCaseCompany(TestCase):
         """
         company = CompanyFactory.create()
         company_dict = model_to_dict(company)
-        self.assertEqual(len(company_dict.keys()), 6)
+        self.assertEqual(len(company_dict.keys()), 7)
 
     def test_attribute_content(self):
         """
@@ -73,7 +73,7 @@ class TestCaseRealEstateProject(TestCase):
         """
         real_estate_project = RealEstateProjectFactory.create()
         real_estate_project_dict = model_to_dict(real_estate_project)
-        self.assertEqual(len(real_estate_project_dict.keys()), 7)
+        self.assertEqual(len(real_estate_project_dict.keys()), 8)
 
     def test_attribute_content(self):
         """
@@ -259,7 +259,7 @@ class TestCaseContract(TestCase):
         """
         contract = ContractFactory.create()
         contract_dict = model_to_dict(contract)
-        self.assertEqual(len(contract_dict.keys()), 5)
+        self.assertEqual(len(contract_dict.keys()), 6)
 
     def test_attribute_content(self):
         """

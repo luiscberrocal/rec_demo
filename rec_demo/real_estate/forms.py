@@ -30,6 +30,10 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
         self._build_client_fields(extras, kwargs)
         self._build_real_estate_fields(extras, kwargs)
 
+    class Meta:
+        model = Contract
+        fields = ('date', 'project', 'broker')
+
     def _build_real_estate_fields(self, extras, kwargs):
         self.real_estate_space_fields = dict()
         i = 0
@@ -112,9 +116,7 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
             self.client_fields[i].append(field_name)
             i += 1
 
-    class Meta:
-        model = Contract
-        fields = ('date', 'project')
+
 
     def clean(self):
         cleaned_data = super(ContractForm, self).clean()
