@@ -84,6 +84,7 @@
                 let url_mask = "{% url 'real_estate-api:list-real-estate-space-by-project' 12345 %}"
                 let url = url_mask.replace(/12345/, projectId);
                 $("#id_real_estate_space_0").html('')
+                $("#id_real_estate_space_0").append('<option value="" selected="">---------</option>');
                 $.ajax({
                         method: 'GET',
                         url: url,
@@ -91,7 +92,12 @@
                         success: function (data) {
                             $.each(data, function () {
                                 console.log(this);
-                                $("#id_real_estate_space_0").append('<option value="' + this.id + '">' + this.name + '</option>')
+                                let display= `${this.name} (${this.space_type})`;
+                                if (this.contract != null){
+                                    display = display + ' {% trans 'Unavailable' %}';
+                                };
+                                let option = `<option value="${this.id}">${display}</option>`;
+                                $("#id_real_estate_space_0").append(option);
                             });
                         }
                     }
@@ -106,7 +112,7 @@
                 //console.log('Removing row id:', $(this).parent().parent().attr('id'));
                 $(this).parent().parent().remove();
             });
-            $('#add-real-estate-space').on('click', function (){
+            $('#add-real-estate-space').on('click', function () {
                 let clone = $("#real-estate-spaces div.row").last().clone(true);
                 let row_id = clone.attr('id');
                 console.log('Row id', row_id);
