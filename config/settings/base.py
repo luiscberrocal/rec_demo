@@ -4,8 +4,8 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
+from django.conf.locale.es import formats as es_formats
 from django.utils.translation import ugettext_lazy as _
-
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # rec_demo/
@@ -248,7 +248,7 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
+                      "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
@@ -322,3 +322,9 @@ LANGUAGES = (
 
 ENVIRONMENT_NAME = env('ENVIRONMENT_NAME', default='DEVELOPMENT')
 ENVIRONMENT_ADMIN_CSS = env('ENVIRONMENT_ADMIN_CSS', default='css/admin-dev.css')
+
+es_formats.DATETIME_FORMAT  = 'd-M-Y H:m:s'
+# es_formats.NUMBER_GROUPING
+# es_formats.DATETIME_INPUT_FORMATS
+# es_formats.SHORT_DATETIME_FORMAT
+es_formats.DATE_FORMAT = 'd-M-Y'

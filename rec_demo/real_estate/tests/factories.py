@@ -70,7 +70,7 @@ class RealEstateProjectFactory(DjangoModelFactory):
                 space_data['project'] = project
                 space_data['space_type'] = RealEstateSpace.LIVING_SPACE
                 space_data['created_by'] = project.created_by
-                space_data['name'] = f'{i}-{apartment_letters[1]}'
+                space_data['name'] = f'{floor}-{apartment_letters[i]}'
                 space_data['area'] = areas[i]
                 space_data['price'] = areas[i] * price_per_sq_meter
                 real_estate_space = RealEstateSpace(**space_data)
