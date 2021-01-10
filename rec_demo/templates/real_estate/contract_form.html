@@ -42,12 +42,22 @@
             </div>
         </div>
         <h3 class="form-subtitle">{% trans 'Real Estate Spaces' %}</h3>
-        <div id="contract-brokers">
+        <div id="real-estate-spaces">
             {% for key, real_estate_space_field in form.get_real_estate_space_fields %}
-                <div class="form-group col-md-12 mb-0">
-                    {{ real_estate_space_field|as_crispy_field }}
+                <div class="row gy-2 gx-3 align-items-center" id="real-estate-space-row-{{ key }}">
+                    <div class="form-group col-md-10 mb-0">
+                        {{ real_estate_space_field|as_crispy_field }}
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-primary delete-real-estate-space" href="#">{% trans 'Delete' %}</a>
+                    </div>
                 </div>
             {% endfor %}
+        </div>
+        <div class="control-group add-buttons">
+            <div class="controls">
+                <a class="btn btn-primary" id="add-real-estate-space" href="#">{% trans 'Add Space' %}</a>
+            </div>
         </div>
         <div class="control-group">
             <div class="controls">
@@ -66,16 +76,6 @@
     </script>
     <script>
         $(document).ready(function () {
-            function updateRealEstateSpacesoo(projectId) {
-                let url_mask = "{% url 'real_estate-api:list-real-estate-space-by-project' 12345 %}"
-                let url = url_mask.replace(/12345/, projectId);
-                $.ajax({
-                    url: url,
-                    success: function (data) {
-                        console.log(data)
-                    }
-                });
-            }
 
             function updateRealEstateSpaces(projectId) {
                 let url_mask = "{% url 'real_estate-api:list-real-estate-space-by-project' 12345 %}"
@@ -98,7 +98,30 @@
             $('.delete-contract-client').on('click', function () {
                 //console.log('Removing row id:', $(this).parent().parent().attr('id'));
                 $(this).parent().parent().remove();
-            })
+            });
+            $('.delete-real-estate-space').on('click', function () {
+                //console.log('Removing row id:', $(this).parent().parent().attr('id'));
+                $(this).parent().parent().remove();
+            });
+            $('#add-real-estate-space').on('click', function (){
+                let clone = $("#real-estate-spaces div.row").last().clone(true);
+                let row_id = clone.attr('id');
+                console.log('Row id', row_id);
+                let n = parseInt(row_id.split('-')[4]) + 1;
+                row_id = 'real-estate-space-row-' + n;
+                clone.attr('id', row_id);
+                //id_real_estate_space_0
+                let clientCombo = clone.children().eq(0).find('select');
+                clientCombo.attr('id', 'id_real_estate_space_' + n)
+                clientCombo.attr('name', 'real_estate_space_' + n)
+
+                let clientComboLabel = clone.children().eq(0).find('label');
+                clientComboLabel.attr('for', 'id_real_estate_space_' + n);
+                let divGroup = clientCombo.parent();
+                divGroup.attr('id', 'div_id_real_estate_space_' + n)
+                clone.appendTo($("#real-estate-spaces"));
+
+            });
             $('#add-client').on('click', function () {
                 let $clone = $("#contract-clients div.row").last().clone(true);
                 let row_id = $clone.attr('id')
@@ -122,7 +145,7 @@
                 let isPrincipalLabel = $clone.children().eq(1).find('label');
                 isPrincipalLabel.attr('for', 'id_contract_client_is_principal_' + n);
 
-                $clone.appendTo($("#contract-clients"))
+                $clone.appendTo($("#contract-clients"));
                 //$this.off('input', arguments.callee)
                 //$clone.on('input', arguments.callee)
 
