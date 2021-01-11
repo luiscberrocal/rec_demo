@@ -1,8 +1,7 @@
-from datetime import timedelta
+from datetime import timedelta, date
 from decimal import Decimal
 
 from django.db.models import OuterRef, Subquery, F, Sum
-from django.test import tag
 from django.utils import timezone
 from test_plus import TestCase
 
@@ -87,19 +86,26 @@ class TestAccount(TestCase):
         account = Account.objects.create(name=name)
         account.add_debit(Decimal('108000'), type=Debit.OTHER_TYPE)
         account.add_debit(Decimal('12000'), type=Debit.DOWN_PAYMENT_TYPE)
-        account.add_credit(Decimal('0.00'))
+        # account.add_credit(Decimal('0.00'))
 
-        credits = Credit.objects.filter(
-            account=OuterRef('pk')).values('account_id').annotate(sum_credits=Sum('amount'))
-        debits = Debit.objects.filter(
-            account=OuterRef('pk')).values('account_id').annotate(sum_debits=Sum('amount'))
-
-        balance = Account.objects.annotate(
-            credit_sum=Subquery(credits.values('sum_credits')),
-            debit_sum=Subquery(debits.values('sum_debits')),
-            balance=F('credit_sum') - F('debit_sum')
-        ).values_list('name', 'balance').get(pk=account.id)
+        balance = Account.objects.get_with_balance().get(pk=account.id)
         self.assertEqual(balance, (name, Decimal('-120000')))
 
+    def test_get_status(self):
+        name = 'PH Victorial Hills 15A'
+        account = Account.objects.create(name=name)
+        due_date = date(2020, 1, 1)
+        debit = account.add_debit(Decimal('10000'), type=Debit.DOWN_PAYMENT_TYPE, due_date=due_date)
+        account.add_credit(Decimal('1000.00'), related_debit=debit)
+        account.add_credit(Decimal('1000.00'), related_debit=debit)
+        status = debit.get_status()
+        self.assertEqual(status, 'UNPAID')
 
-
+    def test_get_status_paid_late(self):
+        name = 'PH Victorial Hills 15A'
+        account = Account.objects.create(name=name)
+        due_date = date(2020, 1, 1)
+        debit = account.add_debit(Decimal('10000'), type=Debit.DOWN_PAYMENT_TYPE, due_date=due_date)
+        credit = account.add_credit(Decimal('10000.00'), related_debit=debit)
+        status = debit.get_status()
+        self.assertEqual(status, 'PAID LATE')

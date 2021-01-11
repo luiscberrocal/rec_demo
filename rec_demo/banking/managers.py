@@ -1,5 +1,8 @@
+from decimal import Decimal
+
 from django.db import models
 from django.db.models import OuterRef, Subquery, Sum, F
+from django.db.models.functions import Coalesce
 
 
 class AccountManager(models.Manager):
@@ -12,8 +15,8 @@ class AccountManager(models.Manager):
             account=OuterRef('pk')).values('account_id').annotate(sum_debits=Sum('amount'))
 
         balance = self.annotate(
-            credit_sum=Subquery(balance_credits.values('sum_credits')),
-            debit_sum=Subquery(balance_debits.values('sum_debits')),
+            credit_sum=Coalesce(Subquery(balance_credits.values('sum_credits')), Decimal('0.00') ),
+            debit_sum=Coalesce(Subquery(balance_debits.values('sum_debits')), Decimal('0.00')),
             balance=F('credit_sum') - F('debit_sum')
         ).values_list('name', 'balance')
         return balance
