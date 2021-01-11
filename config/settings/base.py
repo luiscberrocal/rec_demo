@@ -84,6 +84,7 @@ LOCAL_APPS = [
     "rec_demo.users.apps.UsersConfig",
     'rec_demo.core.apps.CoreConfig',
     'rec_demo.real_estate.apps.RealEstateConfig',
+   # 'rec_demo.banking.apps.BankingConfig',
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
