@@ -109,3 +109,22 @@ class TestAccount(TestCase):
         credit = account.add_credit(Decimal('10000.00'), related_debit=debit)
         status = debit.get_status()
         self.assertEqual(status, 'PAID LATE')
+
+    def test_get_status_paid_on_time(self):
+        name = 'PH Victorial Hills 15A'
+        account = Account.objects.create(name=name)
+        due_date = date(2020, 1, 1)
+        debit = account.add_debit(Decimal('1000.00'), type=Debit.DOWN_PAYMENT_TYPE, due_date=due_date)
+        credit = account.add_credit(Decimal('1000.00'), related_debit=debit, date=due_date)
+        status = debit.get_status()
+        self.assertEqual(status, 'PAID ON TIME')
+
+    def test_get_status_paid_late_multiple_credits(self):
+        name = 'PH Victorial Hills 15A'
+        account = Account.objects.create(name=name)
+        due_date = date(2020, 1, 1)
+        debit = account.add_debit(Decimal('1000.00'), type=Debit.DOWN_PAYMENT_TYPE, due_date=due_date)
+        credit = account.add_credit(Decimal('500.00'), related_debit=debit, date=due_date)
+        credit = account.add_credit(Decimal('500.00'), related_debit=debit)
+        status = debit.get_status()
+        self.assertEqual(status, 'PAID LATE')
