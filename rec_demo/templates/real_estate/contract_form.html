@@ -48,8 +48,20 @@
         <div id="real-estate-spaces">
             {% for key, real_estate_space_field in form.get_real_estate_space_fields %}
                 <div class="row gy-2 gx-3 align-items-center" id="real-estate-space-row-{{ key }}">
-                    <div class="form-group col-md-10 mb-0">
+                    <div class="form-group col-md-7 mb-0">
                         {{ real_estate_space_field|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-1 mb-0">
+                        <label for="real-estate-space-area-{{ key }}">{% trans 'Area' %}</label>
+                        <div class="area" area="0.00" id="real-estate-space-area-{{ key }}">
+                            0.00
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 mb-0">
+                        <label for="real-estate-space-price-{{ key }}">{% trans 'Price' %}</label>
+                        <div class="price" price="0.00" id="real-estate-space-price-{{ key }}">
+                            0.00
+                        </div>
                     </div>
                     <div class="col-md-2">
                         <a class="btn btn-primary delete-real-estate-space" href="#">{% trans 'Delete' %}</a>
@@ -75,9 +87,6 @@
 {% block javascript %}
     {{ block.super }}
     <script>
-
-    </script>
-    <script>
         $(document).ready(function () {
 
             function updateRealEstateSpaces(projectId) {
@@ -96,7 +105,7 @@
                                 if (this.contract != null){
                                     display = display + ' {% trans 'Unavailable' %}';
                                 };
-                                let option = `<option value="${this.id}">${display}</option>`;
+                                let option = `<option value="${this.id}" price="${this.price}" area="${this.area}">${display}</option>`;
                                 $("#id_real_estate_space_0").append(option);
                             });
                         }
@@ -119,15 +128,27 @@
                 let n = parseInt(row_id.split('-')[4]) + 1;
                 row_id = 'real-estate-space-row-' + n;
                 clone.attr('id', row_id);
-                //id_real_estate_space_0
-                let clientCombo = clone.children().eq(0).find('select');
-                clientCombo.attr('id', 'id_real_estate_space_' + n)
-                clientCombo.attr('name', 'real_estate_space_' + n)
+                //Space combobox
+                let spaceCombo = clone.children().eq(0).find('select');
+                spaceCombo.attr('id', 'id_real_estate_space_' + n)
+                spaceCombo.attr('name', 'real_estate_space_' + n)
 
-                let clientComboLabel = clone.children().eq(0).find('label');
-                clientComboLabel.attr('for', 'id_real_estate_space_' + n);
-                let divGroup = clientCombo.parent();
+                let spaceComboLabel = clone.children().eq(0).find('label');
+                spaceComboLabel.attr('for', 'id_real_estate_space_' + n);
+                // Area container
+                let areaDiv = clone.children().eq(1).find('.area');
+                areaDiv.attr('id', 'real-estate-space-area-' + n)
+                let areaDivLabel = clone.children().eq(1).find('label');
+                areaDivLabel.attr('for', 'real-estate-space-area-' + n)
+                // Price container
+                let priceDiv = clone.children().eq(2).find('.price');
+                priceDiv.attr('id', 'real-estate-space-price-' + n)
+                let priceDivLabel = clone.children().eq(2).find('label');
+                priceDivLabel.attr('for', 'real-estate-space-price-' + n)
+                // Div container
+                let divGroup = spaceCombo.parent();
                 divGroup.attr('id', 'div_id_real_estate_space_' + n)
+
                 clone.appendTo($("#real-estate-spaces"));
 
             });

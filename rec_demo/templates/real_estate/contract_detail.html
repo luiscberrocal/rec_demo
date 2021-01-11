@@ -71,7 +71,7 @@
                         <td>{{ real_estate_space.name }}</td>
                         <td>{{ real_estate_space.get_space_type_display }}</td>
                         <td>{{ real_estate_space.area }}</td>
-                        <td>{{ real_estate_space.price }}</td>
+                        <td class="price">{{ real_estate_space.price }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -80,5 +80,22 @@
     </div>
 
 
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function () {
+            let sum = 0.00;
+            $('.price').each(function () {
+                let price = $(this).text().replace(',','');
+                console.log('Price', price)
+                if (!isNaN(price) && price.length != 0) {
+                    sum += parseFloat(price);
+                }
+            });
+            console.log('Total', sum)
+        });
+    </script>
 
 {% endblock %}
