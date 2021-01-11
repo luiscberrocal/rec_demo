@@ -36,11 +36,17 @@
                 <td>{{ contract.created_by }}</td>
                 <td>
                     <a class="btn btn-primary btn-sm"
-                       href="{% url 'real_estate:detail-contract' contract.id %}">{% trans 'View' %}</a>
+                       href="{% url 'real_estate:detail-contract' contract.id %}">
+                        <i class="fas fa-eye" title="{% trans 'View' %}"></i>
+                    </a>
                     <a class="btn btn-primary btn-sm"
-                       href="{% url 'real_estate:update-contract' contract.id %}">{% trans 'Edit' %}</a>
+                       href="{% url 'real_estate:update-contract' contract.id %}">
+                         <i class="fas fa-edit" title="{% trans 'Edit' %}"></i>
+                    </a>
                     <a class="btn btn-danger btn-sm"
-                       href="{% url 'real_estate:delete-contract' contract.id %}">{% trans 'Delete' %}</a>
+                       href="{% url 'real_estate:delete-contract' contract.id %}">
+                         <i class="fas fa-trash-alt" title="{% trans 'Delete' %}"></i>
+                    </a>
                 </td>
             </tr>
         {% endfor %}
