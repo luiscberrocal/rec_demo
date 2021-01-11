@@ -67,6 +67,7 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
         field_name = self.REAL_ESTATE_SPACE_PATTERN.format(i)
         self.fields[field_name] = forms.ModelChoiceField(qs.select_related('project', 'created_by', 'modified_by'),
                                                          required=False, label=_('Real estate space'))
+        self.fields[field_name].widget.attrs.update({'class': 'real-estate-space'})
         if real_estate_space is not None:
             self.initial[field_name] = real_estate_space
         self.real_estate_space_fields[i].append(field_name)

@@ -66,6 +66,8 @@ class RealEstateSpace(Auditable, TimeStampedModel):
     class Meta:
         verbose_name = _('Real estate space')
         verbose_name_plural = _('Real estate spaces')
+        ordering = ('project__name', 'space_type', 'name')
+
 
 
 class Client(Auditable, Human):
@@ -133,6 +135,9 @@ class ContractClient(Auditable, TimeStampedModel):
     contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='contract_clients',
                                  on_delete=models.CASCADE)
     is_principal = models.BooleanField(_('Is principal'), default=True)
+
+    class Meta:
+        ordering = ('is_principal',)
 
 
 class ContractBroker(Auditable, TimeStampedModel):
