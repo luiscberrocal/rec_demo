@@ -1,13 +1,11 @@
 from django.db import models
 from django.db.models import OuterRef, Subquery, Sum, F
-from django.utils import timezone
-
-from .models import Credit, Debit
 
 
 class AccountManager(models.Manager):
 
     def get_with_balance(self):
+        from .models import Credit, Debit
         balance_credits = Credit.objects.filter(
             account=OuterRef('pk')).values('account_id').annotate(sum_credits=Sum('amount'))
         balance_debits = Debit.objects.filter(
@@ -19,7 +17,3 @@ class AccountManager(models.Manager):
             balance=F('credit_sum') - F('debit_sum')
         ).values_list('name', 'balance')
         return balance
-
-
-
-

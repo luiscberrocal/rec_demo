@@ -10,6 +10,7 @@ from ..core.models import Auditable
 
 class Account(Auditable, TimeStampedModel):
     name = models.CharField(max_length=32)
+    objects = AccountManager()
 
     def __str__(self):
         return self.name
@@ -29,7 +30,6 @@ class Account(Auditable, TimeStampedModel):
         today = timezone.now().date()
         debit_data['date'] = kwargs.get('date', today)
         debit_data['comments'] = kwargs.get('comments', None)
-        debit_data['related_debit'] = kwargs.get('related_debit', None)
         debit_data['type'] = kwargs.get('type', Debit.OTHER_TYPE)
         debit_data['account'] = self
         return Debit.objects.create(**debit_data)
