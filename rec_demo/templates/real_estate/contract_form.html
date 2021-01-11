@@ -186,6 +186,22 @@
                 console.log('Project ', project);
                 updateRealEstateSpaces(project);
             })
+            $('.real-estate-space').on('change', function (){
+                let optionSelected = $(this).find("option:selected");
+                let id = $(this).attr('id');
+                let area = optionSelected.attr('area');
+                let price =optionSelected.attr('price');
+
+                let n = parseInt(id.split('_')[4]);
+                console.log('Id', id, 'area', area, 'Price', price, n);
+                $('#real-estate-space-price-'+n).html(price);
+                $('#real-estate-space-price-'+n).attr('price', price);
+
+                $('#real-estate-space-area-'+n).html(area);
+                $('#real-estate-space-area-'+n).attr('area', area);
+
+
+            });
         });
     </script>
 
