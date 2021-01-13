@@ -13,14 +13,17 @@
     <form class="form-horizontal" method="post" action="">
         {% csrf_token %}
         <div class="form-row">
-            <div class="form-group col-md-4 mb-0">
+            <div class="form-group col-md-2 mb-0">
                 {{ form.date|as_crispy_field }}
             </div>
-            <div class="form-group col-md-4 mb-0">
+            <div class="form-group col-md-3 mb-0">
                 {{ form.project|as_crispy_field }}
             </div>
             <div class="form-group col-md-4 mb-0">
                 {{ form.broker|as_crispy_field }}
+            </div>
+             <div class="form-group col-md-3 mb-0">
+                {{ form.sales_type|as_crispy_field }}
             </div>
         </div>
         <h3 class="form-subtitle">{% trans 'Clients' %}</h3>
@@ -72,7 +75,7 @@
         <div id="total">
             <div class="row gy-2 gx-3 align-items-center" id="total-amount-div">
                 <div class="form-group col-md-7 mb-0">
-                    Total: {{ form.total_amount |as_crispy_field}}
+                    Total: {{ form.total_amount |as_crispy_field }}
                 </div>
             </div>
         </div>
@@ -95,6 +98,18 @@
     {{ block.super }}
     <script>
         $(document).ready(function () {
+            function calculateTotal() {
+                let sum = 0.00;
+                $('.price').each(function () {
+                    let price = $(this).text().replace(',', '');
+                    console.log('Price', price)
+                    if (!isNaN(price) && price.length != 0) {
+                        sum += parseFloat(price);
+                    }
+                });
+                console.log('Total', sum)
+                $('#id_total_amount').val(sum)
+            }
 
             function updateRealEstateSpaces(projectId) {
                 let url_mask = "{% url 'real_estate-api:list-real-estate-space-by-project' 12345 %}"
@@ -128,6 +143,7 @@
             $('.delete-real-estate-space').on('click', function () {
                 //console.log('Removing row id:', $(this).parent().parent().attr('id'));
                 $(this).parent().parent().remove();
+                calculateTotal();
             });
             $('#add-real-estate-space').on('click', function () {
                 let clone = $("#real-estate-spaces div.row").last().clone(true);
@@ -209,6 +225,7 @@
 
                 $('#real-estate-space-area-' + n).html(area);
                 $('#real-estate-space-area-' + n).attr('area', area);
+                calculateTotal();
 
 
             });

@@ -12,7 +12,7 @@
             <th>{% trans 'Project' %}</th>
             <th>{% trans 'Clients' %}</th>
             <th>{% trans 'Broker' %}</th>
-            <th>{% trans 'Created by' %}</th>
+            <th>{% trans 'Total amount' %}</th>
             <th>{% trans 'Actions' %}</th>
         </tr>
         </thead>
@@ -33,7 +33,7 @@
                 {% endfor %}
                 </td>
                 <td>{{ contract.broker }}</td>
-                <td>{{ contract.created_by }}</td>
+                <td>{{ contract.total_amount }}</td>
                 <td>
                     <a class="btn btn-primary btn-sm"
                        href="{% url 'real_estate:detail-contract' contract.id %}">
