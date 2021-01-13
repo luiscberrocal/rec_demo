@@ -22,7 +22,7 @@
             <div class="form-group col-md-4 mb-0">
                 {{ form.broker|as_crispy_field }}
             </div>
-             <div class="form-group col-md-3 mb-0">
+            <div class="form-group col-md-3 mb-0">
                 {{ form.sales_type|as_crispy_field }}
             </div>
         </div>
@@ -98,6 +98,8 @@
     {{ block.super }}
     <script>
         $(document).ready(function () {
+            $('.real-estate-space').select2();
+
             function calculateTotal() {
                 let sum = 0.00;
                 $('.price').each(function () {
@@ -146,7 +148,16 @@
                 calculateTotal();
             });
             $('#add-real-estate-space').on('click', function () {
-                let clone = $("#real-estate-spaces div.row").last().clone(true);
+                let lastRow = $("#real-estate-spaces div.row").last();
+                if (lastRow.find('select').data('select2')) {
+                    lastRow.find('select').select2('destroy');
+                    {#$('.selectpicker').removeAttr('data-live-search')#}
+                    {#    .removeAttr('data-select2-id')#}
+                    {#    .removeAttr('aria-hidden')#}
+                    {#    .removeAttr('tabindex');#}
+                };
+
+                let clone = lastRow.clone(true);
                 let row_id = clone.attr('id');
                 console.log('Row id', row_id);
                 let n = parseInt(row_id.split('-')[4]) + 1;
@@ -154,9 +165,12 @@
                 clone.attr('id', row_id);
                 //Space combobox
                 let spaceCombo = clone.children().eq(0).find('select');
-                spaceCombo.attr('id', 'id_real_estate_space_' + n)
-                spaceCombo.attr('name', 'real_estate_space_' + n)
+                //spaceCombo.select2('destroy');
+                spaceCombo.attr('id', 'id_real_estate_space_' + n);
+                spaceCombo.attr('name', 'real_estate_space_' + n);
+                //spaceCombo.width('100%')
 
+                //data-select2-id="select2-data-id_real_estate_space_0"
                 let spaceComboLabel = clone.children().eq(0).find('label');
                 spaceComboLabel.attr('for', 'id_real_estate_space_' + n);
                 // Area container
@@ -176,6 +190,8 @@
                 divGroup.attr('id', 'div_id_real_estate_space_' + n)
 
                 clone.appendTo($("#real-estate-spaces"));
+                spaceCombo.select2()
+                lastRow.children().eq(0).find('select').select2();
 
             });
             $('#add-client').on('click', function () {
