@@ -69,7 +69,6 @@ class RealEstateSpace(Auditable, TimeStampedModel):
         ordering = ('project__name', 'space_type', 'name')
 
 
-
 class Client(Auditable, Human):
     NATURAL_TYPE = 'N'  # Natural
     JURIDICAL_TYPE = 'J'  # Juridical
@@ -114,12 +113,25 @@ class Broker(Auditable, Human):
         verbose_name_plural = _('Brokers')
 
 
+class SalesType(Auditable, TimeStampedModel):
+    name = models.CharField(_('Name'), max_length=60)
+    short_name = models.CharField(_('Short name'), max_length=20, unique=True)
+    requires_loan = models.BooleanField(_('Requires loan'), default=False)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Contract(Auditable, TimeStampedModel):
     date = models.DateField(_('Date'))
     project = models.ForeignKey(RealEstateProject, verbose_name=_('Project'), related_name='contracts',
                                 on_delete=models.CASCADE)
     broker = models.ForeignKey(Broker, verbose_name=_('Broker'), related_name='contracts',
                                on_delete=models.SET_NULL, null=True, blank=True)
+    sales_type = models.ForeignKey(SalesType, verbose_name=_('Sales type'), related_name='contracts',
+                                   on_delete=models.SET_NULL, null=True, blank=True)
+    total_amount = models.DecimalField(_('Total amount'), max_digits=12, decimal_places=2, default=Decimal('0.00'))
+    down_payment = models.DecimalField(_('Down payment'), max_digits=12, decimal_places=2, default=Decimal('0.00'))
 
     class Meta:
         verbose_name = _('Contract')
@@ -141,6 +153,8 @@ class ContractClient(Auditable, TimeStampedModel):
 
 
 class ContractBroker(Auditable, TimeStampedModel):
-    broker = models.ForeignKey(Broker, verbose_name=_('Broker'), related_name='contract_brokers', on_delete=models.CASCADE)
-    contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='contract_brokers', on_delete=models.CASCADE)
+    broker = models.ForeignKey(Broker, verbose_name=_('Broker'), related_name='contract_brokers',
+                               on_delete=models.CASCADE)
+    contract = models.ForeignKey(Contract, verbose_name=_('Contract'), related_name='contract_brokers',
+                                 on_delete=models.CASCADE)
     is_active = models.BooleanField(_('Is active'), default=True)

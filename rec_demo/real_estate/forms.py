@@ -29,10 +29,11 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
         super(ContractForm, self).__init__(*args, **kwargs)
         self._build_client_fields(extras, kwargs)
         self._build_real_estate_fields(extras, kwargs)
+        self.fields['total_amount'].widget.attrs['readonly'] = 'readonly'
 
     class Meta:
         model = Contract
-        fields = ('date', 'project', 'broker')
+        fields = ('date', 'project', 'broker', 'total_amount', 'sales_type')
 
     def _build_real_estate_fields(self, extras, kwargs):
         self.real_estate_space_fields = dict()

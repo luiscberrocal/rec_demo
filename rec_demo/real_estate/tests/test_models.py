@@ -259,7 +259,7 @@ class TestCaseContract(TestCase):
         """
         contract = ContractFactory.create()
         contract_dict = model_to_dict(contract)
-        self.assertEqual(len(contract_dict.keys()), 6)
+        self.assertEqual(len(contract_dict.keys()), 9)
 
     def test_attribute_content(self):
         """
