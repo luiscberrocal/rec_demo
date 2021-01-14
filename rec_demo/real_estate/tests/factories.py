@@ -118,7 +118,7 @@ class ClientFactory(DjangoModelFactory):
     # Field type ImageField for field picture is not currently supported
     date_of_birth = LazyAttribute(
         lambda x: faker.date_of_birth(tzinfo=timezone(settings.TIME_ZONE), minimum_age=18, maximum_age=90))
-    religion = Iterator(['Catolico', 'Protestante', 'Judio', ])
+    #religion = Iterator(['Catolico', 'Protestante', 'Judio', ])
     client_type = Iterator((('N', 'Natural person'), ('J', 'Juridical person')), getter=lambda x: x[0])
 
     created_by = SubFactory(UserFactory)
