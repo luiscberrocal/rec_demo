@@ -65,6 +65,7 @@ class RealEstateProjectFactory(DjangoModelFactory):
         space_list = list()
 
         for floor in range(1, floors + 1):
+            floor_increment = Decimal('1.0')
             for i in range(apartment_per_floor):
                 space_data = dict()
                 space_data['project'] = project
@@ -72,9 +73,10 @@ class RealEstateProjectFactory(DjangoModelFactory):
                 space_data['created_by'] = project.created_by
                 space_data['name'] = f'{floor}-{apartment_letters[i]}'
                 space_data['area'] = areas[i]
-                space_data['price'] = areas[i] * price_per_sq_meter
+                space_data['price'] = areas[i] * price_per_sq_meter *floor_increment
                 real_estate_space = RealEstateSpace(**space_data)
                 space_list.append(real_estate_space)
+                floor_increment += Decimal('0.03')
         RealEstateSpace.objects.bulk_create(space_list)
         return project
 
@@ -116,7 +118,7 @@ class ClientFactory(DjangoModelFactory):
     # Field type ImageField for field picture is not currently supported
     date_of_birth = LazyAttribute(
         lambda x: faker.date_of_birth(tzinfo=timezone(settings.TIME_ZONE), minimum_age=18, maximum_age=90))
-    religion = Iterator(['Catolico', 'Protestante', 'Judio', ])
+    #religion = Iterator(['Catolico', 'Protestante', 'Judio', ])
     client_type = Iterator((('N', 'Natural person'), ('J', 'Juridical person')), getter=lambda x: x[0])
 
     created_by = SubFactory(UserFactory)

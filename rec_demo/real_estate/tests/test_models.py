@@ -159,7 +159,7 @@ class TestCaseClient(TestCase):
         """
         client = ClientFactory.create()
         client_dict = model_to_dict(client)
-        self.assertEqual(len(client_dict.keys()), 15)
+        self.assertEqual(len(client_dict.keys()), 14)
 
     def test_attribute_content(self):
         """
@@ -178,7 +178,6 @@ class TestCaseClient(TestCase):
         self.assertIsNotNone(client.country_for_id)
         self.assertIsNotNone(client.picture)
         self.assertIsNotNone(client.date_of_birth)
-        self.assertIsNotNone(client.religion)
         self.assertIsNotNone(client.created_by)
         self.assertIsNotNone(client.modified_by)
         self.assertIsNotNone(client.full_name)
@@ -209,7 +208,7 @@ class TestCaseBroker(TestCase):
         """
         broker = BrokerFactory.create()
         broker_dict = model_to_dict(broker)
-        self.assertEqual(len(broker_dict.keys()), 15)
+        self.assertEqual(len(broker_dict.keys()), 14)
 
     def test_attribute_content(self):
         """
@@ -228,7 +227,6 @@ class TestCaseBroker(TestCase):
         self.assertIsNotNone(broker.country_for_id)
         self.assertIsNotNone(broker.picture)
         self.assertIsNotNone(broker.date_of_birth)
-        self.assertIsNotNone(broker.religion)
         self.assertIsNotNone(broker.created_by)
         self.assertIsNotNone(broker.modified_by)
         self.assertIsNotNone(broker.full_name)
@@ -259,7 +257,7 @@ class TestCaseContract(TestCase):
         """
         contract = ContractFactory.create()
         contract_dict = model_to_dict(contract)
-        self.assertEqual(len(contract_dict.keys()), 6)
+        self.assertEqual(len(contract_dict.keys()), 9)
 
     def test_attribute_content(self):
         """

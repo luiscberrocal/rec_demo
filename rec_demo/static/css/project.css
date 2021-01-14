@@ -29,3 +29,18 @@
 .is-principal {
     font-weight: bolder;
 }
+
+.detail-attribute {
+    font-weight: bolder;
+    font-size: larger;
+}
+
+.select2-selection__rendered {
+    line-height: calc(1.5em + .75rem) !important;
+}
+.select2-container .select2-selection--single {
+    height: calc(1.5em + .75rem + 2px);!important;
+}
+.select2-selection__arrow {
+    height: calc(1.5em + .75rem + 1px);!important;
+}
