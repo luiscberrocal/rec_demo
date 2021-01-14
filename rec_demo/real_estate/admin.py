@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 
 from .models import Company, RealEstateProject, RealEstateSpace, Client, Broker, Contract, ContractClient, \
     ContractBroker
@@ -7,17 +8,8 @@ from ..core.mixins import AdminAuditableMixin
 
 
 @admin.register(Company)
-class CompanyAdmin(AdminAuditableMixin, admin.ModelAdmin):
-    list_display = (
-        'id',
-        'name',
-        'short_name',
-        'logo',
-        'created',
-        'modified',
-        'created_by',
-        'modified_by',
-    )
+class CompanyAdmin(AdminAuditableMixin, ImportExportModelAdmin):
+    list_display = ('id', 'name', 'short_name', 'logo', 'created', 'modified', 'created_by', 'modified_by',)
     list_filter = ('created', 'modified', 'created_by', 'modified_by')
     search_fields = ('name',)
 
@@ -43,6 +35,7 @@ class RealEstateProjectAdmin(AdminAuditableMixin, admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(RealEstateProjectAdmin, self).get_queryset(request)
         return qs.select_related('company', 'created_by', 'modified_by')
+
 
 @admin.register(RealEstateSpace)
 class RealEstateSpaceAdmin(AdminAuditableMixin, admin.ModelAdmin):
@@ -71,26 +64,10 @@ class RealEstateSpaceAdmin(AdminAuditableMixin, admin.ModelAdmin):
 
 
 @admin.register(Client)
-class ClientAdmin(AdminAuditableMixin, admin.ModelAdmin):
-    list_display = (
-        'id',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'sex',
-        'national_id',
-        'national_id_type',
-        'country_for_id',
-        'picture',
-        'date_of_birth',
-        'religion',
-        'full_name',
-        'client_type',
-        'created',
-        'modified',
-        'created_by',
-        'modified_by',
-    )
+class ClientAdmin(AdminAuditableMixin, ImportExportModelAdmin):
+    list_display = ('id', 'first_name', 'middle_name', 'last_name', 'sex', 'national_id', 'national_id_type',
+                    'country_for_id', 'picture', 'date_of_birth', 'full_name', 'client_type', 'created', 'modified',
+                    'created_by', 'modified_by',)
     list_filter = (
         'created',
         'modified',
@@ -114,7 +91,6 @@ class BrokerAdmin(AdminAuditableMixin, admin.ModelAdmin):
         'country_for_id',
         'picture',
         'date_of_birth',
-        'religion',
         'full_name',
         'client_type',
         'created',
@@ -154,7 +130,7 @@ class ContractAdmin(AdminAuditableMixin, admin.ModelAdmin):
         'modified_by',
         'date',
     )
-    #inlines = (RealEstateSpaceInline,)
+    # inlines = (RealEstateSpaceInline,)
 
 
 @admin.register(ContractClient)

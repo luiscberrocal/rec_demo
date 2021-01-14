@@ -35,7 +35,7 @@ class Human(TimeStampedModel):
     picture = models.ImageField(_('Picture'), null=True, blank=True)
     date_of_birth = models.DateField(_('Date of birth'), null=True, blank=True)
 
-    religion = models.CharField(_('Religion'), max_length=60, null=True, blank=True)
+    #religion = models.CharField(_('Religion'), max_length=60, null=True, blank=True)
 
     @property
     def age(self):
