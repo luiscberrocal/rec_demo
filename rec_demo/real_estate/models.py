@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 from model_utils.models import TimeStampedModel
 
+from .exceptions import RealEstateException
 from ..banking.models import Account
 from ..core.models import Auditable, Human
 
@@ -142,6 +143,27 @@ class Contract(Auditable, TimeStampedModel):
 
     def __str__(self):
         return f'{self.project.name} ({self.id})'
+
+    def add_space(self, real_estate_space, **kwargs):
+        raise_error = kwargs.get('raise_error', True)
+        if real_estate_space.project.id == self.project.id:
+            if real_estate_space.contract is None:
+                real_estate_space.contract = self
+                real_estate_space.save()
+            else:
+                if raise_error:
+                    msg = _(f'Real estate space already has a contract {real_estate_space.contract.id}')
+                    raise RealEstateException(msg)
+        else:
+            if raise_error:
+                msg = _(f'Contract project and space project are not the same')
+                raise RealEstateException(msg)
+
+    def add_client(self, client, **kwargs):
+        raise_error = kwargs.get('raise_error', True)
+        count = ContractClient.objects.filter(client=client, contract=self).count()
+        if count == 0:
+            return ContractClient.objects.create(client=client, contract=self)
 
 
 class ContractClient(Auditable, TimeStampedModel):

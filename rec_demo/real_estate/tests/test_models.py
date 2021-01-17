@@ -244,8 +244,9 @@ class TestCaseContract(TestCase):
         cls.project = RealEstateProjectFactory.create_with_spaces(6, 4,
                                                                   areas=[Decimal('100.00'), Decimal('100.00'),
                                                                          Decimal('75.00'), Decimal('75.00')])
-        cls.client = ClientFactory.create()
-        cls.broker = BrokerFactory.create()
+        cls.user = cls.project.created_by
+        cls.contract_client = ClientFactory.create(created_by=cls.user)
+        cls.broker = BrokerFactory.create(created_by=cls.user)
 
 
     def test_create(self):
@@ -287,7 +288,13 @@ class TestCaseContract(TestCase):
 
     def test_create_with_account(self):
         real_estate_space = self.project.real_estate_spaces.first()
-        contract_data = dict()
+        contract = ContractFactory(project=real_estate_space.project,
+                                   created_by=self.user, broker=self.broker)
+        self.assertEqual(Contract.objects.count(), 1)
+        contract.add_space(real_estate_space)
+        contract.add_client(self.contract_client)
+        self.assertEqual(contract.real_estate_spaces.count(), 1)
+        self.assertEqual(contract.contract_clients.count(), 1)
 
 
 
