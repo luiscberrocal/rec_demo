@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.forms.models import model_to_dict
 from django.test import TestCase
 
@@ -5,6 +7,9 @@ from .factories import CompanyFactory, RealEstateProjectFactory, RealEstateSpace
     ContractFactory, ContractClientFactory, ContractBrokerFactory
 from ..models import Company, RealEstateProject, RealEstateSpace, Client, Broker, Contract, ContractClient, \
     ContractBroker
+from ..utils import get_or_create_sales_types
+from ...banking.models import Account, TransactionType
+from ...banking.utils import get_or_create_transaction_types
 
 
 class TestCaseCompany(TestCase):
@@ -230,10 +235,21 @@ class TestCaseBroker(TestCase):
         self.assertIsNotNone(broker.created_by)
         self.assertIsNotNone(broker.modified_by)
         self.assertIsNotNone(broker.full_name)
-        self.assertIsNotNone(broker.client_type)
+        self.assertIsNotNone(broker.broker_type)
 
 
 class TestCaseContract(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        get_or_create_sales_types()
+        get_or_create_transaction_types()
+
+        cls.project = RealEstateProjectFactory.create_with_spaces(6, 4,
+                                                                  areas=[Decimal('100.00'), Decimal('100.00'),
+                                                                         Decimal('75.00'), Decimal('75.00')])
+        cls.user = cls.project.created_by
+        cls.contract_client = ClientFactory.create(created_by=cls.user)
+        cls.broker = BrokerFactory.create(created_by=cls.user)
 
     def test_create(self):
         """
@@ -257,7 +273,7 @@ class TestCaseContract(TestCase):
         """
         contract = ContractFactory.create()
         contract_dict = model_to_dict(contract)
-        self.assertEqual(len(contract_dict.keys()), 9)
+        self.assertEqual(len(contract_dict.keys()), 10)
 
     def test_attribute_content(self):
         """
@@ -271,6 +287,35 @@ class TestCaseContract(TestCase):
         self.assertIsNotNone(contract.modified_by)
         self.assertIsNotNone(contract.date)
         self.assertIsNotNone(contract.project)
+
+    def test_create_with_account(self):
+        real_estate_space = self.project.real_estate_spaces.first()
+        contract = ContractFactory(project=real_estate_space.project,
+                                   created_by=self.user, broker=self.broker)
+        self.assertEqual(Contract.objects.count(), 1)
+        contract.add_space(real_estate_space)
+        contract.add_client(self.contract_client)
+        self.assertEqual(contract.real_estate_spaces.count(), 1)
+        self.assertEqual(contract.contract_clients.count(), 1)
+        total = contract.calculate_total()
+        self.assertEqual(real_estate_space.price, total)
+        print(f'>>>> Total {total}')
+        account = Account.objects.create(name=f'Contract {contract.id}')  # Project: {contract.project.name}')
+        contract.account = account
+        contract.total_amount = total
+        contract.down_payment = Decimal('12000.00')
+        contract.save()
+        separation_fee = Decimal('500.00')
+        contract.account.add_debit(separation_fee,
+                                   TransactionType.objects.get(short_name='DOWN'))
+        contract.account.add_debit(separation_fee,
+                                   TransactionType.objects.get(short_name='DOWN'))
+        contract.account.add_debit(Decimal('11000.00'),
+                                   TransactionType.objects.get(short_name='DOWN'))
+        contract.account.add_debit(contract.total_amount - contract.down_payment,
+                                   TransactionType.objects.get(short_name='LOAN'))
+        balance = Account.objects.get_with_balance().get(pk=contract.account.id)
+        self.assertEqual(balance[1], Decimal('-120000'))
 
 
 class TestCaseContractClient(TestCase):

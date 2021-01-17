@@ -41,5 +41,12 @@ https://riptutorial.com/django/example/21255/use-django-filter-with-cbv
 
 Forms Select2
 ==============
-
+This did not work for me
 https://django-select2.readthedocs.io/en/latest/
+
+
+SoftDelete
+-----------
+
+
+https://adriennedomingus.medium.com/soft-deletion-in-django-e4882581c340

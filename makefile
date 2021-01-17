@@ -18,7 +18,7 @@ help:
 clean: clean-media clean-output
 
 clean-output:
-	rm -f output/*
+	rm -rf output/*
 
 clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
