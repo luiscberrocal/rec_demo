@@ -63,9 +63,8 @@ class RealEstateProjectFactory(DjangoModelFactory):
 
         project = cls.create(**kwargs)
         space_list = list()
-
+        floor_increment = Decimal('1.0')
         for floor in range(1, floors + 1):
-            floor_increment = Decimal('1.0')
             for i in range(apartment_per_floor):
                 space_data = dict()
                 space_data['project'] = project
@@ -76,7 +75,7 @@ class RealEstateProjectFactory(DjangoModelFactory):
                 space_data['price'] = areas[i] * price_per_sq_meter *floor_increment
                 real_estate_space = RealEstateSpace(**space_data)
                 space_list.append(real_estate_space)
-                floor_increment += Decimal('0.03')
+            floor_increment += Decimal('0.03')
         RealEstateSpace.objects.bulk_create(space_list)
         return project
 
@@ -166,9 +165,52 @@ class ClientFactory(DjangoModelFactory):
         return client_dict
 
 
-class BrokerFactory(ClientFactory):
+class BrokerFactory(DjangoModelFactory):
+
     class Meta:
         model = Broker
+
+    # middle_name = LazyAttribute(lambda x: FuzzyText(length=60, chars=string.digits).fuzz())
+    sex = Iterator((('M', 'Male'), ('F', 'Female')), getter=lambda x: x[0])
+    national_id = LazyAttribute(lambda x: FuzzyText(length=50, chars=string.digits).fuzz())
+    national_id_type = Iterator((('NATIONAL_ID', 'National Id'), ('DRIVERS_LICENSE', 'Drivers License'),
+                                 ('PASSPORT', 'Passport'), ('OTHER', 'Other')), getter=lambda x: x[0])
+    country_for_id = Iterator(['PA', 'US', 'GB', ])
+    # Field type ImageField for field picture is not currently supported
+    date_of_birth = LazyAttribute(
+        lambda x: faker.date_of_birth(tzinfo=timezone(settings.TIME_ZONE), minimum_age=18, maximum_age=90))
+    # religion = Iterator(['Catolico', 'Protestante', 'Judio', ])
+    broker_type = Iterator((('N', 'Natural person'), ('J', 'Juridical person')), getter=lambda x: x[0])
+
+    created_by = SubFactory(UserFactory)
+
+    @lazy_attribute
+    def modified_by(self):
+        return self.created_by
+
+    @lazy_attribute
+    def first_name(self):
+        if self.broker_type == 'N':
+            if self.sex == 'M':
+                return faker.first_name_male()
+            else:
+                return faker.first_name_female()
+        else:
+            return None
+
+    @lazy_attribute
+    def last_name(self):
+        if self.broker_type == 'N':
+            return faker.last_name()
+        else:
+            return None
+
+    @lazy_attribute
+    def full_name(self):
+        if self.broker_type == 'N':
+            return f'{self.last_name}, {self.first_name}'
+        else:
+            return faker.company()
 
 
 class ContractFactory(DjangoModelFactory):

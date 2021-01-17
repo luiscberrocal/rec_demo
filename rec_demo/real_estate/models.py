@@ -1,10 +1,13 @@
 from decimal import Decimal
 
 from django.db import models
+from django.db.models import Sum
 from django.utils.translation import gettext_lazy as _
 # Create your models here.
 from model_utils.models import TimeStampedModel
 
+from .exceptions import RealEstateException
+from ..banking.models import Account
 from ..core.models import Auditable, Human
 
 
@@ -99,11 +102,11 @@ class Broker(Auditable, Human):
         (JURIDICAL_TYPE, _('Juridical person')),
     )
     full_name = models.CharField(_('Full name'), max_length=120, null=True, blank=True)
-    client_type = models.CharField(_('Client type'), max_length=1, choices=CLIENT_TYPE_CHOICES,
+    broker_type = models.CharField(_('Broker type'), max_length=1, choices=CLIENT_TYPE_CHOICES,
                                    default=NATURAL_TYPE)
 
     def __str__(self):
-        if self.client_type == Client.NATURAL_TYPE:
+        if self.broker_type == Client.NATURAL_TYPE:
             return f'{self.last_name}, {self.first_name}'
         else:
             return f'{self.full_name}'
@@ -132,6 +135,8 @@ class Contract(Auditable, TimeStampedModel):
                                    on_delete=models.SET_NULL, null=True, blank=True)
     total_amount = models.DecimalField(_('Total amount'), max_digits=12, decimal_places=2, default=Decimal('0.00'))
     down_payment = models.DecimalField(_('Down payment'), max_digits=12, decimal_places=2, default=Decimal('0.00'))
+    account = models.OneToOneField(Account, verbose_name=_('Account'), related_name='contract',
+                                   on_delete=models.PROTECT, null=True, blank=True)
 
     class Meta:
         verbose_name = _('Contract')
@@ -139,6 +144,44 @@ class Contract(Auditable, TimeStampedModel):
 
     def __str__(self):
         return f'{self.project.name} ({self.id})'
+
+    def add_space(self, real_estate_space, **kwargs):
+        raise_error = kwargs.get('raise_error', True)
+        if real_estate_space.project.id == self.project.id:
+            if real_estate_space.contract is None:
+                real_estate_space.contract = self
+                real_estate_space.save()
+            else:
+                if raise_error:
+                    msg = _(f'Real estate space already has a contract {real_estate_space.contract.id}')
+                    raise RealEstateException(msg)
+        else:
+            if raise_error:
+                msg = _(f'Contract project and space project are not the same')
+                raise RealEstateException(msg)
+
+    def add_client(self, client, **kwargs):
+        raise_error = kwargs.get('raise_error', True)
+        count = ContractClient.objects.filter(client=client, contract=self).count()
+        if count == 0:
+            return ContractClient.objects.create(client=client, contract=self)
+
+    def calculate_total(self, **kwargs):
+        assign = kwargs.get('assign', False)
+        save = kwargs.get('save', False)
+        check = kwargs.get('check', False)
+        current_total = self.real_estate_spaces.aggregate(Sum('price'))
+        total = current_total['price__sum']
+        if check and total != self.total_amount:
+            msg = _('The sum of prices in the contract is not the same as the total_amount')
+            raise RealEstateException(msg)
+        if assign:
+            self.total_amount = total
+        if save and assign:
+            self.save()
+        return total
+
+
 
 
 class ContractClient(Auditable, TimeStampedModel):
