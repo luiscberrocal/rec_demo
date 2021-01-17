@@ -84,7 +84,7 @@ LOCAL_APPS = [
     "rec_demo.users.apps.UsersConfig",
     'rec_demo.core.apps.CoreConfig',
     'rec_demo.real_estate.apps.RealEstateConfig',
-   # 'rec_demo.banking.apps.BankingConfig',
+    'rec_demo.banking.apps.BankingConfig',
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -325,7 +325,7 @@ ENVIRONMENT_NAME = env('ENVIRONMENT_NAME', default='DEVELOPMENT')
 ENVIRONMENT_ADMIN_CSS = env('ENVIRONMENT_ADMIN_CSS', default='css/admin-dev.css')
 
 USE_THOUSAND_SEPARATOR = True
-es_formats.DATETIME_FORMAT  = 'd-M-Y H:m:s'
+es_formats.DATETIME_FORMAT = 'd-M-Y H:m:s'
 # es_formats.NUMBER_GROUPING
 # es_formats.DATETIME_INPUT_FORMATS
 # es_formats.SHORT_DATETIME_FORMAT

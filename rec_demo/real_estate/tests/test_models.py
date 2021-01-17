@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.forms.models import model_to_dict
 from django.test import TestCase
 
@@ -5,6 +7,7 @@ from .factories import CompanyFactory, RealEstateProjectFactory, RealEstateSpace
     ContractFactory, ContractClientFactory, ContractBrokerFactory
 from ..models import Company, RealEstateProject, RealEstateSpace, Client, Broker, Contract, ContractClient, \
     ContractBroker
+from ..utils import get_or_create_sales_types
 
 
 class TestCaseCompany(TestCase):
@@ -230,10 +233,20 @@ class TestCaseBroker(TestCase):
         self.assertIsNotNone(broker.created_by)
         self.assertIsNotNone(broker.modified_by)
         self.assertIsNotNone(broker.full_name)
-        self.assertIsNotNone(broker.client_type)
+        self.assertIsNotNone(broker.broker_type)
 
 
 class TestCaseContract(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        get_or_create_sales_types()
+
+        cls.project = RealEstateProjectFactory.create_with_spaces(6, 4,
+                                                                  areas=[Decimal('100.00'), Decimal('100.00'),
+                                                                         Decimal('75.00'), Decimal('75.00')])
+        cls.client = ClientFactory.create()
+        cls.broker = BrokerFactory.create()
+
 
     def test_create(self):
         """
@@ -257,7 +270,7 @@ class TestCaseContract(TestCase):
         """
         contract = ContractFactory.create()
         contract_dict = model_to_dict(contract)
-        self.assertEqual(len(contract_dict.keys()), 9)
+        self.assertEqual(len(contract_dict.keys()), 10)
 
     def test_attribute_content(self):
         """
@@ -271,6 +284,12 @@ class TestCaseContract(TestCase):
         self.assertIsNotNone(contract.modified_by)
         self.assertIsNotNone(contract.date)
         self.assertIsNotNone(contract.project)
+
+    def test_create_with_account(self):
+        real_estate_space = self.project.real_estate_spaces.first()
+        contract_data = dict()
+
+
 
 
 class TestCaseContractClient(TestCase):

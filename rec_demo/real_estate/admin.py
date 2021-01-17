@@ -39,23 +39,9 @@ class RealEstateProjectAdmin(AdminAuditableMixin, admin.ModelAdmin):
 
 @admin.register(RealEstateSpace)
 class RealEstateSpaceAdmin(AdminAuditableMixin, admin.ModelAdmin):
-    list_display = (
-        'id',
-        'project',
-        'name',
-        'space_type',
-        'area',
-        'price',
-        'contract',
-        'created',
-        'modified',
-        'created_by',
-        'modified_by',
-    )
-    list_filter = (
-        'project',
-        'contract',
-    )
+    list_display = ('id', 'project', 'name', 'space_type', 'area', 'price', 'contract', 'created', 'modified',
+                    'created_by', 'modified_by',)
+    list_filter = ('project', 'contract',)
     search_fields = ('name',)
 
     def get_queryset(self, request):
@@ -81,22 +67,8 @@ class ClientAdmin(AdminAuditableMixin, ImportExportModelAdmin):
 @admin.register(Broker)
 class BrokerAdmin(AdminAuditableMixin, admin.ModelAdmin):
     list_display = (
-        'id',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'sex',
-        'national_id',
-        'national_id_type',
-        'country_for_id',
-        'picture',
-        'date_of_birth',
-        'full_name',
-        'client_type',
-        'created',
-        'modified',
-        'created_by',
-        'modified_by',
+        'id', 'first_name', 'middle_name', 'last_name', 'sex', 'national_id', 'national_id_type', 'country_for_id',
+        'picture', 'date_of_birth', 'full_name', 'broker_type', 'created', 'modified', 'created_by', 'modified_by',
     )
     list_filter = (
         'created',
@@ -110,51 +82,15 @@ class BrokerAdmin(AdminAuditableMixin, admin.ModelAdmin):
 
 @admin.register(Contract)
 class ContractAdmin(AdminAuditableMixin, admin.ModelAdmin):
-    list_display = (
-        'id',
-        'date',
-        'project',
-        'broker',
-        'created',
-        'modified',
-        'created_by',
-        'modified_by',
-
-    )
-    list_filter = (
-        'broker',
-        'project',
-        'created',
-        'modified',
-        'created_by',
-        'modified_by',
-        'date',
-    )
+    list_display = ('id', 'date', 'project', 'broker', 'created', 'modified', 'created_by', 'modified_by',)
+    list_filter = ('broker', 'project', 'created', 'modified', 'created_by', 'modified_by', 'date',)
     # inlines = (RealEstateSpaceInline,)
 
 
 @admin.register(ContractClient)
 class ContractClientAdmin(AdminAuditableMixin, admin.ModelAdmin):
-    list_display = (
-        'id',
-        'created',
-        'modified',
-        'created_by',
-        'modified_by',
-        'client',
-        'contract',
-        'is_principal',
-    )
-    list_filter = (
-        'created',
-        'modified',
-        'created_by',
-        'modified_by',
-        'client',
-        'contract',
-        'is_principal',
-    )
-
+    list_display = ('id', 'created', 'modified', 'created_by', 'modified_by', 'client', 'contract', 'is_principal',)
+    list_filter = ('created', 'modified', 'created_by', 'modified_by', 'client', 'contract', 'is_principal'    )
 
 @admin.register(ContractBroker)
 class ContractBrokerAdmin(AdminAuditableMixin, admin.ModelAdmin):

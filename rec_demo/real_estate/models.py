@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 from model_utils.models import TimeStampedModel
 
+from ..banking.models import Account
 from ..core.models import Auditable, Human
 
 
@@ -99,11 +100,11 @@ class Broker(Auditable, Human):
         (JURIDICAL_TYPE, _('Juridical person')),
     )
     full_name = models.CharField(_('Full name'), max_length=120, null=True, blank=True)
-    client_type = models.CharField(_('Client type'), max_length=1, choices=CLIENT_TYPE_CHOICES,
+    broker_type = models.CharField(_('Broker type'), max_length=1, choices=CLIENT_TYPE_CHOICES,
                                    default=NATURAL_TYPE)
 
     def __str__(self):
-        if self.client_type == Client.NATURAL_TYPE:
+        if self.broker_type == Client.NATURAL_TYPE:
             return f'{self.last_name}, {self.first_name}'
         else:
             return f'{self.full_name}'
@@ -132,6 +133,8 @@ class Contract(Auditable, TimeStampedModel):
                                    on_delete=models.SET_NULL, null=True, blank=True)
     total_amount = models.DecimalField(_('Total amount'), max_digits=12, decimal_places=2, default=Decimal('0.00'))
     down_payment = models.DecimalField(_('Down payment'), max_digits=12, decimal_places=2, default=Decimal('0.00'))
+    account = models.OneToOneField(Account, verbose_name=_('Account'), related_name='contract',
+                                   on_delete=models.PROTECT, null=True, blank=True)
 
     class Meta:
         verbose_name = _('Contract')
