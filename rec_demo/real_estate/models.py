@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
+from django.db.models import Sum
 from django.utils.translation import gettext_lazy as _
 # Create your models here.
 from model_utils.models import TimeStampedModel
@@ -164,6 +165,23 @@ class Contract(Auditable, TimeStampedModel):
         count = ContractClient.objects.filter(client=client, contract=self).count()
         if count == 0:
             return ContractClient.objects.create(client=client, contract=self)
+
+    def calculate_total(self, **kwargs):
+        assign = kwargs.get('assign', False)
+        save = kwargs.get('save', False)
+        check = kwargs.get('check', False)
+        current_total = self.real_estate_spaces.aggregate(Sum('price'))
+        total = current_total['price__sum']
+        if check and total != self.total_amount:
+            msg = _('The sum of prices in the contract is not the same as the total_amount')
+            raise RealEstateException(msg)
+        if assign:
+            self.total_amount = total
+        if save and assign:
+            self.save()
+        return total
+
+
 
 
 class ContractClient(Auditable, TimeStampedModel):
