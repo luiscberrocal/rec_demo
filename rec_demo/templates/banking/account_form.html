@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+    {% if form.instance.id %}
+        <h2>{% trans 'Account' %}</h2>
+    {% else %}
+        <h2>{% trans 'New account' %}</h2>
+    {% endif %}
+
+
+    <form class="form-horizontal" method="post" action="">
+        {% csrf_token %}
+    <div class="form-row">
+            <div class="form-group col-md-2 mb-0">
+                {{ form.contract|as_crispy_field }}
+            </div>
+        </div>
+        <h3 class="form-subtitle">{% trans 'Transactions' %}</h3>
+
+    </form>
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+
+{% endblock %}
