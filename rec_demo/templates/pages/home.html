@@ -7,22 +7,24 @@
         </div>
         <div class="card-body">
             <a class="btn btn-primary" href="{% url 'real_estate:create-contract' %}"
-               role="button"><i class="fas fa-plus-circle"></i> {% trans 'Create Contract' %}</a>
+               role="button"><i class="fas fa-plus-circle"></i> {% trans 'Create contract' %}</a>
+            <a class="btn btn-primary" href="{% url 'banking:create-account' %}"
+               role="button"><i class="fas fa-plus-circle"></i> {% trans 'Create account' %}</a>
             <a class="btn btn-primary" href="{% url 'real_estate:list-contract' %}"
                role="button">{% trans 'Contract List' %}</a>
         </div>
     </div>
-   {% if ADMIN_URL %}
-       <div class="card">
-        <div class="card-header">
-            {% trans 'Super User' %}
-        </div>
-        <div class="card-body">
-            <a class="btn btn-primary" href="{{ ADMIN_URL }}"
-               role="button">{% trans 'Adminitrative Console' %}</a>
+    {% if ADMIN_URL %}
+        <div class="card">
+            <div class="card-header">
+                {% trans 'Super User' %}
+            </div>
+            <div class="card-body">
+                <a class="btn btn-primary" href="{{ ADMIN_URL }}"
+                   role="button">{% trans 'Adminitrative Console' %}</a>
 
+            </div>
         </div>
-    </div>
     {% endif %}
 
 {% endblock content %}
