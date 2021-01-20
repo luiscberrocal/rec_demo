@@ -13,13 +13,13 @@
     <form class="form-horizontal" method="post" action="">
         {% csrf_token %}
         <div class="form-row">
-            <div class="form-group col-md-2 mb-0">
+            <div class="form-group col-md-3 mb-0">
                 {{ form.contract|as_crispy_field }}
             </div>
         </div>
         <h3 class="form-subtitle">{% trans 'Transactions' %}</h3>
         {% for key, f1, f2, f3, f4, f5, f6, f7 in form.get_transaction_fields %}
-            <div class="row gy-2 gx-3 align-items-center" id="transaction-{{ key }}">
+            <div class="form-row" id="transaction-{{ key }}">
                 <div class="row gy-2 gx-3 align-items-center">
                     <div class="form-group col-md-3 mb-0">
                         {{ f1|as_crispy_field }}
@@ -46,6 +46,18 @@
                 </div>
             </div>
         {% endfor %}
+        <div class="control-group add-buttons">
+            <div class="controls">
+                <a class="btn btn-primary" id="add-transaction" href="#">{% trans 'Add Transaction' %}</a>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <a href="{% url 'real_estate:list-contract' %}" class="btn btn-primary">{% trans 'Cancel' %}</a>
+                <button type="submit" class="btn btn-primary" id="save_button">{% trans 'Save' %}</button>
+
+            </div>
+        </div>
     </form>
 
 {% endblock %}

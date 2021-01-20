@@ -28,6 +28,7 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
         # Transaction type
         field_name = self.TRANSACTION_PATTERN.format('type', i)
         choices = (
+            (None, '---------'),
             ('DBT', _('Debit')),
             ('CDT', _('Credit'))
         )
