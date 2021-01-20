@@ -25,7 +25,7 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
 
     def _build_transaction_fields(self, i, transaction_type_qs, **kwargs):
         field_names = list()
-        # Transaction type
+        # Debit or credit
         field_name = self.TRANSACTION_PATTERN.format('type', i)
         choices = (
             (None, '---------'),
