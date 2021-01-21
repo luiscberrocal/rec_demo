@@ -106,8 +106,9 @@ class TestAccount(TestCase):
         account.add_debit(Decimal('12000'), transaction_type=self.down_payment_transaction_type)
         # account.add_credit(Decimal('0.00'))
 
-        balance = Account.objects.get_with_balance().get(pk=account.id)
-        self.assertEqual(balance, (name, Decimal('-120000')))
+        account = Account.objects.with_totals().get(pk=account.id)
+        self.assertEqual(account.name, name)
+        self.assertEqual(account.balance, Decimal('-120000'))
 
     def test_get_status(self):
         name = 'PH Victorial Hills 15A'
@@ -124,8 +125,10 @@ class TestAccount(TestCase):
         name = 'PH Victorial Hills 15A'
         account = Account.objects.create(name=name)
         due_date = date(2020, 1, 1)
-        debit = account.add_debit(Decimal('10000'), transaction_type=self.down_payment_transaction_type, due_date=due_date)
-        credit = account.add_credit(Decimal('10000.00'), transaction_type=self.payment_transaction_type, related_debit=debit)
+        debit = account.add_debit(Decimal('10000.00'), transaction_type=self.down_payment_transaction_type,
+                                  due_date=due_date)
+        credit = account.add_credit(Decimal('10000.00'), transaction_type=self.payment_transaction_type,
+                                    related_debit=debit)
         status = debit.get_status()
         self.assertEqual(status, 'PAID LATE')
 

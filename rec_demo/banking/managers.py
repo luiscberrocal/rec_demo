@@ -15,8 +15,25 @@ class AccountManager(models.Manager):
             account=OuterRef('pk')).values('account_id').annotate(sum_debits=Sum('amount'))
 
         balance = self.annotate(
-            credit_sum=Coalesce(Subquery(balance_credits.values('sum_credits')), Decimal('0.00') ),
+            credit_sum=Coalesce(Subquery(balance_credits.values('sum_credits')), Decimal('0.00')),
             debit_sum=Coalesce(Subquery(balance_debits.values('sum_debits')), Decimal('0.00')),
             balance=F('credit_sum') - F('debit_sum')
         ).values_list('name', 'balance')
+        return balance
+
+    def with_totals(self):
+        from .models import Transaction
+        balance_credits = Transaction.objects.filter(
+            account=OuterRef('pk'), type=Transaction.CREDIT_TYPE
+        ).values('account_id').annotate(sum_credits=Sum('amount'))
+
+        balance_debits = Transaction.objects.filter(
+            account=OuterRef('pk'), type=Transaction.DEBIT_TYPE
+        ).values('account_id').annotate(sum_debits=Sum('amount'))
+
+        balance = self.annotate(
+            credit_sum=Coalesce(Subquery(balance_credits.values('sum_credits')), Decimal('0.00')),
+            debit_sum=Coalesce(Subquery(balance_debits.values('sum_debits')), Decimal('0.00')),
+            balance=F('credit_sum') + F('debit_sum')
+        ) #.values_list('name', 'balance')
         return balance

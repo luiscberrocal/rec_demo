@@ -314,8 +314,8 @@ class TestCaseContract(TestCase):
                                    TransactionType.objects.get(short_name='DOWN'))
         contract.account.add_debit(contract.total_amount - contract.down_payment,
                                    TransactionType.objects.get(short_name='LOAN'))
-        balance = Account.objects.get_with_balance().get(pk=contract.account.id)
-        self.assertEqual(balance[1], Decimal('-120000'))
+        account = Account.objects.with_totals().get(pk=contract.account.id)
+        self.assertEqual(account.balance, Decimal('-120000'))
 
 
 class TestCaseContractClient(TestCase):
