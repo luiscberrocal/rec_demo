@@ -19,30 +19,19 @@ class Account(Auditable, TimeStampedModel):
         return self.name
 
     def add_credit(self, amount, transaction_type, **kwargs):
-        credit_data = {'amount': amount, 'type': Transaction.CREDIT_TYPE}
-        today = timezone.now().date()
-        credit_data['date'] = kwargs.get('date', today)
-        credit_data['comments'] = kwargs.get('comments', None)
-        credit_data['related_debit'] = kwargs.get('related_debit', None)
-        credit_data['transaction_type'] = transaction_type
-        credit_data['account'] = self
-        return Transaction.objects.create(**credit_data)
+        return self._add_transaction(Transaction.CREDIT_TYPE, amount, transaction_type, **kwargs)
 
     def add_debit(self, amount, transaction_type, **kwargs):
-        if amount > Decimal('0.00'):
-            amount *= Decimal('-1.00')
-        debit_data = {'amount': amount, 'type': Transaction.DEBIT_TYPE}
-        today = timezone.now().date()
-        debit_data['date'] = kwargs.get('date', today)
-        debit_data['due_date'] = kwargs.get('due_date', None)
-        debit_data['comments'] = kwargs.get('comments', None)
-        debit_data['transaction_type'] = transaction_type
-        debit_data['account'] = self
-        return Transaction.objects.create(**debit_data)
+        return self._add_transaction(Transaction.DEBIT_TYPE, amount, transaction_type, **kwargs)
 
     def _add_transaction(self, t_type, amount, transaction_type, **kwargs):
         today = timezone.now().date()
         transaction_data = dict()
+        if isinstance(amount, str):
+            if ',' in amount:
+                amount = amount.replace(',', '')
+            amount = Decimal(amount)
+
         if t_type == Transaction.DEBIT_TYPE:
             transaction_data['due_date'] = kwargs.get('due_date', None)
             if amount > Decimal('0.00'):
@@ -58,9 +47,6 @@ class Account(Auditable, TimeStampedModel):
         transaction_data['transaction_type'] = transaction_type
         transaction_data['account'] = self
         return Transaction.objects.create(**transaction_data)
-
-
-
 
 
 class TransactionType(Auditable, TimeStampedModel):
@@ -126,7 +112,7 @@ class Credit(Auditable, TimeStampedModel):
 class Transaction(Auditable, TimeStampedModel):
     CREDIT_TYPE = 'C'
     DEBIT_TYPE = 'D'
-    TYPE_CHOICES =(
+    TYPE_CHOICES = (
         (CREDIT_TYPE, _('Credit')),
         (DEBIT_TYPE, _('Debit')),
     )
