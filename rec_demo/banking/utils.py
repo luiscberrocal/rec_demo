@@ -1,5 +1,7 @@
-from rec_demo.banking.exceptions import BankingException
-from rec_demo.banking.models import TransactionType
+from decimal import Decimal
+
+from .exceptions import BankingException
+from .models import TransactionType
 
 
 def get_or_create_transaction_types():
@@ -43,3 +45,17 @@ def get_or_create_transaction_types():
     TransactionType.objects.bulk_create(new_transaction_types)
 
     return transaction_types
+
+
+def divide_in_payments(amount, number, diff_to_last=True, **kwargs):
+    payment = (amount / Decimal(str(number))).quantize(Decimal("1.00"))
+    remainder = amount % payment
+    payments = list()
+    for i in range(number):
+        payments.append(payment)
+    if remainder != Decimal('0.00'):
+        if diff_to_last:
+            payments[number - 1] = payments[number - 1] + remainder
+        else:
+            payments[0] = payments[0] + remainder
+    return payments
