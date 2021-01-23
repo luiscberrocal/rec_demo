@@ -48,7 +48,8 @@ def get_or_create_transaction_types():
 
 
 def divide_in_payments(amount, number, diff_to_last=True, **kwargs):
-    payment = (amount / Decimal(str(number))).quantize(Decimal("1.00"))
+    rounding = kwargs.get('rounding', '1.00')
+    payment = (amount / Decimal(str(number))).quantize(Decimal(rounding))
     remainder = amount % payment
     payments = list()
     for i in range(number):
