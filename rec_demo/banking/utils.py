@@ -1,9 +1,11 @@
 from datetime import date
 from decimal import Decimal
 
+from django.utils.translation import gettext_lazy as _
+
 from .exceptions import BankingException
 from .models import TransactionType
-from  django.utils.translation import gettext_lazy as _
+
 
 def get_or_create_transaction_types():
     transaction_types = list()
@@ -52,16 +54,20 @@ def divide_in_payments(amount, number, diff_to_last=True, **kwargs):
     if number <= 1:
         return amount
     rounding = kwargs.get('rounding', '1.00')
+
     payment = (amount / Decimal(str(number))).quantize(Decimal(rounding))
-    remainder = amount % payment
+
     payments = list()
+    total = Decimal('0.00')
     for i in range(number):
         payments.append(payment)
-    if remainder != Decimal('0.00'):
-        if diff_to_last:
-            payments[number - 1] = payments[number - 1] + remainder
-        else:
-            payments[0] = payments[0] + remainder
+        total += payment
+    diff = amount - total
+    if diff_to_last:
+        payments[number-1] += diff
+    else:
+        payments[0] += diff
+
     if True:
         total = Decimal('0.00')
         for payment in payments:
@@ -91,4 +97,3 @@ def divide_in_payments_with_dates(amount, number, start_date, diff_to_last=True,
         payments.append({'date': current_date, 'amount': payments_only[i]})
         current_date = get_next_month_date(current_date)
     return payments
-

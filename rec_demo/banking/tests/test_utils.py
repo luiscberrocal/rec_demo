@@ -40,7 +40,15 @@ class Test_divide_in_payments(SimpleTestCase):
         amount = Decimal('18250.00')
         number = 6
         payments = divide_in_payments(amount, number)
-        self.assertEqual(len(payments), 9)
+        self.assertEqual(len(payments), 6)
+
+        calculated_total = Decimal('0.00')
+        for payment in payments:
+            calculated_total += payment
+
+        self.assertEqual(amount, calculated_total)
+        self.assertEqual(payments[0], Decimal('3041.67'))
+        self.assertEqual(payments[number - 1], Decimal('3041.65'))
 
     def test_divide_in_payments_with_dates(self):
         amount = Decimal('12433.27')
