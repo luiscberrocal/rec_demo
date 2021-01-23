@@ -35,3 +35,10 @@ class TransactionListAPIViewTestCase(TestCase):
             self.response_200(response)
             results = response.data
             self.assertEqual(len(results), 13)
+
+    def test_list_transaction_account(self):
+        with self.login(self.app_user):
+            response = self.get('banking_api:list-transaction-account', account_pk=self.account.id)
+            self.response_200(response)
+            results = response.data
+            self.assertEqual(len(results), 6)
