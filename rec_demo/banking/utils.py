@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from .exceptions import BankingException
 from .models import TransactionType
-
+from  django.utils.translation import gettext_lazy as _
 
 def get_or_create_transaction_types():
     transaction_types = list()
@@ -62,6 +62,13 @@ def divide_in_payments(amount, number, diff_to_last=True, **kwargs):
             payments[number - 1] = payments[number - 1] + remainder
         else:
             payments[0] = payments[0] + remainder
+    if True:
+        total = Decimal('0.00')
+        for payment in payments:
+            total += payment
+        if total != amount:
+            raise BankingException(
+                _(f'Error in split. The sum ({total}) should be equal to amount ({amount}). Check decimal presicion.'))
     return payments
 
 
