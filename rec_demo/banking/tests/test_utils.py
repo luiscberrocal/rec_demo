@@ -1,5 +1,5 @@
 from datetime import date
-from decimal import Decimal
+from decimal import Decimal, getcontext
 
 from django.test import SimpleTestCase
 
@@ -36,6 +36,12 @@ class Test_divide_in_payments(SimpleTestCase):
         self.assertEqual(payments[0], Decimal('137.00'))
         self.assertEqual(payments[number - 1], Decimal('137.25'))
 
+    def test_divide_in_payments_mod_issue(self):
+        amount = Decimal('18250.00')
+        number = 6
+        payments = divide_in_payments(amount, number)
+        self.assertEqual(len(payments), 9)
+
     def test_divide_in_payments_with_dates(self):
         amount = Decimal('12433.27')
         number = 6
@@ -52,3 +58,21 @@ class Test_divide_in_payments(SimpleTestCase):
         self.assertEqual(payments[0]['date'], start_date)
         self.assertEqual(payments[number - 1]['amount'], Decimal('2072.22'))
         self.assertEqual(payments[number - 1]['date'], date(2021, 4, 3))
+
+    def test_rounding(self):
+        decimal_context = getcontext()
+        original_precision = decimal_context.prec
+        decimal_context.prec = 16
+        total = Decimal("18250")
+        amount = Decimal("3041.67")
+        rem = total % amount
+        print(rem)
+        div = total / amount
+        srtring_div = str(div)
+        decimal_part = srtring_div.split('.')[1]
+        dp_dec = Decimal(decimal_part)
+        rem2 = dp_dec * total
+        print(rem2)
+        decimal_context.prec = original_precision
+        rem3 = total % amount
+        print(rem3)
