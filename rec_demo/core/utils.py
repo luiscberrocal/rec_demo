@@ -29,7 +29,7 @@ def parse_role_name(role):
         raise ValueError('{} does not match a role name'.format(value))
 
 
-def clean_dict(dictionary, **kwargs):
+def clean_dict(dictionary, clean_for='json', **kwargs):
     """
     Function to clean a model dictionary. It will change:
     1. elements that are None to blank string so it will be valid for POST data.
@@ -37,16 +37,20 @@ def clean_dict(dictionary, **kwargs):
     :param dictionary:
     :return:
     """
+    if clean_for not in ['json', 'form']:
+        raise ValueError(f'{clean_for} in not a valid choice')
     for key in dictionary.keys():
-        if dictionary[key] is None:
-            dictionary[key] = ''
+        if clean_for == 'json':
+            if dictionary[key] is None:
+                dictionary[key] = ''
         if isinstance(dictionary[key], date):
             date_format = kwargs.get('date_format', '%Y-%m-%d')
             dictionary[key] = dictionary[key].strftime(date_format)
         if isinstance(dictionary[key], Decimal):
             dictionary[key] = str(dictionary[key])
-        if isinstance(dictionary[key], Model):
-            dictionary[key] = dictionary[key].pk
+        if clean_for == 'form':
+            if isinstance(dictionary[key], Model):
+                dictionary[key] = dictionary[key].pk
     return dictionary
 
 

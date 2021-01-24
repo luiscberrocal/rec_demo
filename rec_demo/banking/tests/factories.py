@@ -59,5 +59,5 @@ class AccountFactory(object):
                 field_name = pattern.format(field, index)
                 data_dict[field_name] = getattr(transaction, field)
             index += 1
-        clean_data_dict = clean_dict(data_dict)
+        clean_data_dict = clean_dict(data_dict, clean_for='form')
         return clean_data_dict

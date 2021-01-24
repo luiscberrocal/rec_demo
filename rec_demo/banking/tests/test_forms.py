@@ -55,4 +55,4 @@ class TestAccountForm(TestCase):
             self.fail('Not valid')
 
         self.assertIsNotNone(account.id)
-        self.assertEqual(account.transactions.count(), 9)
+        self.assertEqual(account.transactions.count(), 2)

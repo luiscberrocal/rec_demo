@@ -79,6 +79,15 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
                 index = match.group(2)
                 if not transactions_dict.get(index):
                     transactions_dict[index] = dict()
+                if field_name == 'related_debit':
+                    if cleaned_data[indexed_field_name] == '':
+                        cleaned_data[indexed_field_name] = None
+                    else:
+                        try:
+                            tr = Transaction.objects.get(pk=cleaned_data[indexed_field_name])
+                            cleaned_data[indexed_field_name] = tr
+                        except TransactionType.DoesNotExist:
+                            self.add_error(indexed_field_name, 'Transaction does not exist')
                 transactions_dict[index][field_name] = cleaned_data[indexed_field_name]
             else:
                 logger.debug(f'{c} Not matched field name {indexed_field_name}')
