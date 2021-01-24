@@ -259,7 +259,18 @@ LOGGING = {
             "formatter": "verbose",
         }
     },
-    "root": {"level": "INFO", "handlers": ["console"]},
+    'loggers': {
+        'rec_demo': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        # 'alpha_clinic.finance': {
+        #     'handlers': ['console'],
+        #     'level': 'INFO',
+        # },
+
+    },
+    # "root": {"level": "INFO", "handlers": ["console"]},
 }
 
 # Celery
