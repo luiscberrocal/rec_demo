@@ -3,7 +3,8 @@ from decimal import Decimal, getcontext
 
 from django.test import SimpleTestCase
 
-from ..utils import divide_in_payments, divide_in_payments_with_dates
+from ..forms import AccountForm
+from ..utils import divide_in_payments, divide_in_payments_with_dates, get_index_and_field_name
 
 
 class Test_divide_in_payments(SimpleTestCase):
@@ -84,3 +85,10 @@ class Test_divide_in_payments(SimpleTestCase):
         decimal_context.prec = original_precision
         rem3 = total % amount
         print(rem3)
+
+    def test_get_index_and_field_name(self):
+        field_name = AccountForm.TRANSACTION_PATTERN.format('due_date', 0)
+        result = get_index_and_field_name(field_name)
+        self.assertEqual(result[0], True)
+        self.assertEqual(result[1], 'due_date')
+        self.assertEqual(result[2], '0')

@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.utils.translation import gettext_lazy as _
 
 from .exceptions import BankingException
+from .forms import AccountForm
 from .models import TransactionType
 
 
@@ -59,14 +60,13 @@ def divide_in_payments(amount, number, diff_to_last=True, **kwargs):
 
     payment = (amount / Decimal(str(number))).quantize(Decimal(rounding))
 
-
     total = Decimal('0.00')
     for i in range(number):
         payments.append(payment)
         total += payment
     diff = amount - total
     if diff_to_last:
-        payments[number-1] += diff
+        payments[number - 1] += diff
     else:
         payments[0] += diff
 
@@ -103,3 +103,16 @@ def divide_in_payments_with_dates(amount, number, start_date, diff_to_last=True,
         payments.append({'date': current_date, 'amount': payments_only[i]})
         current_date = get_next_month_date(current_date)
     return payments
+
+
+def get_index_and_field_name(field_name, regexp=AccountForm.TRANSACTION_REGEXP):
+    match = regexp.match(field_name)
+    match_found = False
+    parsed_field_name =  None
+    parsed_index = None
+    if match:
+        match_found = True
+        parsed_field_name = match.group(1)
+        parsed_index = match.group(2)
+    return match_found, parsed_field_name, parsed_index
+
