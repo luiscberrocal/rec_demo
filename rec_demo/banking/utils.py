@@ -51,13 +51,15 @@ def get_or_create_transaction_types():
 
 
 def divide_in_payments(amount, number, diff_to_last=True, **kwargs):
+    payments = list()
     if number <= 1:
-        return amount
+        payments.append(amount)
+        return payments
     rounding = kwargs.get('rounding', '1.00')
 
     payment = (amount / Decimal(str(number))).quantize(Decimal(rounding))
 
-    payments = list()
+
     total = Decimal('0.00')
     for i in range(number):
         payments.append(payment)
@@ -86,10 +88,14 @@ def get_next_month_date(current_date, delta=1):
     if 12 < next_month <= 24:
         year += 1
         next_month -= 12
+    elif next_month > 24:
+        raise BankingException('Only one year delta is supported')
     return date(year, next_month, day)
 
 
 def divide_in_payments_with_dates(amount, number, start_date, diff_to_last=True, **kwargs):
+    if number <= 0:
+        raise BankingException('Number of splits need to be equal to or higher than 1')
     payments_only = divide_in_payments(amount, number, diff_to_last, **kwargs)
     payments = list()
     current_date = start_date

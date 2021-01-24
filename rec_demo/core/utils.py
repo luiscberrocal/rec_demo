@@ -1,7 +1,8 @@
-
 import re
 from datetime import date
+from decimal import Decimal
 
+from django.db.models import Model
 from django.forms import model_to_dict
 from django.utils import timezone
 
@@ -13,10 +14,9 @@ def years_ago(years, from_date=None) -> date:
         return from_date.replace(year=from_date.year - years)
     except ValueError:
         # Must be 2/29!
-        assert from_date.month == 2 and from_date.day == 29 # can be removed
+        assert from_date.month == 2 and from_date.day == 29  # can be removed
         return from_date.replace(month=2, day=28,
-                                 year=from_date.year-years)
-
+                                 year=from_date.year - years)
 
 
 def parse_role_name(role):
@@ -41,8 +41,12 @@ def clean_dict(dictionary, **kwargs):
         if dictionary[key] is None:
             dictionary[key] = ''
         if isinstance(dictionary[key], date):
-            date_format = kwargs.get('date_format','%Y-%m-%d' )
+            date_format = kwargs.get('date_format', '%Y-%m-%d')
             dictionary[key] = dictionary[key].strftime(date_format)
+        if isinstance(dictionary[key], Decimal):
+            dictionary[key] = str(dictionary[key])
+        if isinstance(dictionary[key], Model):
+            dictionary[key] = dictionary[key].pk
     return dictionary
 
 
