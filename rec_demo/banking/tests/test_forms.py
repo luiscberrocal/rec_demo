@@ -36,14 +36,14 @@ class TestAccountForm(TestCase):
                                                               number_of_splits=1)
         model_data = model_to_dict(account)
         model_data.pop('id')
-        #model_data.pop('created_by')
-        #model_data.pop('modified_by')
+        # model_data.pop('created_by')
+        # model_data.pop('modified_by')
         form_data = dict()
         form_data['user'] = self.user
         form_data['data'] = AccountFactory.build_transaction_form_data(account)
         form_data['data'] = {**form_data['data'], **model_data}
-        #form_data['data'] = model_data
-        #form_data['data']['contract'] = self.contract
+        # form_data['data'] = model_data
+        form_data['data']['contract'] = self.contract.id
 
         account.delete()
 
@@ -55,4 +55,11 @@ class TestAccountForm(TestCase):
             self.fail('Not valid')
 
         self.assertIsNotNone(account.id)
+        self.assertIsNotNone(account.contract)
         self.assertEqual(account.transactions.count(), 2)
+
+        db_account = Account.objects.with_totals().get(pk=account.pk)
+        self.assertEqual(db_account.balance, Decimal('-275000'))
+        self.assertEqual(db_account.debit_sum, Decimal('-275000'))
+        self.assertEqual(db_account.credit_sum, Decimal('0.00'))
+        self.assertEqual(db_account.transactions.count(), 2)

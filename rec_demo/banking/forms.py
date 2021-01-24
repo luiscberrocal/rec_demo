@@ -41,7 +41,7 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
         super(AccountForm, self).__init__(*args, **kwargs)
         transaction_type_qs = TransactionType.objects.all()
         self.fields['contract'] = forms.ModelChoiceField(queryset=Contract.objects.all(),
-                                                         label=_('Contract'), required=False)
+                                                         label=_('Contract'))
 
         self.transaction_fields = dict()
         i = 0
@@ -103,6 +103,8 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
 
         if commit:
             instance.save()
+            self.cleaned_data['contract'].account = instance
+            self.cleaned_data['contract'].save()
             qs = instance.transactions
             if qs.count() != 0:
                 qs.delete()
