@@ -166,28 +166,6 @@ class TestCaseClient(TestCase):
         client_dict = model_to_dict(client)
         self.assertEqual(len(client_dict.keys()), 14)
 
-    def test_attribute_content(self):
-        """
-        Test that all attributes of Client server have content. This test will break if an attributes name is changed.
-        """
-        client = ClientFactory.create()
-        self.assertIsNotNone(client.id)
-        self.assertIsNotNone(client.created)
-        self.assertIsNotNone(client.modified)
-        self.assertIsNotNone(client.first_name)
-        self.assertIsNone(client.middle_name)
-        self.assertIsNotNone(client.last_name)
-        self.assertIsNotNone(client.sex)
-        self.assertIsNotNone(client.national_id)
-        self.assertIsNotNone(client.national_id_type)
-        self.assertIsNotNone(client.country_for_id)
-        self.assertIsNotNone(client.picture)
-        self.assertIsNotNone(client.date_of_birth)
-        self.assertIsNotNone(client.created_by)
-        self.assertIsNotNone(client.modified_by)
-        self.assertIsNotNone(client.full_name)
-        self.assertIsNotNone(client.client_type)
-
 
 class TestCaseBroker(TestCase):
 
@@ -214,28 +192,6 @@ class TestCaseBroker(TestCase):
         broker = BrokerFactory.create()
         broker_dict = model_to_dict(broker)
         self.assertEqual(len(broker_dict.keys()), 14)
-
-    def test_attribute_content(self):
-        """
-        Test that all attributes of Broker server have content. This test will break if an attributes name is changed.
-        """
-        broker = BrokerFactory.create()
-        self.assertIsNotNone(broker.id)
-        self.assertIsNotNone(broker.created)
-        self.assertIsNotNone(broker.modified)
-        self.assertIsNotNone(broker.first_name)
-        self.assertIsNone(broker.middle_name)
-        self.assertIsNotNone(broker.last_name)
-        self.assertIsNotNone(broker.sex)
-        self.assertIsNotNone(broker.national_id)
-        self.assertIsNotNone(broker.national_id_type)
-        self.assertIsNotNone(broker.country_for_id)
-        self.assertIsNotNone(broker.picture)
-        self.assertIsNotNone(broker.date_of_birth)
-        self.assertIsNotNone(broker.created_by)
-        self.assertIsNotNone(broker.modified_by)
-        self.assertIsNotNone(broker.full_name)
-        self.assertIsNotNone(broker.broker_type)
 
 
 class TestCaseContract(TestCase):
