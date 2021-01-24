@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from django.utils import timezone
 
+from ..forms import AccountForm
 from ..models import TransactionType, Account
 from ..utils import get_or_create_transaction_types, divide_in_payments_with_dates
 
@@ -39,3 +40,17 @@ class AccountFactory(object):
         for payment in payments:
             account.add_debit(payment['amount'], down, due_date=payment['date'])
         return account
+
+    @classmethod
+    def build_transaction_form_data(cls, account):
+        index = 0
+        pattern = AccountForm.TRANSACTION_PATTERN
+        fields = ['type', 'date', 'account', 'transaction_type', 'amount', 'comments',
+                  'due_date', 'related_debit',]# 'created', 'modified', 'created_by', 'modified_by']
+        data_dict = dict()
+        for transaction in account.transactions.all():
+            for field in fields:
+                field_name = pattern.format(field, index)
+                data_dict[field_name] = getattr(transaction, field)
+            index += 1
+        return data_dict
