@@ -42,3 +42,24 @@ class TransactionListAPIViewTestCase(TestCase):
             self.response_200(response)
             results = response.data
             self.assertEqual(len(results), 6)
+
+
+class TransactionTypeListAPIViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.app_user = SimpleUserFactory.create()
+        get_or_create_transaction_types()
+
+    def test_list_credits(self):
+        with self.login(self.app_user):
+            response = self.get('banking_api:list-credit-transaction-type')
+            self.response_200(response)
+            results = response.data
+            self.assertEqual(len(results), 4)
+
+    def test_list_debits(self):
+        with self.login(self.app_user):
+            response = self.get('banking_api:list-debit-transaction-type')
+            self.response_200(response)
+            results = response.data
+            self.assertEqual(len(results), 9)

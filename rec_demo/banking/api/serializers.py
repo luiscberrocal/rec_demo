@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Transaction
+from ..models import Transaction, TransactionType
 
 
 class TransactionPostSerializer(serializers.ModelSerializer):
@@ -15,6 +15,23 @@ class TransactionPostSerializer(serializers.ModelSerializer):
 
 
 class TransactionSerializer(TransactionPostSerializer):
+    """
+    Standard Serializer for Transaction model.
+    """
+    pass
+
+
+class TransactionTypePostSerializer(serializers.ModelSerializer):
+    """
+    Standard Serializer for Transaction model.
+    """
+
+    class Meta:
+        model = TransactionType
+        fields = ('id', 'name', 'short_name', 'allowed_for', 'created', 'modified', 'created_by', 'modified_by',)
+
+
+class TransactionTypeSerializer(TransactionTypePostSerializer):
     """
     Standard Serializer for Transaction model.
     """
