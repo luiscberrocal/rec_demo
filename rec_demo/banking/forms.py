@@ -88,6 +88,10 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
                             cleaned_data[indexed_field_name] = tr
                         except TransactionType.DoesNotExist:
                             self.add_error(indexed_field_name, 'Transaction does not exist')
+
+                if field_name == 'pk' and cleaned_data[indexed_field_name] == '':
+                    cleaned_data[indexed_field_name] = None
+
                 transactions_dict[index][field_name] = cleaned_data[indexed_field_name]
             else:
                 logger.debug(f'{c} Not matched field name {indexed_field_name}')
@@ -116,6 +120,13 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
     def _build_transaction_fields(self, i, transaction_type_qs, **kwargs):
         transaction = kwargs.get('transaction', None)
         field_names = list()
+        # Primary key
+        # -----------------------------------------------------------
+        field_name = self.TRANSACTION_PATTERN.format('pk', i)
+        self.fields[field_name] = forms.CharField(label=_('pk'), required=False, widget=forms.HiddenInput())
+        if transaction is not None:
+            self.initial[field_name] = transaction.pk
+        field_names.append(field_name)
         # Debit or credit
         # -----------------------------------------------------------
         field_name = self.TRANSACTION_PATTERN.format('type', i)

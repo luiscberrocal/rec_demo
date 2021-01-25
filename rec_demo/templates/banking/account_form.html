@@ -18,9 +18,10 @@
             </div>
         </div>
         <h3 class="form-subtitle">{% trans 'Transactions' %}</h3>
-        {% for key, f1, f2, f3, f4, f5, f6, f7 in form.get_transaction_fields %}
+        {% for key, f0, f1, f2, f3, f4, f5, f6, f7 in form.get_transaction_fields %}
             <div class="form-row" id="transaction-{{ key }}">
                 <div class="row gy-2 gx-3 align-items-center">
+                        {{ f0 }}
                     <div class="form-group col-md-3 mb-0">
                         {{ f1|as_crispy_field }}
                     </div>
