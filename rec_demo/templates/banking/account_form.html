@@ -16,37 +16,43 @@
             <div class="form-group col-md-3 mb-0">
                 {{ form.contract|as_crispy_field }}
             </div>
+            <div class="form-group col-md-3 mb-0">
+                {{ form.name|as_crispy_field }}
+            </div>
         </div>
         <h3 class="form-subtitle">{% trans 'Transactions' %}</h3>
-        {% for key, f0, f1, f2, f3, f4, f5, f6, f7 in form.get_transaction_fields %}
-            <div class="form-row" id="transaction-{{ key }}">
-                <div class="row gy-2 gx-3 align-items-center">
+        <div id="transactions">
+            {% for key, f0, f1, f2, f3, f4, f5, f6, f7 in form.get_transaction_fields %}
+                <div class="form-row" id="transaction-{{ key }}">
+                    <div class="row gy-2 gx-3 align-items-center">
                         {{ f0 }}
-                    <div class="form-group col-md-3 mb-0">
-                        {{ f1|as_crispy_field }}
-                    </div>
-                    <div class="form-group col-md-3 mb-0">
-                        {{ f2|as_crispy_field }}
-                    </div>
-                    <div class="form-group col-md-3 mb-0">
-                        {{ f3|as_crispy_field }}
-                    </div>
-                    <div class="form-group col-md-3 mb-0">
-                        {{ f4|as_crispy_field }}
-                    </div>
+                        <div class="form-group col-md-3 mb-0">
+                            {{ f1|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-3 mb-0">
+                            {{ f2|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-3 mb-0">
+                            {{ f3|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-3 mb-0">
+                            {{ f4|as_crispy_field }}
+                        </div>
 
-                    <div class="form-group col-md-8 mb-0">
-                        {{ f5|as_crispy_field }}
-                    </div>
-                    <div class="form-group col-md-2 mb-0">
-                        {{ f6|as_crispy_field }}
-                    </div>
-                    <div class="form-group col-md-2 mb-0">
-                        {{ f7|as_crispy_field }}
+                        <div class="form-group col-md-8 mb-0">
+                            {{ f5|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-2 mb-0">
+                            {{ f6|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-2 mb-0">
+                            {{ f7|as_crispy_field }}
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+
+        </div>
         <div class="control-group add-buttons">
             <div class="controls">
                 <a class="btn btn-primary" id="add-transaction" href="#">{% trans 'Add Transaction' %}</a>
@@ -54,7 +60,7 @@
         </div>
         <div class="control-group">
             <div class="controls">
-                <a href="{% url 'real_estate:list-contract' %}" class="btn btn-primary">{% trans 'Cancel' %}</a>
+                <a href="{% url 'banking:list-account' %}" class="btn btn-primary">{% trans 'Cancel' %}</a>
                 <button type="submit" class="btn btn-primary" id="save_button">{% trans 'Save' %}</button>
 
             </div>
@@ -66,7 +72,47 @@
     {{ block.super }}
     <script>
         $(document).ready(function () {
+            function getIndex(elementId) {
+                const regex = /transaction-(\d+)/gm;
+                let match = regex.exec(elementId);
+                //console.log(match)
+                return parseInt(match[1]);
 
+            }
+
+            function renumberFormFields(cloneNode) {
+
+                cloneNode.find('input:text, input:password, input:file, select, textarea')
+                    .each(function () {
+                        console.log($(this));
+                    });
+            }
+
+            function cloneLastTransaction() {
+                let lastRow = $("#transactions div.form-row").last();
+                let clone = lastRow.clone(true);
+                let row_id = clone.attr('id');
+                let n = getIndex(row_id) + 1;
+                console.log('id', row_id, n)
+                renumberFormFields(clone);
+                clone.appendTo($("#transactions"));
+            }
+
+            $('#id_contract').on('change', function () {
+                let contract = $('#id_contract option:selected').text();
+                $('#id_name').val(contract);
+            });
+            $('.transaction-class').on('change', function () {
+                let cls = $(this).val();
+                let elementId = $(this).attr('id');
+                let n = getIndex(elementId);
+                //console.log('Class', cls)
+                //console.log('elementId', elementId)
+                //console.log('n', n)
+            });
+            $('#add-transaction').on('click', function () {
+                cloneLastTransaction();
+            });
         });
     </script>
 
