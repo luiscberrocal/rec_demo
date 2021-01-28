@@ -48,7 +48,7 @@ class AccountFactory(object):
         return account
 
     @classmethod
-    def build_transaction_form_data(cls, account):
+    def build_transaction_form_data(cls, account, clean_for='form'):
         index = 0
         pattern = AccountForm.TRANSACTION_PATTERN
         fields = ['type', 'date', 'account', 'transaction_type', 'amount', 'comments',
@@ -59,5 +59,5 @@ class AccountFactory(object):
                 field_name = pattern.format(field, index)
                 data_dict[field_name] = getattr(transaction, field)
             index += 1
-        clean_data_dict = clean_dict(data_dict, clean_for='form')
+        clean_data_dict = clean_dict(data_dict, clean_for=clean_for)
         return clean_data_dict

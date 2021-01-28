@@ -136,6 +136,7 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
             (Transaction.CREDIT_TYPE, _('Credit'))
         )
         self.fields[field_name] = forms.ChoiceField(choices=choices, label=_('Type'), required=False)
+        self.fields[field_name].widget.attrs.update({'class': 'transaction-class'})
         if transaction is not None:
             self.initial[field_name] = transaction.type
         field_names.append(field_name)
