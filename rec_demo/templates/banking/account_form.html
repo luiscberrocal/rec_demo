@@ -80,11 +80,23 @@
 
             }
 
-            function renumberFormFields(cloneNode) {
+            function renumberFormFields(cloneNode, newIndex) {
 
-                cloneNode.find('input:text, input:password, input:file, select, textarea')
+                cloneNode.find('input, select, textarea')
                     .each(function () {
-                        console.log($(this));
+                        //console.log($(this));
+                        let id =  $(this).attr('id').replace(/\d+/gm, newIndex);
+                        let name =  $(this).attr('name').replace(/\d+/gm, newIndex);
+                        $(this).attr('id', id);
+                        $(this).attr('name', name);
+                        //console.log('id', $(this).attr('id'));
+                        //console.log('name', $(this).attr('name'));
+                    });
+                cloneNode.find('label')
+                    .each(function () {
+                        //console.log($(this));
+                        let label =  $(this).attr('for').replace(/\d+/gm, newIndex);
+                        console.log('For', label);
                     });
             }
 
@@ -94,7 +106,7 @@
                 let row_id = clone.attr('id');
                 let n = getIndex(row_id) + 1;
                 console.log('id', row_id, n)
-                renumberFormFields(clone);
+                renumberFormFields(clone, n);
                 clone.appendTo($("#transactions"));
             }
 
