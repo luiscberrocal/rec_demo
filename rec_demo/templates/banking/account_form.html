@@ -131,10 +131,10 @@
             });
             $('.transaction-class').on('change', function () {
                 let cls = $(this).val();
-                let elementId = $(this).attr('id');
-                let n = getIndex(elementId);
+                let elementId = $(this).parent().parent().attr('id');
+                //let n = getIndex(elementId);
                 //console.log('Class', cls)
-                //console.log('elementId', elementId)
+                console.log('elementId', elementId)
                 //console.log('n', n)
             });
             $('#add-transaction').on('click', function () {
