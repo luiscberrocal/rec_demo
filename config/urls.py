@@ -26,6 +26,7 @@ urlpatterns += i18n_patterns(
     # User management
     path("users/", include("rec_demo.users.urls", namespace="users")),
     path("real-estate/", include("rec_demo.real_estate.urls", namespace="real_estate")),
+    path("banking/", include("rec_demo.banking.urls", namespace="banking")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -38,6 +39,7 @@ urlpatterns += [
     path("auth-token/", obtain_auth_token),
     path('api/v1/app-data/', app_data, name='app_data'),
     path("api/v1/real-estate/", include("rec_demo.real_estate.api.urls", namespace="real_estate_api")),
+    path("api/v1/banking/", include("rec_demo.banking.api.urls", namespace="banking_api")),
 ]
 
 if settings.DEBUG:
