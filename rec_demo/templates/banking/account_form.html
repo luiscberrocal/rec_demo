@@ -22,35 +22,45 @@
         </div>
         <h3 class="form-subtitle">{% trans 'Transactions' %}</h3>
         <div id="transactions">
+
             {% for key, f0, f1, f2, f3, f4, f5, f6, f7 in form.get_transaction_fields %}
-                <div class="form-row" id="transaction-{{ key }}">
-                    <div class="row gy-2 gx-3 align-items-center">
-                        {{ f0 }}
-                        <div class="form-group col-md-3 mb-0">
-                            {{ f1|as_crispy_field }}
-                        </div>
-                        <div class="form-group col-md-3 mb-0">
-                            {{ f2|as_crispy_field }}
-                        </div>
-                        <div class="form-group col-md-3 mb-0">
-                            {{ f3|as_crispy_field }}
-                        </div>
-                        <div class="form-group col-md-3 mb-0">
-                            {{ f4|as_crispy_field }}
+                <div class="form-row transaction-row" id="transaction-{{ key }}">
+                    <div class="col-md-11">
+                        <div class="form-row" >
+                            <div class="row gy-2 gx-3 align-items-center">
+                                {{ f0 }}
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ f1|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ f2|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ f3|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ f4|as_crispy_field }}
+                                </div>
+
+                                <div class="form-group col-md-8 mb-0">
+                                    {{ f5|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-2 mb-0">
+                                    {{ f6|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-2 mb-0">
+                                    {{ f7|as_crispy_field }}
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group col-md-8 mb-0">
-                            {{ f5|as_crispy_field }}
-                        </div>
-                        <div class="form-group col-md-2 mb-0">
-                            {{ f6|as_crispy_field }}
-                        </div>
-                        <div class="form-group col-md-2 mb-0">
-                            {{ f7|as_crispy_field }}
-                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <a class="btn btn-primary delete-transaction" href="#">{% trans 'Delete' %}</a>
                     </div>
                 </div>
             {% endfor %}
+
 
         </div>
         <div class="control-group add-buttons">
@@ -86,17 +96,17 @@
                 cloneNode.find('input, select, textarea, label, div')
                     .each(function () {
                         //console.log($(this));$(this).hasAttribute('for')
-                        if  (this.hasAttribute('for')){
+                        if (this.hasAttribute('for')) {
                             let label = $(this).attr('for').replace(/\d+/gm, newIndex);
                             $(this).attr('for', label)
                             //console.log('For', label);
                         }
-                        if (this.hasAttribute('id')){
+                        if (this.hasAttribute('id')) {
                             let id = $(this).attr('id').replace(/\d+/gm, newIndex)
                             $(this).attr('id', id);
                             //console.log('id', $(this).attr('id'));
                         }
-                         if (this.hasAttribute('name')){
+                        if (this.hasAttribute('name')) {
                             let name = $(this).attr('name').replace(/\d+/gm, newIndex);
                             $(this).attr('name', name);
                             //console.log('name', $(this).attr('name'));
@@ -106,7 +116,7 @@
             }
 
             function cloneLastTransaction() {
-                let lastRow = $("#transactions div.form-row").last();
+                let lastRow = $("#transactions").children().last();
                 let clone = lastRow.clone(true);
                 let row_id = clone.attr('id');
                 let n = getIndex(row_id) + 1;
@@ -129,6 +139,9 @@
             });
             $('#add-transaction').on('click', function () {
                 cloneLastTransaction();
+            });
+            $('.delete-transaction').on('click', function (){
+                $(this).parent().parent().remove();
             });
         });
     </script>

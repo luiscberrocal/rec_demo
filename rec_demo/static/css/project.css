@@ -22,6 +22,7 @@
     padding: .5rem;
     color: whitesmoke;
 }
+
 .add-buttons {
     padding-bottom: .5rem;
 }
@@ -38,9 +39,18 @@
 .select2-selection__rendered {
     line-height: calc(1.5em + .75rem) !important;
 }
+
 .select2-container .select2-selection--single {
-    height: calc(1.5em + .75rem + 2px);!important;
+    height: calc(1.5em + .75rem + 2px);
+!important;
 }
+
 .select2-selection__arrow {
-    height: calc(1.5em + .75rem + 1px);!important;
+    height: calc(1.5em + .75rem + 1px);
+!important;
+}
+
+.transaction-row {
+    border-bottom: .15em solid dodgerblue;
+    margin-bottom: .5em;
 }
