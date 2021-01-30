@@ -20,13 +20,38 @@
                 {{ form.name|as_crispy_field }}
             </div>
         </div>
+        <div class="card">
+            <div class="card-header">
+                {% trans 'Real estate spaces' %}
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">{% trans 'Type' %}</th>
+                    <th scope="col">{% trans 'Area' %}</th>
+                    <th scope="col">{% trans 'Price' %}</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>name</td>
+                            <td>t</td>
+                            <td>area</td>
+                            <td class="price">price</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <h3 class="form-subtitle">{% trans 'Transactions' %}</h3>
         <div id="transactions">
 
             {% for key, f0, f1, f2, f3, f4, f5, f6, f7 in form.get_transaction_fields %}
                 <div class="form-row transaction-row" id="transaction-{{ key }}">
                     <div class="col-md-11">
-                        <div class="form-row" >
+                        <div class="form-row">
                             <div class="row gy-2 gx-3 align-items-center">
                                 {{ f0 }}
                                 <div class="form-group col-md-3 mb-0">
@@ -82,6 +107,25 @@
     {{ block.super }}
     <script>
         $(document).ready(function () {
+            function getContractData(contractId) {
+                let url_mask = "{% url 'real_estate-api:detail-contract' 12345 %}"
+                let url = url_mask.replace(/12345/, contractId);
+                $.ajax({
+                    method: 'GET',
+                    url: url,
+                    data: {},
+                    success: function (data) {
+                        {#$.each(data, function () {#}
+                        {#    console.log(this);#}
+                        {# }); #}
+                        console.log(data)
+                        data.real_estate_spaces.forEach(function (item){
+                            console.log(item);
+                        })
+                    }
+                });
+            }
+
             function getIndex(elementId) {
                 const regex = /transaction-(\d+)/gm;
                 let match = regex.exec(elementId);
@@ -127,7 +171,10 @@
 
             $('#id_contract').on('change', function () {
                 let contract = $('#id_contract option:selected').text();
+                let contractId = $('#id_contract').val();
+
                 $('#id_name').val(contract);
+                getContractData(contractId)
             });
             $('.transaction-class').on('change', function () {
                 let cls = $(this).val();
@@ -140,7 +187,7 @@
             $('#add-transaction').on('click', function () {
                 cloneLastTransaction();
             });
-            $('.delete-transaction').on('click', function (){
+            $('.delete-transaction').on('click', function () {
                 $(this).parent().parent().remove();
             });
         });
