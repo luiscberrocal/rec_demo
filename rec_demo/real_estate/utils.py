@@ -68,7 +68,7 @@ def create_spaces(project, floors, **kwargs):
         space_data['space_type'] = RealEstateSpace.PARKING_SPACE
         space_data['created_by'] = project.created_by
         space_data['name'] = f'Estacionamiento {i+1}'
-        space_data['area'] = None
+        space_data['area'] = Decimal('6')
         space_data['price'] = parking_default_price
         real_estate_space = RealEstateSpace(**space_data)
         space_list.append(real_estate_space)
@@ -79,7 +79,7 @@ def create_spaces(project, floors, **kwargs):
         space_data['space_type'] = RealEstateSpace.STORAGE_SPACE
         space_data['created_by'] = project.created_by
         space_data['name'] = f'Storage {i + 1}'
-        space_data['area'] = None
+        space_data['area'] = Decimal('10')
         space_data['price'] = storage_default_price
         real_estate_space = RealEstateSpace(**space_data)
         space_list.append(real_estate_space)

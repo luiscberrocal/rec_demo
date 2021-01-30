@@ -18,58 +18,58 @@ class Command(BaseCommand):
         current_user = User.objects.first()
         company = self._create_company(current_user, reset_company)
         project_data = dict()
-        project_data['Rossini'] = {'floors': 15,
-                                   'areas': {'105', '105', '95', '95'},
+        project_data['Rossini'] = {'name': 'PH Rossini', 'floors': 15,
+                                   'areas': ['105', '105', '95', '95'],
                                    'created_by': current_user,
                                    'company': company,
                                    'parkings': 10,
                                    'storage': 5}
-        project_data['Carla'] = {'floors': 10,
-                                 'areas': {'60', '60', '75'},
+        project_data['Carla'] = {'name': 'PH Carla', 'floors': 10,
+                                 'areas': ['60', '60', '75'],
                                  'created_by': current_user,
                                  'company': company,
                                  'parkings': 5,
                                  'storage': 0}
-        project_data['Tania'] = {'floors': 50,
-                                 'areas': {'420', '420', },
+        project_data['Tania'] = {'name': 'PH Tania', 'floors': 50,
+                                 'areas': ['420', '420', ],
                                  'created_by': current_user,
                                  'company': company,
                                  'parkings': 20,
                                  'storage': 20}
 
-        project_data['Eduardo'] = {'floors': 4,
-                                   'areas': {'66', '66', },
+        project_data['Eduardo'] = {'name': 'PH Eduardo', 'floors': 4,
+                                   'areas': ['66', '66', ],
                                    'created_by': current_user,
                                    'company': company,
                                    'parkings': 0,
                                    'storage': 0}
 
-        project_data['Ariadna'] = {'floors': 4,
-                                   'areas': {'76', '76', },
+        project_data['Ariadna'] = {'name': 'PH Ariadna', 'floors': 4,
+                                   'areas': ['76', '76', ],
                                    'created_by': current_user,
                                    'company': company,
                                    'parkings': 0,
                                    'storage': 0}
-        project_data['Kenia'] = {'floors': 4,
-                                 'areas': {'76', '76', },
+        project_data['Kenia'] = {'name': 'PH Kenia', 'floors': 4,
+                                 'areas': ['76', '76', ],
                                  'created_by': current_user,
                                  'company': company,
                                  'parkings': 0,
                                  'storage': 0}
 
         for name in project_data.keys():
-            project_name = f'PH {project_data[name]["name"]}'
-            floors = project_data[name].pop('floor')
+            floors = project_data[name].pop('floors')
             create = False
             try:
-                project = RealEstateProject.objects.get(name=project_name)
+                project = RealEstateProject.objects.get(name=project_data[name]['name'])
                 if reset_projects:
                     project.delete()
                     create = True
             except RealEstateProject.DoesNotExist:
                 create = True
             if create:
-                project = RealEstateProjectFactory.create_with_spaces(floors, apartment_per_floor=floors, **project_data[name])
+                project = RealEstateProjectFactory.create_with_spaces(floors, apartment_per_floor=floors,
+                                                                      **project_data[name])
                 self.stdout.write(f'Project {project}: {project.real_estate_spaces.count()}')
 
     def _create_company(self, current_user, reset_company):
