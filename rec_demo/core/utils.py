@@ -58,3 +58,18 @@ def model_to_json_dict(instance, **kwargs):
     model_dict = model_to_dict(instance)
     clean_data = clean_dict(model_dict, **kwargs)
     return clean_data
+
+
+def convert_to_decimal(data):
+    if isinstance(data, list):
+        new_list = list()
+        for dec in data:
+            new_list.append(convert_to_decimal(dec))
+        return new_list
+    elif isinstance(data, str):
+        clean_dec = data.replace(',', '')
+        return Decimal(clean_dec)
+    elif isinstance(data, Decimal):
+        return data
+    else:
+        raise ValueError('Unsupported type to convert to decimal')

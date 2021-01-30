@@ -79,7 +79,42 @@
         </div>
     </div>
 
-
+    <div class="card">
+    <div class="card-header">
+        {% trans 'Transactions' %}
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+            <th scope="col">{% trans 'Date' %}</th>
+            <th scope="col">{% trans 'Amount' %}</th>
+            <th scope="col">{% trans 'Transaction type' %}</th>
+            <th scope="col">{% trans 'Comments' %}</th>
+            <th scope="col">{% trans 'Due date' %}</th>
+            </thead>
+            <tbody>
+            {% for transaction in object.account.transactions.all %}
+                <tr>
+                    <td>
+                        {{ transaction.date }}
+                    </td>
+                    <td>
+                        {{ transaction.amount }}
+                    </td>
+                    <td>
+                        {{ transaction.transaction_type }}
+                    </td>
+                    <td>
+                        {{ transaction.comments }}
+                    </td>
+                    <td>
+                        {{ transaction.due_date }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}
 {% block javascript %}
@@ -88,7 +123,7 @@
         $(document).ready(function () {
             let sum = 0.00;
             $('.price').each(function () {
-                let price = $(this).text().replace(',','');
+                let price = $(this).text().replace(',', '');
                 console.log('Price', price)
                 if (!isNaN(price) && price.length != 0) {
                     sum += parseFloat(price);

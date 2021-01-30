@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView, DetailView
 
 from .forms import AccountForm
@@ -11,7 +11,11 @@ from ..core.mixins import AuditableViewMixin
 class AccountCreateView(AuditableViewMixin, LoginRequiredMixin, CreateView):
     model = Account
     form_class = AccountForm
-    success_url = reverse_lazy('banking:list-account')
+
+    # success_url = reverse_lazy('banking:list-account')
+
+    def get_success_url(self):
+        return reverse('real_estate:detail-contract', args=(self.object.id,))
 
 
 account_create_view = AccountCreateView.as_view()
@@ -20,7 +24,11 @@ account_create_view = AccountCreateView.as_view()
 class AccountUpdateView(AuditableViewMixin, LoginRequiredMixin, UpdateView):
     model = Account
     form_class = AccountForm
-    success_url = reverse_lazy('banking:list-account')
+
+    # success_url = reverse_lazy('banking:list-account')
+
+    def get_success_url(self):
+        return reverse('real_estate:detail-contract', args=(self.object.id,))
 
 
 account_update_view = AccountUpdateView.as_view()

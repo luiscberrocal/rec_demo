@@ -6,6 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from .exceptions import BankingException
 from .forms import AccountForm
 from .models import TransactionType
+from ..real_estate.exceptions import RealEstateException
+from ..real_estate.models import RealEstateSpace
 
 
 def get_or_create_transaction_types():
@@ -108,11 +110,13 @@ def divide_in_payments_with_dates(amount, number, start_date, diff_to_last=True,
 def get_index_and_field_name(field_name, regexp=AccountForm.TRANSACTION_REGEXP):
     match = regexp.match(field_name)
     match_found = False
-    parsed_field_name =  None
+    parsed_field_name = None
     parsed_index = None
     if match:
         match_found = True
         parsed_field_name = match.group(1)
         parsed_index = match.group(2)
     return match_found, parsed_field_name, parsed_index
+
+
 
