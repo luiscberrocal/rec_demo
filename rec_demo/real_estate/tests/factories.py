@@ -1,8 +1,9 @@
 import string
 from decimal import Decimal
+from typing import Sequence, Any
 
 from django.conf import settings
-from factory import Iterator, lazy_attribute
+from factory import Iterator, lazy_attribute, post_generation
 from factory import LazyAttribute
 from factory import SubFactory
 from factory.django import DjangoModelFactory
@@ -202,12 +203,29 @@ class ContractFactory(DjangoModelFactory):
     date = LazyAttribute(
         lambda x: faker.date_time_between(start_date="-1y", end_date="now", tzinfo=timezone(settings.TIME_ZONE)).date())
     project = SubFactory(RealEstateProjectFactory)
-
+    broker = SubFactory(BrokerFactory)
     created_by = SubFactory(UserFactory)
 
     @lazy_attribute
     def modified_by(self):
         return self.created_by
+
+    @post_generation
+    def contract_clients(self, create: bool, extracted: Sequence[Any], **kwargs):
+        if not create:
+            return
+        if extracted is not None and extracted > 0:
+            ContractClientFactory.create(contract=self, created_by=self.created_by)
+
+    @post_generation
+    def real_estate_spaces(self, create: bool, extracted: Sequence[Any], **kwargs):
+        if not create:
+            return
+        if extracted is not None and extracted > 0:
+            qs = self.project.real_estate_spaces.filter(space_type=RealEstateSpace.LIVING_SPACE)
+            if qs.count() > 0:
+                self.add_space(qs.first())
+
 
 
 class ContractClientFactory(DjangoModelFactory):

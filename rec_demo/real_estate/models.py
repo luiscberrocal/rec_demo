@@ -182,8 +182,6 @@ class Contract(Auditable, TimeStampedModel):
         return total
 
 
-
-
 class ContractClient(Auditable, TimeStampedModel):
     client = models.ForeignKey(Client, verbose_name=_('Client'), related_name='contract_clients',
                                on_delete=models.CASCADE)
