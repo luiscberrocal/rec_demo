@@ -248,6 +248,8 @@ class TestCaseContract(TestCase):
         real_estate_space = self.project.real_estate_spaces.first()
         contract = ContractFactory(project=real_estate_space.project,
                                    created_by=self.user, broker=self.broker)
+        contract.real_estate_spaces.all().delete()
+        contract.contract_clients.all().delete()
         self.assertEqual(Contract.objects.count(), 1)
         contract.add_space(real_estate_space)
         contract.add_client(self.contract_client)
@@ -281,14 +283,14 @@ class TestCaseContractClient(TestCase):
         Test the creation of a ContractClient model using a factory
         """
         contract_client = ContractClientFactory.create()
-        self.assertEqual(ContractClient.objects.count(), 1)
+        self.assertEqual(ContractClient.objects.count(), 2)
 
     def test_create_batch(self):
         """
         Test the creation of 5 ContractClient models using a factory
         """
         contract_clients = ContractClientFactory.create_batch(5)
-        self.assertEqual(ContractClient.objects.count(), 5)
+        self.assertEqual(ContractClient.objects.count(), 10)
         self.assertEqual(len(contract_clients), 5)
 
     def test_attribute_count(self):

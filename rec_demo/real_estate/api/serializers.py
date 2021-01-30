@@ -16,7 +16,7 @@ from rest_framework import serializers
 #     Standard Serializer for $MODEL_NAME$ model.
 #     """
 #     pass
-from ..models import RealEstateSpace
+from ..models import RealEstateSpace, Contract
 
 
 class RealEstateSpacePostSerializer(serializers.ModelSerializer):
@@ -37,3 +37,26 @@ class RealEstateSpaceSerializer(RealEstateSpacePostSerializer):
     Standard Serializer for RealEstateSpace model.
     """
     pass
+
+
+class ContractPostSerializer(serializers.ModelSerializer):
+    """
+    Standard Serializer for Contract model.
+    """
+
+    class Meta:
+        model = Contract
+        fields = ('id', 'date', 'project', 'broker', 'created', 'modified', 'created_by', 'modified_by',)
+
+
+class ContractSerializer(ContractPostSerializer):
+    """
+    Standard Serializer for Contract model.
+    """
+    real_estate_spaces = RealEstateSpaceSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Contract
+        fields = ('id', 'date', 'project', 'broker', 'created', 'modified', 'created_by',
+                  'modified_by', 'real_estate_spaces')
+

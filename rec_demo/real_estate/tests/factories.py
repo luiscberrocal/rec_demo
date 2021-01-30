@@ -214,18 +214,17 @@ class ContractFactory(DjangoModelFactory):
     def contract_clients(self, create: bool, extracted: Sequence[Any], **kwargs):
         if not create:
             return
-        if extracted is not None and extracted > 0:
+        if extracted is None:
             ContractClientFactory.create(contract=self, created_by=self.created_by)
 
     @post_generation
     def real_estate_spaces(self, create: bool, extracted: Sequence[Any], **kwargs):
         if not create:
             return
-        if extracted is not None and extracted > 0:
+        if extracted is None:
             qs = self.project.real_estate_spaces.filter(space_type=RealEstateSpace.LIVING_SPACE)
             if qs.count() > 0:
                 self.add_space(qs.first())
-
 
 
 class ContractClientFactory(DjangoModelFactory):

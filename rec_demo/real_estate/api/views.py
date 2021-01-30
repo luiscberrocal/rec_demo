@@ -1,7 +1,7 @@
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 
-from .serializers import RealEstateSpaceSerializer, RealEstateSpacePostSerializer
-from ..models import RealEstateSpace
+from .serializers import RealEstateSpaceSerializer, RealEstateSpacePostSerializer, ContractSerializer
+from ..models import RealEstateSpace, Contract
 
 
 class RealEstateSpaceListAPIView(ListAPIView):
@@ -34,3 +34,31 @@ class RealEstateSpaceCreateAPIView(CreateAPIView):
 
 
 real_estate_space_create_api_view = RealEstateSpaceCreateAPIView.as_view()
+
+
+class ContractListAPIView(ListAPIView):
+    serializer_class = ContractSerializer
+
+    def get_queryset(self):
+        return Contract.objects.all()
+
+
+contract_list_api_view = ContractListAPIView.as_view()
+
+
+class ContractDetailAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = ContractSerializer
+    queryset = Contract.objects.all()
+
+    def get_object(self):
+        return super(ContractDetailAPIView, self).get_object()
+
+
+contract_detail_api_view = ContractDetailAPIView.as_view()
+
+
+class ContractCreateAPIView(CreateAPIView):
+    serializer_class = ContractSerializer
+
+
+contract_create_api_view = ContractCreateAPIView.as_view()
