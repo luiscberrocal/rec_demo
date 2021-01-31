@@ -183,9 +183,11 @@
             $('#id_contract').on('change', function () {
                 let contract = $('#id_contract option:selected').text();
                 let contractId = $('#id_contract').val();
-
+                let url_mask = "{% url 'real_estate-api:detail-contract' 12345 %}"
+                let url = url_mask.replace(/12345/, contractId);
                 $('#id_name').val(contract);
-                getContractData(contractId)
+                $('#real-estate-spaces-card').addRealEstateSpaces(url)
+                //getContractData(contractId)
             });
             $('.transaction-class').on('change', function () {
                 let cls = $(this).val();
