@@ -46,4 +46,32 @@
 
     };
 
+    $.fn.getRealEstateData = function (url_mask) {
+        return this.each(function () {
+            let formRow = $(this);
+            //const selectBox = formRow.find('select')
+            let optionSelected = formRow.find("option:selected").val();
+            let priceDiv = formRow.find('div.price')
+            let areaDiv = formRow.find('div.area')
+            console.log(formRow.attr('id'), optionSelected)
+            let url = url_mask.replace(/12345/, optionSelected);
+            if (optionSelected.length > 0) {
+                $.ajax({
+                    method: 'GET',
+                    url: url,
+                    data: {},
+                    success: function (data) {
+                        console.log(data.area, data.price);
+                        priceDiv.attr('price', data.price);
+                        priceDiv.text(data.price);
+                        areaDiv.attr('area', data.area);
+                        areaDiv.text(data.area);
+                    }
+                });
+            }
+        });
+
+    }
+
 }(jQuery));
+
