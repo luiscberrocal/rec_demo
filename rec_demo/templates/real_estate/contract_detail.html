@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="real-estate-spaces-card">
         <div class="card-header">
             {% trans 'Real estate spaces' %}
         </div>
@@ -66,14 +66,6 @@
                 <th scope="col">{% trans 'Price' %}</th>
                 </thead>
                 <tbody>
-                {% for real_estate_space in object.real_estate_spaces.all %}
-                    <tr>
-                        <td>{{ real_estate_space.name }}</td>
-                        <td>{{ real_estate_space.get_space_type_display }}</td>
-                        <td>{{ real_estate_space.area }}</td>
-                        <td class="price">{{ real_estate_space.price }}</td>
-                    </tr>
-                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -98,7 +90,6 @@
                     <td>
                         {{ transaction.date }}
                     </td>
-
                     <td>
                         {{ transaction.transaction_type }}
                     </td>
@@ -107,7 +98,8 @@
                     </td>
                     <td>
                         {{ transaction.due_date }}
-                    </td> <td>
+                    </td>
+                    <td>
                         {{ transaction.amount }}
                     </td>
                 </tr>
@@ -128,8 +120,11 @@
                 if (!isNaN(price) && price.length != 0) {
                     sum += parseFloat(price);
                 }
-            });
+             });
             console.log('Total', sum)
+
+            let url= "{% url 'real_estate-api:detail-contract' object.id %}"
+            $('#real-estate-spaces-card').addRealEstateSpaces(url)
         });
     </script>
 

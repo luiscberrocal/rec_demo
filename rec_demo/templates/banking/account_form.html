@@ -100,42 +100,6 @@
     {{ block.super }}
     <script>
         $(document).ready(function () {
-            function getContractData(contractId) {
-                let url_mask = "{% url 'real_estate-api:detail-contract' 12345 %}"
-                let url = url_mask.replace(/12345/, contractId);
-                $.ajax({
-                    method: 'GET',
-                    url: url,
-                    data: {},
-                    success: function (data) {
-                        let tbody = $('#real-estate-spaces-card').find('tbody')
-                        let sum = 0.0
-                        data.real_estate_spaces.forEach(function (item) {
-                            //console.log(item);
-                            let row = tbody.append($('<tr>'));
-                            row.append($('<td>').text(item.name));
-                            row.append($('<td>').text(item.space_type))
-                            row.append($('<td>').text(item.area))
-                            let price = parseFloat(item.price).toLocaleString('en', {
-                                useGrouping: true,
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            })
-                            sum += parseFloat(item.price);
-                            row.append($('<td>').text(price).addClass('price').attr('price', item.price))
-                        })
-                        let row = tbody.append($('<tr>'));
-                        row.append($('<td colspan="3">').text('Total'));
-                        let sumDisplay = parseFloat(sum).toLocaleString('en', {
-                            useGrouping: true,
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        })
-                        row.append($('<td>').text(sumDisplay).addClass('price').attr('price', sum))
-
-                    }
-                });
-            }
 
             function getIndex(elementId) {
                 const regex = /transaction-(\d+)/gm;
