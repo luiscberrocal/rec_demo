@@ -15,7 +15,8 @@ class AccountFactory(object):
     def create_account_for_apartment(cls, *args, **kwargs):
         account_name = args[0]
         app_user = args[1]
-        price = kwargs.get('price', Decimal('125000.00'))
+        contract = kwargs.get('contract', None)
+        price = kwargs.get('price', contract.total_amount or Decimal('125000.00'))
         put_apart_payment = kwargs.get('put_apart_payment', None)
         down_payment_percentage = kwargs.get('down_payment_percentage', Decimal('0.15'))
         down_payment = kwargs.get('down_payment', price * down_payment_percentage)

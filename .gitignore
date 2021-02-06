@@ -334,3 +334,5 @@ output/
 !.envs/.local/
 
 .envs/.local/.django_aws
+
+reports/
