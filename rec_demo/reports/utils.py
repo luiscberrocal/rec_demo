@@ -71,10 +71,11 @@ class Reporter(object):
 
 def generate_transaction_report(**kwargs):
     location = kwargs.get('location')
+    expiration_time = kwargs.get('expiration_time', None)
     qs = Transaction.objects.all()
     resource = TransactionResource()
 
-    reporter = Reporter()
+    reporter = Reporter(expiration_time=expiration_time)
     result = reporter.write_report(qs, resource, location=location)
 
     return result

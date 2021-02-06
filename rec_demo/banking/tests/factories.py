@@ -16,7 +16,10 @@ class AccountFactory(object):
         account_name = args[0]
         app_user = args[1]
         contract = kwargs.get('contract', None)
-        price = kwargs.get('price', contract.total_amount or Decimal('125000.00'))
+        if contract is None:
+            price = kwargs.get('price', Decimal('125000.00'))
+        else:
+            price = contract.total_amount
         put_apart_payment = kwargs.get('put_apart_payment', None)
         down_payment_percentage = kwargs.get('down_payment_percentage', Decimal('0.15'))
         down_payment = kwargs.get('down_payment', price * down_payment_percentage)
@@ -53,7 +56,7 @@ class AccountFactory(object):
         index = 0
         pattern = AccountForm.TRANSACTION_PATTERN
         fields = ['type', 'date', 'account', 'transaction_type', 'amount', 'comments',
-                  'due_date', 'related_debit',]# 'created', 'modified', 'created_by', 'modified_by']
+                  'due_date', 'related_debit', ]  # 'created', 'modified', 'created_by', 'modified_by']
         data_dict = dict()
         for transaction in account.transactions.all():
             for field in fields:
