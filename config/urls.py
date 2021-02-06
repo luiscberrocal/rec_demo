@@ -27,6 +27,7 @@ urlpatterns += i18n_patterns(
     path("users/", include("rec_demo.users.urls", namespace="users")),
     path("real-estate/", include("rec_demo.real_estate.urls", namespace="real_estate")),
     path("banking/", include("rec_demo.banking.urls", namespace="banking")),
+    path("reports/", include("rec_demo.reports.urls", namespace="reports")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

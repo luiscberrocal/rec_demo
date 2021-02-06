@@ -14,6 +14,18 @@
                role="button">{% trans 'Contract List' %}</a>
         </div>
     </div>
+    <div class="card">
+        <div class="card-header">
+            {% trans 'Reports' %}
+        </div>
+        <div class="card-body">
+            <a class="btn btn-primary" href="{% url 'reports:create-report' %}"
+               role="button"><i class="fas fa-plus-circle"></i> {% trans 'Create report' %}</a>
+
+            <a class="btn btn-primary" href="{% url 'reports:list-report' %}"
+               role="button">{% trans 'Report List' %}</a>
+        </div>
+    </div>
     {% if ADMIN_URL %}
         <div class="card">
             <div class="card-header">

@@ -1,6 +1,8 @@
 import os
 
+import requests
 from django.test import TestCase
+from django_test_tools.file_utils import temporary_file
 
 from ..utils import generate_transaction_report
 from ...banking.tests.factories import AccountFactory
@@ -17,8 +19,15 @@ class TestGenerateTransactionReport(TestCase):
         filename = generate_transaction_report(location='LOCAL')
         self.assertTrue(os.path.exists(filename))
 
+    @temporary_file('xlsx', delete_on_exit=True)
     def test_simple_write_s3(self):
-        filename = generate_transaction_report(location='S3', expiration_time=3000)
-        print(filename)
+        filename = self.test_simple_write_s3.filename
+        url = generate_transaction_report(location='S3', expiration_time=3000)
+        r = requests.get(url)
+
+        with open(filename, 'wb') as f:
+            f.write(r.content)
+        self.assertTrue(os.path.exists(filename))
+        self.assertEqual(r.status_code, 200)
 
 
