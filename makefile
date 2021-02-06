@@ -49,11 +49,11 @@ stop-containers:
 	docker stop $$(docker ps -qa)
 
 test: stop-containers
-	docker-compose -f local_min.yml run --service-ports django python manage.py test --settings=config.settings.test --exclude-tag=TO-FIX --exclude=PROD
+	docker-compose -f local_min.yml run --service-ports django python manage.py test --settings=config.settings.test --exclude-tag=TO-FIX --exclude=S3
 	#./scripts/test_cypress.sh
 
 test-finance: stop-containers
-	docker-compose -f local_min.yml run --service-ports django python manage.py test alpha_clinic.finance.tests --settings=config.settings.test --exclude-tag=TO-FIX --exclude=PROD
+	docker-compose -f local_min.yml run --service-ports django python manage.py test alpha_clinic.finance.tests --settings=config.settings.test --exclude-tag=TO-FIX --exclude=S3
 	#./scripts/test_cypress.sh
 
 check:

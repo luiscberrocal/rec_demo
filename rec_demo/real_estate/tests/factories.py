@@ -1,8 +1,9 @@
 import string
 from decimal import Decimal
+from typing import Sequence, Any
 
 from django.conf import settings
-from factory import Iterator, lazy_attribute
+from factory import Iterator, lazy_attribute, post_generation
 from factory import LazyAttribute
 from factory import SubFactory
 from factory.django import DjangoModelFactory
@@ -10,10 +11,10 @@ from factory.fuzzy import FuzzyText
 from faker import Factory as FakerFactory
 from pytz import timezone
 
-from ..exceptions import RealEstateException
 from ..forms import ContractForm
 from ..models import Company, RealEstateProject, RealEstateSpace, Client, Broker, Contract, ContractClient, \
     ContractBroker
+from ..utils import create_spaces
 from ...users.tests.factories import UserFactory
 
 faker = FakerFactory.create()
@@ -49,34 +50,17 @@ class RealEstateProjectFactory(DjangoModelFactory):
 
     @classmethod
     def create_with_spaces(cls, floors, apartment_per_floor=4, **kwargs):
-        #Kwargs
-        areas = kwargs.pop('areas', list())
-        default_area = kwargs.pop('default_area', Decimal('100.00'))
-        price_per_sq_meter = kwargs.pop('price_per_sq_meter', Decimal('1200.00'))
+        # Kwargs
+        project_fields = ['name', 'short_name', 'company', 'logo', 'active', 'creaated_by', 'modified_by']
+        project_kwargs = dict()
+        for project_field in project_fields:
+            if kwargs.get(project_field):
+                project_kwargs[project_field] = kwargs.pop(project_field)
 
-        apartment_letters = 'ABCDEFGHI'
-        if len(areas) == 0:
-            for i in range(apartment_per_floor):
-                areas.append(default_area)
-        elif len(areas) != 0 and len(areas) != apartment_per_floor:
-            raise RealEstateException('Number of apartment per floor must match len of areas')
+        project = cls.create(**project_kwargs)
+        kwargs['apartment_per_floor'] = apartment_per_floor
+        create_spaces(project, floors, **kwargs)
 
-        project = cls.create(**kwargs)
-        space_list = list()
-        floor_increment = Decimal('1.0')
-        for floor in range(1, floors + 1):
-            for i in range(apartment_per_floor):
-                space_data = dict()
-                space_data['project'] = project
-                space_data['space_type'] = RealEstateSpace.LIVING_SPACE
-                space_data['created_by'] = project.created_by
-                space_data['name'] = f'{floor}-{apartment_letters[i]}'
-                space_data['area'] = areas[i]
-                space_data['price'] = areas[i] * price_per_sq_meter *floor_increment
-                real_estate_space = RealEstateSpace(**space_data)
-                space_list.append(real_estate_space)
-            floor_increment += Decimal('0.03')
-        RealEstateSpace.objects.bulk_create(space_list)
         return project
 
 
@@ -117,7 +101,7 @@ class ClientFactory(DjangoModelFactory):
     # Field type ImageField for field picture is not currently supported
     date_of_birth = LazyAttribute(
         lambda x: faker.date_of_birth(tzinfo=timezone(settings.TIME_ZONE), minimum_age=18, maximum_age=90))
-    #religion = Iterator(['Catolico', 'Protestante', 'Judio', ])
+    # religion = Iterator(['Catolico', 'Protestante', 'Judio', ])
     client_type = Iterator((('N', 'Natural person'), ('J', 'Juridical person')), getter=lambda x: x[0])
 
     created_by = SubFactory(UserFactory)
@@ -153,7 +137,7 @@ class ClientFactory(DjangoModelFactory):
     @classmethod
     def create_batch_form_data(cls, *args, **kwargs):
         client_dict = dict()
-        clients = cls.create_batch(*args, **kwargs )
+        clients = cls.create_batch(*args, **kwargs)
         i = 0
         for client in clients:
             client_field = ContractForm.CLIENT_PATTERN.format(i)
@@ -166,7 +150,6 @@ class ClientFactory(DjangoModelFactory):
 
 
 class BrokerFactory(DjangoModelFactory):
-
     class Meta:
         model = Broker
 
@@ -220,12 +203,28 @@ class ContractFactory(DjangoModelFactory):
     date = LazyAttribute(
         lambda x: faker.date_time_between(start_date="-1y", end_date="now", tzinfo=timezone(settings.TIME_ZONE)).date())
     project = SubFactory(RealEstateProjectFactory)
-
+    broker = SubFactory(BrokerFactory)
     created_by = SubFactory(UserFactory)
 
     @lazy_attribute
     def modified_by(self):
         return self.created_by
+
+    @post_generation
+    def contract_clients(self, create: bool, extracted: Sequence[Any], **kwargs):
+        if not create:
+            return
+        if extracted is None:
+            ContractClientFactory.create(contract=self, created_by=self.created_by)
+
+    @post_generation
+    def real_estate_spaces(self, create: bool, extracted: Sequence[Any], **kwargs):
+        if not create:
+            return
+        if extracted is None:
+            qs = self.project.real_estate_spaces.filter(space_type=RealEstateSpace.LIVING_SPACE)
+            if qs.count() > 0:
+                self.add_space(qs.first())
 
 
 class ContractClientFactory(DjangoModelFactory):

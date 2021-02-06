@@ -50,7 +50,7 @@
         <h3 class="form-subtitle">{% trans 'Real Estate Spaces' %}</h3>
         <div id="real-estate-spaces">
             {% for key, real_estate_space_field in form.get_real_estate_space_fields %}
-                <div class="row gy-2 gx-3 align-items-center" id="real-estate-space-row-{{ key }}">
+                <div class="row gy-2 gx-3 align-items-center real-estate-space-row" id="real-estate-space-row-{{ key }}">
                     <div class="form-group col-md-7 mb-0">
                         {{ real_estate_space_field|as_crispy_field }}
                     </div>
@@ -98,13 +98,14 @@
     {{ block.super }}
     <script>
         $(document).ready(function () {
+            let urlRealEstateSpaceMask = "{% url 'real_estate-api:detail-real-estate-space' 12345 %}"
             $('.real-estate-space').select2();
-
+            $('.real-estate-space-row').getRealEstateData(urlRealEstateSpaceMask)
             function calculateTotal() {
                 let sum = 0.00;
                 $('.price').each(function () {
                     let price = $(this).text().replace(',', '');
-                    console.log('Price', price)
+                    //console.log('Price', price)
                     if (!isNaN(price) && price.length != 0) {
                         sum += parseFloat(price);
                     }
@@ -155,7 +156,8 @@
                     {#    .removeAttr('data-select2-id')#}
                     {#    .removeAttr('aria-hidden')#}
                     {#    .removeAttr('tabindex');#}
-                };
+                }
+                ;
 
                 let clone = lastRow.clone(true);
                 let row_id = clone.attr('id');
@@ -240,11 +242,15 @@
                 $('#real-estate-space-price-' + n).attr('price', price);
 
                 $('#real-estate-space-area-' + n).html(area);
-                $('#real-estate-space-area-' + n).attr('area', area);
+                $('#real-estate-space-area-' + n).attr('area', area)
+                let url = urlRealEstateSpaceMask.replace(/12345/, optionSelected.val())
+                $(this).parents('.real-estate-space-row').getRealEstateData(url);
                 calculateTotal();
 
 
             });
+            //console.log('CALC')
+            //calculateTotal();
         });
     </script>
 

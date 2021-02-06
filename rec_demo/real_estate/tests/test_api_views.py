@@ -1,6 +1,6 @@
 from test_plus import TestCase
 
-from .factories import RealEstateProjectFactory
+from .factories import RealEstateProjectFactory, ContractFactory
 from ...users.tests.factories import SimpleUserFactory
 
 
@@ -105,3 +105,21 @@ class TestRealEstateSpaceListAPIView(TestCase):
 #
 #         self.assertEqual(RealEstateSpace.objects.count(), 1)
 #         write_assertions(real-estate-space_post_data, 'real-estate-space_post_data', type_only=True)
+
+
+class TestContractDetailAPIView(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.app_user = SimpleUserFactory.create()
+        cls.project = RealEstateProjectFactory.create_with_spaces(4, created_by=cls.app_user)
+
+
+    def test_get(self):
+        contract = ContractFactory.create(project=self.project, created_by=self.app_user)
+        with self.login(self.app_user):
+            response = self.get('real_estate_api:detail-contract', pk=contract.id)
+            self.response_200(response)
+            results = response.data
+            self.assertEqual(len(results), 9)
+            self.assertEqual(len(results['real_estate_spaces']), 1)
