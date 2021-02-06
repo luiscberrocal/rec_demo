@@ -5,7 +5,7 @@ import tempfile
 import boto3
 from botocore import errorfactory
 from django.conf import settings
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, tag
 from django_test_tools.file_utils import temporary_file, hash_file
 
 logger = logging.getLogger(__name__)
@@ -22,6 +22,7 @@ class TestBotoUpload(SimpleTestCase):
         )
         self.s3_client = session.client('s3')
 
+    @tag('S3')
     @temporary_file('.txt', delete_on_exit=True)
     def test_upload(self):
         source_filename = '../../requirements/base.txt'
@@ -47,6 +48,7 @@ class TestBotoUpload(SimpleTestCase):
             pass
         print(res)
 
+    @tag('S3')
     def test_upload_new_file(self):
         object_name = 'test_upload_new_file.txt'
         bucket = settings.AWS_STORAGE_BUCKET_NAME
