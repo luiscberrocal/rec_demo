@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+    <h2>{% trans 'Report' %} {{ object.id }}</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-4 detail-attribute">{% trans 'id' %}:</div>
+                <div class="col-md-8">{{ object.id }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            {% trans 'Children' %}
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                <th scope="col">{% trans 'Name' %}</th>
+                </thead>
+                <tbody>
+                {% for child in object.child.all %}
+                    <tr>
+                        <td>{{ child.name }}</td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+
+{% endblock %}

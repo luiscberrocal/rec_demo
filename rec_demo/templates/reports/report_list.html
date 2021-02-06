@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+    <h2>{% trans 'Reports' %}</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>{% trans 'id' %}</th>
+            <th>{% trans 'Url' %}</th>
+            <th>{% trans 'Actions' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for report in report_list %}
+            <tr>
+                <td> {{ report.id }}</td>
+                <td> {{ report.url }}</td>
+                <td>
+                    <a class="btn btn-primary btn-sm"
+                       href="{% url 'reports:detail-report' report.id %}">
+                        <i class="fas fa-eye" title="{% trans 'View' %}"></i>
+                    </a>
+                    <a class="btn btn-primary btn-sm"
+                       href="#">
+                         <i class="fas fa-edit" title="{% trans 'Edit' %}"></i>
+                    </a>
+                    <a class="btn btn-danger btn-sm"
+                       href="{% url 'reports:delete-report' report.id %}">
+                         <i class="fas fa-trash-alt" title="{% trans 'Delete' %}"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %}
+        <nav aria-label="Pagination"></nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}"
+                       aria-label="{% trans 'Previous' %}">
+                        <span area-hidden="true">&laquo;</span>
+                        <span class="sr-only">{% trans 'Previous' %}</span>
+                    </a>
+
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span area-hidden="true">&laquo;</span>
+                    <span class="sr-only">{% trans 'Previous' %}</span>
+                </li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+
+{% endblock %}

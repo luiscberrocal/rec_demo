@@ -5,16 +5,28 @@ from django.views.generic import ListView, FormView, DeleteView, DetailView
 
 from .forms import ReportForm
 from .models import Report
+from .utils import generate_transaction_report
 
 
 class ReportCreateView(LoginRequiredMixin, FormView):
     form_class = ReportForm
     success_url = reverse_lazy('reports:list-report')
     template_name = 'reports/report_form.html'
-    
-    def post(self, request, *args, **kwargs):
-        response = super(ReportCreateView, self).post(request, *args, **kwargs)
-        return response
+
+    def form_valid(self, form):
+        self.build_report(form.cleaned_data)
+        return super(ReportCreateView, self).form_valid(form)
+
+    def build_report(self, cleaned_data):
+        report_data = dict()
+        report_data['name'] = cleaned_data['type']
+        report_data['task_id'] = '999'
+        report_data['url'] = generate_transaction_report(location='S3', expiration_time=3000)
+        Report.objects.create(**report_data)
+
+
+
+
 
 
 report_create_view = ReportCreateView.as_view()

@@ -335,4 +335,4 @@ output/
 
 .envs/.local/.django_aws
 
-reports/
+/reports-output/
