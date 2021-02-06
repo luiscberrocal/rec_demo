@@ -1,5 +1,5 @@
 release: python manage.py migrate
 
 web: gunicorn config.wsgi:application
-worker: celery worker -a config.celery_app --loglevel=info
-beat: celery beat -a config.celery_app --loglevel=info
+worker: celery -A config.celery_app worker --loglevel=info
+beat: celery -A config.celery_app beat --loglevel=info
