@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
+from slugify import slugify
 
 from ...models import RealEstateProject, Company
-from ...tests.factories import RealEstateProjectFactory, CompanyFactory
+from ...utils import create_spaces
 from ....users.models import User
 
 
@@ -68,8 +69,10 @@ class Command(BaseCommand):
             except RealEstateProject.DoesNotExist:
                 create = True
             if create:
-                project = RealEstateProjectFactory.create_with_spaces(floors, apartment_per_floor=floors,
-                                                                      **project_data[name])
+                project = RealEstateProject.objects.create(name=project_data[name]['name'],
+                                                           short_name= slugify(project_data[name]['name']),
+                                                           company=company)
+                create_spaces(project, floors, **project_data[name])
                 self.stdout.write(f'Project {project}: {project.real_estate_spaces.count()}')
 
     def _create_company(self, current_user, reset_company):
@@ -83,6 +86,6 @@ class Command(BaseCommand):
         except Company.DoesNotExist:
             create_company = True
         if create_company:
-            company = CompanyFactory.create(name=company_name, created_by=current_user)
+            company = Company.objects.create(name=company_name, created_by=current_user)
             self.stdout.write(f'Created {company.name} ({company.id})')
         return company

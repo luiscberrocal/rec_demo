@@ -1,14 +1,11 @@
 from django.core.management.base import BaseCommand
 
-from ...models import RealEstateProject, Company
-from ...tests.factories import RealEstateProjectFactory, CompanyFactory
 from ...utils import get_or_create_sales_types
 from ....banking.utils import get_or_create_transaction_types
-from ....users.models import User
 
 
 class Command(BaseCommand):
-    help = "Create fake data."
+    help = "Create types data."
 
     def add_arguments(self, parser):
         pass
@@ -24,4 +21,3 @@ class Command(BaseCommand):
         transaction_types = get_or_create_transaction_types()
         for transaction_type in transaction_types:
             self.stdout.write(f'Created: {transaction_type["created"]} {transaction_type["name"]}')
-

@@ -18,7 +18,7 @@ class Reporter(object):
             self.expiration_time = kwargs.get('expiration_time', None)
 
         self.target_folder = kwargs.get('report_folder', 'reports')
-        #self.output_folder = kwargs.get('output_folder', 'report_output')
+        self.output_folder = kwargs.get('output_folder', 'report-output')
 
     def _upload_to_s3(self, source_filename, object_name, **kwargs):
         expiring_time = kwargs.get('expiration_time', self.expiration_time)
@@ -40,7 +40,7 @@ class Reporter(object):
         return url
 
     def _get_report_filename(self, base_filename, **kwargs):
-        output_folder = kwargs.get('output_folder', self.target_folder)
+        output_folder = kwargs.get('output_folder', self.output_folder)
         file_path = settings.ROOT_DIR / output_folder
         if not os.path.exists(file_path):
             os.mkdir(file_path)
