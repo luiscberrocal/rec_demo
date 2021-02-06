@@ -1,11 +1,14 @@
+from celery.result import AsyncResult
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, FormView, DeleteView, DetailView
+from django.views.generic.base import View
 
 from .forms import ReportForm
 from .models import Report
-from .utils import generate_transaction_report
+from .tasks import create_transaction_report_task
 
 
 class ReportCreateView(LoginRequiredMixin, FormView):
@@ -18,15 +21,12 @@ class ReportCreateView(LoginRequiredMixin, FormView):
         return super(ReportCreateView, self).form_valid(form)
 
     def build_report(self, cleaned_data):
+        task_id = create_transaction_report_task.delay(location='S3', expiration_time=3000)
         report_data = dict()
         report_data['name'] = cleaned_data['type']
-        report_data['task_id'] = '999'
-        report_data['url'] = generate_transaction_report(location='S3', expiration_time=3000)
+        report_data['task_id'] = task_id
+        # report_data['url'] = generate_transaction_report()
         Report.objects.create(**report_data)
-
-
-
-
 
 
 report_create_view = ReportCreateView.as_view()
@@ -61,3 +61,18 @@ class ReportDetailView(LoginRequiredMixin, DetailView):
 
 
 report_detail_view = ReportDetailView.as_view()
+
+
+class ReportStatusView(LoginRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        task_id = kwargs.get('task_id')
+        task_result = AsyncResult(task_id)
+        result = {
+            "task_id": task_id,
+            "task_status": task_result.status,
+            "task_result": task_result.result
+        }
+        return JsonResponse(result, status=200)
+
+report_status_view = ReportStatusView.as_view()
