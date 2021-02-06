@@ -62,5 +62,5 @@ class TestBotoUpload(SimpleTestCase):
                                                         Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
                                                                 'Key': object_name}, ExpiresIn=expiring_time)
             # print(f'URL: {url}')
-        self.assertTrue('https://emr-practice-staging-bucket.s3.amazonaws.com/test_upload_new_file.txt' in url)
+        self.assertTrue('https://rec-demo-staging-bucket.s3.amazonaws.com/test_upload_new_file.txt' in url)
         self.s3_client.delete_object(Bucket=bucket, Key=object_name)
