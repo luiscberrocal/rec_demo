@@ -4,7 +4,7 @@ import requests
 from django.test import TestCase
 from django_test_tools.file_utils import temporary_file
 
-from ..utils import generate_transaction_report
+from ..utils import generate_transaction_report, Reporter
 from ...banking.tests.factories import AccountFactory
 from ...real_estate.tests.factories import ClientFactory, ContractFactory
 
@@ -31,3 +31,10 @@ class TestGenerateTransactionReport(TestCase):
         self.assertEqual(r.status_code, 200)
 
 
+class TestReporter(TestCase):
+
+    def test__add_timestamp(self):
+        reporter = Reporter()
+        filename = 'transaction.xlsx'
+        dated_filename = reporter._add_timestamp(filename)
+        self.assertRegex(dated_filename, r'^\d{8}_\d{6}_[a-z_-]+\.[a-z]+$')
