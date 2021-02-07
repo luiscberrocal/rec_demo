@@ -49,7 +49,7 @@ class Reporter(object):
         return os.path.join(file_path, base_filename)
 
     def _add_timestamp(self, filename, position='start'):
-        timestamp = timezone.now().strftime('%Y%m%d_%H%M%S')
+        timestamp = timezone.localtime().strftime('%Y%m%d_%H%M%S')
         file_parts = os.path.splitext(filename)
         if position == 'end':
             return f'{file_parts[0]}_{timestamp}{file_parts[1]}'
