@@ -28,8 +28,11 @@ class ReportDetailAPIView(RetrieveUpdateDestroyAPIView):
             "task_status": task_result.status,
             "task_result": task_result.result
         }
-        report.metadata = {**report.metadata, **result}
-        if task_result.status == 'SUCCEED':
+        if report.metadata is None:
+            report.metadata = result
+        else:
+            report.metadata = {**report.metadata, **result}
+        if task_result.status == 'SUCCESS2':
             report.url = task_result.result
         report.save()
         return report

@@ -54,7 +54,7 @@ class Reporter(object):
             with open(filename, 'wb') as excel_file:
                 excel_file.write(dataset.xlsx)
             # self.clean_up(filename, model_name)
-            return filename
+            return {'filename': filename}
         elif location == 'S3':
             object_name = base_filename
             with tempfile.NamedTemporaryFile() as temp:
@@ -63,7 +63,7 @@ class Reporter(object):
                     excel_file.write(dataset.xlsx)
                 # self.clean_up(filename, model_name)
                 url = self._upload_to_s3(filename, object_name)
-            return url
+            return {'url': url, 's3_object_name': object_name}
         else:
             msg = f'{location} is not a supported location for writing reports'
             raise ReportsException(msg)
@@ -72,7 +72,7 @@ class Reporter(object):
 def generate_transaction_report(**kwargs):
     location = kwargs.get('location')
     expiration_time = kwargs.get('expiration_time', None)
-    qs = Transaction.objects.all()
+    qs = Transaction.objects.all() #TODO Add setting for max number of records in report
     resource = TransactionResource()
 
     reporter = Reporter(expiration_time=expiration_time)

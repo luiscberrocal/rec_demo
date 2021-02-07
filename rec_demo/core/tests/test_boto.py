@@ -37,7 +37,7 @@ class TestBotoUpload(SimpleTestCase):
 
         output_hash = hash_file(output_filename)
         res = self.s3_client.get_object_acl( Bucket=bucket,Key=object_name)
-        print(res)
+
         self.s3_client.delete_object(Bucket=bucket, Key=object_name)
         self.assertEqual(output_hash, source_hash)
         self.assertTrue(os.path.exists(output_filename))

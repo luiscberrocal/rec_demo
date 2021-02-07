@@ -2,6 +2,9 @@ import re
 from datetime import date
 from decimal import Decimal
 
+import boto3
+import botocore
+from django.conf import settings
 from django.db.models import Model
 from django.forms import model_to_dict
 from django.utils import timezone
@@ -102,3 +105,22 @@ class CaseChanger(object):
     def to_camel_case(self, snake_str):
         components = snake_str.split('_')
         return ''.join(x.title() for x in components)
+
+
+def file_exists_on_s3(bucket_name, filename, s3_client=None):
+    if s3_client is None:
+        session = boto3.Session(
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        )
+        s3_client = session.client('s3')
+    try:
+        s3_client.get_object_acl(Bucket=bucket_name, Key=filename )
+        return True
+    except Exception as e:
+        if e.response['Error']['Code'] == "NoSuchKey":
+            return False
+        else:
+            raise e #TODO Wrap in core Exception
+    raise CoreException('Could not find file in bucket')
+
