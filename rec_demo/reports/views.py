@@ -9,6 +9,7 @@ from django.views.generic.base import View
 from .forms import ReportForm
 from .models import Report
 from .tasks import create_transaction_report_task
+from ..core.mixins import AuditableViewMixin
 
 
 class ReportCreateView(LoginRequiredMixin, FormView):
@@ -27,6 +28,9 @@ class ReportCreateView(LoginRequiredMixin, FormView):
         report_data['name'] = cleaned_data['type']
         report_data['task_id'] = task_id
         report_data['metadata'] = {'config': report_config}
+        report_data['created_by'] = self.request.user
+        report_data['modified_by'] = None
+
         Report.objects.create(**report_data)
 
 

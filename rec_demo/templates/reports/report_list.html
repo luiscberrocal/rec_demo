@@ -20,7 +20,13 @@
                 <td><a href="{% url 'reports-api:detail-report' report.id %}"> {{ report.id }}</a></td>
                 <td> {{ report.name }}</td>
                 <td><a href="{% url 'reports:status-report' report.task_id %}">{{ report.task_id }}</a></td>
-                <td> {{ report.url }}</td>
+                <td>
+                    {% if report.url %}
+                        <a href="{{ report.metadata.task_result.url }}">{{ report.metadata.task_result.s3_object_name }}</a>
+                    {% else %}
+                    {% trans 'Building report...' %}
+                    {% endif %}
+                </td>
                 <td>
                     <a class="btn btn-primary btn-sm"
                        href="{% url 'reports:detail-report' report.id %}">
@@ -28,11 +34,11 @@
                     </a>
                     <a class="btn btn-primary btn-sm"
                        href="#">
-                         <i class="fas fa-edit" title="{% trans 'Edit' %}"></i>
+                        <i class="fas fa-edit" title="{% trans 'Edit' %}"></i>
                     </a>
                     <a class="btn btn-danger btn-sm"
                        href="{% url 'reports:delete-report' report.id %}">
-                         <i class="fas fa-trash-alt" title="{% trans 'Delete' %}"></i>
+                        <i class="fas fa-trash-alt" title="{% trans 'Delete' %}"></i>
                     </a>
                 </td>
             </tr>

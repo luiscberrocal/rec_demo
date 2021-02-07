@@ -15,7 +15,7 @@ class Report(Auditable, TimeStampedModel):
     metadata = JSONField(_('Metadata'), null=True, blank=True)
 
     class Meta:
-        ordering = ('created', )
+        ordering = ('-created', )
 
     def __str__(self):
         return self.url

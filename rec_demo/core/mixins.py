@@ -24,7 +24,8 @@ class AuditableFormMixin(object):
 
     def clean(self):
         clean_data = super(AuditableFormMixin, self).clean()
-        if self.instance.id is None:
-            clean_data['created_by'] = self.user
-        clean_data['modified_by'] = self.user
+        if hasattr(self, 'instance'):
+            if self.instance.id is None:
+                clean_data['created_by'] = self.user
+            clean_data['modified_by'] = self.user
         return clean_data
