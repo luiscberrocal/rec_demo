@@ -21,11 +21,12 @@ class ReportCreateView(LoginRequiredMixin, FormView):
         return super(ReportCreateView, self).form_valid(form)
 
     def build_report(self, cleaned_data):
-        task_id = create_transaction_report_task.delay(location='S3', expiration_time=3000)
+        report_config = {'location': 'S3', 'expiration_time': 3000} ###TODO Set in settings
+        task_id = create_transaction_report_task.delay(**report_config)
         report_data = dict()
         report_data['name'] = cleaned_data['type']
         report_data['task_id'] = task_id
-        # report_data['url'] = generate_transaction_report()
+        report_data['metadata'] = {'config': report_config}
         Report.objects.create(**report_data)
 
 

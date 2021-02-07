@@ -17,7 +17,7 @@
         <tbody>
         {% for report in report_list %}
             <tr>
-                <td> {{ report.id }}</td>
+                <td><a href="{% url 'reports-api:detail-report' report.id %}"> {{ report.id }}</a></td>
                 <td> {{ report.name }}</td>
                 <td><a href="{% url 'reports:status-report' report.task_id %}">{{ report.task_id }}</a></td>
                 <td> {{ report.url }}</td>

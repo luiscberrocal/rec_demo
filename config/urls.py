@@ -41,6 +41,7 @@ urlpatterns += [
     path('api/v1/app-data/', app_data, name='app_data'),
     path("api/v1/real-estate/", include("rec_demo.real_estate.api.urls", namespace="real_estate_api")),
     path("api/v1/banking/", include("rec_demo.banking.api.urls", namespace="banking_api")),
+    path("api/v1/reports/", include("rec_demo.reports.api.urls", namespace="reports_api")),
 ]
 
 if settings.DEBUG:
