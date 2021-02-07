@@ -22,9 +22,9 @@ class TestFileExistsOnS3(SimpleTestCase):
         object_name = 'base_req_test_file_exists_on_s3_true.txt'
         self.s3_client.upload_file(source_filename, bucket, object_name)
         sleep(2)
-        result = file_exists_on_s3(bucket, object_name, s3_client=self.s3_client)
+        result = file_exists_on_s3(object_name, bucket, s3_client=self.s3_client)
         self.assertTrue(result)
         self.s3_client.delete_object(Bucket=bucket, Key=object_name)
-        result = file_exists_on_s3(bucket, object_name, s3_client=self.s3_client)
+        result = file_exists_on_s3(object_name, bucket, s3_client=self.s3_client)
         sleep(2)
         self.assertFalse(result)

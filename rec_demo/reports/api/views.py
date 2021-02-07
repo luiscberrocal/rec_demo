@@ -22,19 +22,7 @@ class ReportDetailAPIView(RetrieveUpdateDestroyAPIView):
     def get_object(self):
         update_report = False
         report = super(ReportDetailAPIView, self).get_object()
-        task_result = AsyncResult(report.task_id)
-        result = {
-            "task_id": report.task_id,
-            "task_status": task_result.status,
-            "task_result": task_result.result
-        }
-        if report.metadata is None:
-            report.metadata = result
-        else:
-            report.metadata = {**report.metadata, **result}
-        if task_result.status == 'SUCCESS':
-            report.url = task_result.result
-        report.save()
+        report.update_report_metadata()
         return report
 
 

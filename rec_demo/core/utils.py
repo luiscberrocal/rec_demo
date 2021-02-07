@@ -107,13 +107,14 @@ class CaseChanger(object):
         return ''.join(x.title() for x in components)
 
 
-def file_exists_on_s3(bucket_name, filename, s3_client=None):
+def file_exists_on_s3(filename, bucket_name=None, s3_client=None):
+    if filename is None:
+        return False
+    if bucket_name is None:
+        bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+
     if s3_client is None:
-        session = boto3.Session(
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        )
-        s3_client = session.client('s3')
+        s3_client = get_s3_client()
     try:
         s3_client.get_object_acl(Bucket=bucket_name, Key=filename )
         return True
@@ -123,4 +124,13 @@ def file_exists_on_s3(bucket_name, filename, s3_client=None):
         else:
             raise e #TODO Wrap in core Exception
     raise CoreException('Could not find file in bucket')
+
+
+def get_s3_client():
+    session = boto3.Session(
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    )
+    s3_client = session.client('s3')
+    return s3_client
 

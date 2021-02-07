@@ -23,12 +23,12 @@ class TestGenerateTransactionReport(TestCase):
     def test_simple_write_s3(self):
         filename = self.test_simple_write_s3.filename
         result = generate_transaction_report(location='S3', expiration_time=3000)
-        r = requests.get(result['url'])
+        url = requests.get(result['url'])
 
         with open(filename, 'wb') as f:
-            f.write(r.content)
+            f.write(url.content)
         self.assertTrue(os.path.exists(filename))
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(url.status_code, 200)
 
 
 class TestReporter(TestCase):
