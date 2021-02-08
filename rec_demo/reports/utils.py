@@ -21,6 +21,7 @@ class Reporter(object):
 
         self.target_folder = kwargs.get('report_folder', 'reports')
         self.output_folder = kwargs.get('output_folder', 'report-output')
+        self.base_filename = kwargs.get('base_filename', 'transactions.xlsx')
 
     def _upload_to_s3(self, source_filename, object_name, **kwargs):
         expiring_time = kwargs.get('expiration_time', self.expiration_time)
@@ -39,7 +40,7 @@ class Reporter(object):
         else:
             url = s3_client.generate_presigned_url('get_object', Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
                                                                          'Key': object_name}, ExpiresIn=expiring_time)
-        return url
+        return url, object_name
 
     def _get_report_filename(self, base_filename, **kwargs):
         output_folder = kwargs.get('output_folder', self.output_folder)
@@ -59,7 +60,7 @@ class Reporter(object):
             raise ReportsException('Unsupported position')
 
     def write_report(self, queryset, resource, location='S3', **kwargs):
-        base_filename = kwargs.get('filename', 'transactions.xlsx')
+        base_filename = kwargs.get('filename', self.base_filename)
         dataset = resource.export(queryset=queryset)
         if location == 'LOCAL':
             if self.add_timestamp:
@@ -79,7 +80,7 @@ class Reporter(object):
                 with open(filename, 'wb') as excel_file:
                     excel_file.write(dataset.xlsx)
                 # self.clean_up(filename, model_name)
-                url = self._upload_to_s3(filename, object_name)
+                url, object_name = self._upload_to_s3(filename, object_name)
             return {'url': url, 's3_object_name': object_name}
         else:
             msg = f'{location} is not a supported location for writing reports'
@@ -87,12 +88,12 @@ class Reporter(object):
 
 
 def generate_transaction_report(**kwargs):
-    location = kwargs.get('location')
+    location = kwargs.pop('location')
     expiration_time = kwargs.get('expiration_time', None)
     qs = Transaction.objects.all()  # TODO Add setting for max number of records in report
     resource = TransactionResource()
 
-    reporter = Reporter(expiration_time=expiration_time)
+    reporter = Reporter(**kwargs)
     result = reporter.write_report(qs, resource, location=location)
 
     return result
