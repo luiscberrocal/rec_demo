@@ -28,7 +28,7 @@ class AccountUpdateView(AuditableViewMixin, LoginRequiredMixin, UpdateView):
     # success_url = reverse_lazy('banking:list-account')
 
     def get_success_url(self):
-        return reverse('real_estate:detail-contract', args=(self.object.id,))
+        return reverse('real_estate:detail-contract', args=(self.object.contract.id,))
 
 
 account_update_view = AccountUpdateView.as_view()

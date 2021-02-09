@@ -4,7 +4,7 @@
 
 {% block content %}
     {% if form.instance.id %}
-        <h2>{% trans 'Account' %}</h2>
+        <h2>{% trans 'Account' %} {{ form.instance.id }} (<span id="contract-id">{{ form.instance.contract.id }}</span>)</h2>
     {% else %}
         <h2>{% trans 'New account' %}</h2>
     {% endif %}
@@ -100,6 +100,10 @@
     {{ block.super }}
     <script>
         $(document).ready(function () {
+            let contractId = $('#contract-id').text();
+            let url_mask = "{% url 'real_estate-api:detail-contract' 12345 %}"
+            let url = url_mask.replace(/12345/, contractId);
+            $('#real-estate-spaces-card').addRealEstateSpaces(url)
 
             function getIndex(elementId) {
                 const regex = /transaction-(\d+)/gm;

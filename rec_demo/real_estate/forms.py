@@ -1,9 +1,11 @@
 import re
 
 from django import forms
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Company, Contract, ContractClient, Client, RealEstateSpace
+from ..banking.models import Account
 from ..core.mixins import AuditableFormMixin
 
 
@@ -30,6 +32,7 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
         self._build_client_fields(extras, kwargs)
         self._build_real_estate_fields(extras, kwargs)
         self.fields['total_amount'].widget.attrs['readonly'] = 'readonly'
+        self.fields['date'].initial = timezone.localtime().date()
 
     class Meta:
         model = Contract
@@ -118,8 +121,6 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
             self.client_fields[i].append(field_name)
             i += 1
 
-
-
     def clean(self):
         cleaned_data = super(ContractForm, self).clean()
         cleaned_data["clients"] = self._clean_client_fields(cleaned_data)
@@ -169,6 +170,14 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
         instance = super(ContractForm, self).save(commit=False)
 
         if commit:
+            instance.save()
+            if instance.account is None:
+                name = str(instance)
+                if len(name) > 32:
+                    name = name[31:]
+                account_data = {'name': name}
+                account = Account.objects.create(**account_data)
+                instance.account = account
             instance.save()
             qs = ContractClient.objects.filter(contract=instance)
             if qs.count() != 0:

@@ -11,23 +11,6 @@ from ..real_estate.models import Contract
 logger = logging.getLogger(__name__)
 
 
-class AccountForm3(forms.ModelForm):
-    TRANSACTION_PATTERN = 'cr_db_transaction_{}_{}'
-    TRANSACTION_REGEXP = re.compile(r"cr_db_transaction_([a-z\_]+)_(\d+)")
-
-    class Meta:
-        model = Account
-        fields = ('name',)
-
-    def __init__(self, *args, **kwargs):
-        extras = kwargs.get('extras', 1)
-        super(AccountForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        cleaned_data = super(AccountForm, self).clean()
-        return cleaned_data
-
-
 class AccountForm(AuditableFormMixin, forms.ModelForm):
     TRANSACTION_PATTERN = 'cr_db_transaction_{}_{}'
     TRANSACTION_REGEXP = re.compile(r"cr_db_transaction_([a-z\_]+)_(\d+)")
@@ -42,6 +25,8 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
         transaction_type_qs = TransactionType.objects.all()
         self.fields['contract'] = forms.ModelChoiceField(queryset=Contract.objects.all(),
                                                          label=_('Contract'))
+        if hasattr(self.instance, 'contract'):
+            self.fields['contract'].initial = self.instance.contract.id
 
         self.transaction_fields = dict()
         i = 0
@@ -74,7 +59,7 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
         for indexed_field_name in cleaned_data.keys():
             match = self.TRANSACTION_REGEXP.match(indexed_field_name)
             if match:
-                #logger.debug(f'{c}. Matched field name {indexed_field_name}')
+                # logger.debug(f'{c}. Matched field name {indexed_field_name}')
                 field_name = match.group(1)
                 index = match.group(2)
                 if not transactions_dict.get(index):
@@ -111,7 +96,7 @@ class AccountForm(AuditableFormMixin, forms.ModelForm):
             self.cleaned_data['contract'].save()
             qs = instance.transactions
             if qs.count() != 0:
-                qs.delete()
+                qs.all().delete()
             for transaction in self.cleaned_data['transactions']:
                 transaction.account = instance
             Transaction.objects.bulk_create(self.cleaned_data['transactions'])

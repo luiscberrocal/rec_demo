@@ -41,12 +41,18 @@
                     </a>
                     <a class="btn btn-primary btn-sm"
                        href="{% url 'real_estate:update-contract' contract.id %}">
-                         <i class="fas fa-edit" title="{% trans 'Edit' %}"></i>
+                        <i class="fas fa-edit" title="{% trans 'Edit' %}"></i>
                     </a>
                     <a class="btn btn-danger btn-sm"
                        href="{% url 'real_estate:delete-contract' contract.id %}">
-                         <i class="fas fa-trash-alt" title="{% trans 'Delete' %}"></i>
+                        <i class="fas fa-trash-alt" title="{% trans 'Delete' %}"></i>
                     </a>
+                    {% if contract.account %}
+                        <a class="btn btn-primary btn-sm"
+                           href="{% url 'banking:update-account' contract.account.id %}">
+                            <i class="fas fa-money-bill" title="{% trans 'Edit account' %}"></i>
+                        </a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
