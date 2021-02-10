@@ -49,8 +49,8 @@
                     </a>
                     {% if contract.account %}
                         <a class="btn btn-primary btn-sm"
-                           href="{% url 'banking:update-account' contract.account.id %}">
-                            <i class="fas fa-money-bill" title="{% trans 'Edit account' %}"></i>
+                           href="{% url 'banking:update-payment-plan' contract.account.id %}">
+                            <i class="fas fa-money-bill" title="{% trans 'Edit payment plan' %}"></i>
                         </a>
                     {% endif %}
                 </td>

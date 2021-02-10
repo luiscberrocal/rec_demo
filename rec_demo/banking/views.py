@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView, DetailView
 
-from .forms import AccountForm
+from .forms import AccountForm, PaymentPlanForm
 from .models import Account
 from ..core.mixins import AuditableViewMixin
 
@@ -56,3 +56,16 @@ class AccountDetailView(LoginRequiredMixin, DetailView):
 
 
 account_detail_view = AccountDetailView.as_view()
+
+
+class PaymentPlanUpdateView(AuditableViewMixin, LoginRequiredMixin, UpdateView):
+    model = Account
+    form_class = PaymentPlanForm
+    template_name = 'banking/payment_plan_form.html'
+
+    def get_success_url(self):
+        return reverse('real_estate:detail-contract', args=(self.object.contract.id,))
+
+
+payment_plan_update_view = PaymentPlanUpdateView.as_view()
+

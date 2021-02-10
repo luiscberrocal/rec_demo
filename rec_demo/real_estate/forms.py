@@ -174,7 +174,7 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
             if instance.account is None:
                 name = str(instance)
                 if len(name) > 32:
-                    name = name[31:]
+                    name = name[30:]
                 account_data = {'name': name}
                 account = Account.objects.create(**account_data)
                 instance.account = account

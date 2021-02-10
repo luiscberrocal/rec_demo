@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+    {% if form.instance.id %}
+        <h2>{% trans 'Payment plan' %} {{ form.instance.id }} (<span id="contract-id">{{ form.instance.contract.id }}</span>)</h2>
+    {% else %}
+        <h2>{% trans 'New pay planment' %}</h2>
+    {% endif %}
+
+
+    <form class="form-horizontal" method="post" action="">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-3 mb-0">
+                {{ form.contract|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                {{ form.name|as_crispy_field }}
+            </div>
+        </div>
+        <div class="card" id="real-estate-spaces-card">
+            <div class="card-header">
+                {% trans 'Real estate spaces' %}
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">{% trans 'Type' %}</th>
+                    <th scope="col">{% trans 'Area' %}</th>
+                    <th scope="col">{% trans 'Price' %}</th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h3 class="form-subtitle">{% trans 'Plan' %}</h3>
+        <div id="transactions">
+
+            {% for key, id, transaction_type, f2, amount, f4, comments, due_date, f7 in form.get_transaction_fields %}
+                <div class="form-row transaction-row" id="transaction-{{ key }}">
+                    <div class="col-md-11">
+                        <div class="form-row">
+                            <div class="row gy-2 gx-3 align-items-center">
+                                {{ id }} {{ transaction_type|as_crispy_field }} {{ f2|as_crispy_field }}
+                                 {{ f7|as_crispy_field }}
+                                <div class="form-group col-md-2 mb-0">
+                                    {{ amount|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-3 mb-0">
+                                    {{ f4|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-2 mb-0">
+                                    {{ due_date|as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-5 mb-0">
+                                    {{ comments|as_crispy_field }}
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-1">
+                        <a class="btn btn-primary delete-transaction" href="#">{% trans 'Delete' %}</a>
+                    </div>
+                </div>
+            {% endfor %}
+
+
+        </div>
+        <div class="control-group add-buttons">
+            <div class="controls">
+                <a class="btn btn-primary" id="add-transaction" href="#">{% trans 'Add Transaction' %}</a>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <a href="{% url 'banking:list-account' %}" class="btn btn-primary">{% trans 'Cancel' %}</a>
+                <button type="submit" class="btn btn-primary" id="save_button">{% trans 'Save' %}</button>
+
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function () {
+            let contractId = $('#contract-id').text();
+            let url_mask = "{% url 'real_estate-api:detail-contract' 12345 %}"
+            let url = url_mask.replace(/12345/, contractId);
+            $('#real-estate-spaces-card').addRealEstateSpaces(url)
+
+            function getIndex(elementId) {
+                const regex = /transaction-(\d+)/gm;
+                let match = regex.exec(elementId);
+                //console.log(match)
+                return parseInt(match[1]);
+
+            }
+
+            function renumberFormFields(cloneNode, newIndex) {
+                let nodeId = cloneNode.attr('id').replace(/\d+/gm, newIndex);
+                cloneNode.attr('id', nodeId);
+                cloneNode.find('input, select, textarea, label, div')
+                    .each(function () {
+                        //console.log($(this));$(this).hasAttribute('for')
+                        if (this.hasAttribute('for')) {
+                            let label = $(this).attr('for').replace(/\d+/gm, newIndex);
+                            $(this).attr('for', label)
+                            //console.log('For', label);
+                        }
+                        if (this.hasAttribute('id')) {
+                            let id = $(this).attr('id').replace(/\d+/gm, newIndex)
+                            $(this).attr('id', id);
+                            //console.log('id', $(this).attr('id'));
+                        }
+                        if (this.hasAttribute('name')) {
+                            let name = $(this).attr('name').replace(/\d+/gm, newIndex);
+                            $(this).attr('name', name);
+                            //console.log('name', $(this).attr('name'));
+                        }
+
+                    });
+            }
+
+            function cloneLastTransaction() {
+                let lastRow = $("#transactions").children().last();
+                let clone = lastRow.clone(true);
+                let row_id = clone.attr('id');
+                let n = getIndex(row_id) + 1;
+                console.log('id', row_id, n)
+                renumberFormFields(clone, n);
+                clone.appendTo($("#transactions"));
+            }
+
+            $('#id_contract').on('change', function () {
+                let contract = $('#id_contract option:selected').text();
+                let contractId = $('#id_contract').val();
+                let url_mask = "{% url 'real_estate-api:detail-contract' 12345 %}"
+                let url = url_mask.replace(/12345/, contractId);
+                $('#id_name').val(contract);
+                $('#real-estate-spaces-card').addRealEstateSpaces(url)
+                //getContractData(contractId)
+            });
+            $('.transaction-class').on('change', function () {
+                let cls = $(this).val();
+                let elementId = $(this).parent().parent().attr('id');
+                //let n = getIndex(elementId);
+                //console.log('Class', cls)
+                console.log('elementId', elementId)
+                //console.log('n', n)
+            });
+            $('#add-transaction').on('click', function () {
+                cloneLastTransaction();
+            });
+            $('.delete-transaction').on('click', function () {
+                $(this).parent().parent().remove();
+            });
+        });
+    </script>
+
+{% endblock %}
