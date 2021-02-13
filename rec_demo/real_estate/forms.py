@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Company, Contract, ContractClient, Client, RealEstateSpace
+from ..banking.exceptions import BankingException
 from ..banking.models import Account
 from ..core.mixins import AuditableFormMixin
 
@@ -173,8 +174,9 @@ class ContractForm(AuditableFormMixin, forms.ModelForm):
             instance.save()
             if instance.account is None:
                 name = str(instance)
-                if len(name) > 32:
-                    name = name[30:]
+                if len(name) > 100:
+                    msg = _(f'Cannot create account for contract {instance.id} name is too long ({len(name)})')
+                    raise BankingException(msg)
                 account_data = {'name': name}
                 account = Account.objects.create(**account_data)
                 instance.account = account

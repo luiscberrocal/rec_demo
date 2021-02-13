@@ -12,7 +12,7 @@ from ..core.models import Auditable
 
 
 class Account(Auditable, TimeStampedModel):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=100)
     objects = AccountManager()
 
     def __str__(self):

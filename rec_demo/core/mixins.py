@@ -27,5 +27,9 @@ class AuditableFormMixin(object):
         if hasattr(self, 'instance'):
             if self.instance.id is None:
                 clean_data['created_by'] = self.user
-            clean_data['modified_by'] = self.user
+                self.instance.created_by = self.user
+            else:
+                clean_data['modified_by'] = self.user
+                self.instance.modified_by = self.user
+
         return clean_data

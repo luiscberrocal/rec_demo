@@ -37,6 +37,7 @@ class TestContractCreateView(TestCase):
         self.assertEqual(contract.contract_clients.filter(is_principal=True).count(), 1)
         self.assertEqual(contract.contract_clients.count(), 3)
         self.assertEqual(contract.real_estate_spaces.count(), 1)
+        self.assertEqual(contract.created_by, self.app_user)
 
     def test_get(self):
         # contract = ContractFactory.create(created_by=self.app_user)
