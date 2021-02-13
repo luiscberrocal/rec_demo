@@ -1,0 +1,55 @@
+[
+  {
+    "first_name": "Bruce",
+    "last_name": "Wayne",
+    "sex": "M",
+    "national_id": "F8-200-1234",
+    "national_id_type": "NATIONAL_ID",
+    "country_for_id": "PA",
+    "client_type": "N"
+  },
+  {
+    "first_name": "Anakin",
+    "last_name": "Skywalker",
+    "sex": "M",
+    "national_id": "F8-250-1234",
+    "national_id_type": "NATIONAL_ID",
+    "country_for_id": "PA",
+    "client_type": "N"
+  },
+  {
+    "first_name": "Leia",
+    "last_name": "Organa",
+    "sex": "F",
+    "national_id": "F8-334-1234",
+    "national_id_type": "NATIONAL_ID",
+    "country_for_id": "PA",
+    "client_type": "N"
+  },
+  {
+    "first_name": "Han",
+    "last_name": "Solo",
+    "sex": "M",
+    "national_id": "F8-335-1234",
+    "national_id_type": "NATIONAL_ID",
+    "country_for_id": "PA",
+    "client_type": "N"
+  },
+  {
+    "first_name": "Rey",
+    "last_name": "Skywalker",
+    "sex": "F",
+    "national_id": "F8-336-1234",
+    "national_id_type": "NATIONAL_ID",
+    "country_for_id": "PA",
+    "client_type": "N"
+  },
+  {
+    "first_name": "Mandalorian",
+    "last_name": "Investments",
+    "national_id": "F38-336-1234",
+    "national_id_type": "NATIONAL_ID",
+    "country_for_id": "PA",
+    "client_type": "J"
+  }
+]
