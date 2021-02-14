@@ -3,12 +3,12 @@ import os
 
 from django.conf import settings
 
-from .exceptions import RealEstateException
-from .models import Client, Broker
+from rec_demo.real_estate.exceptions import RealEstateException
+from rec_demo.real_estate.models import Client, Broker
 
 
 def create_clients(**kwargs):
-    filename = kwargs.get('filename', settings.APPS_DIR / 'real_estate/fake_clients.json')
+    filename = kwargs.get('filename', settings.APPS_DIR / 'demo/fake_clients.json')
     if not os.path.exists(filename):
         raise RealEstateException('File not found')
     with open(filename, 'r', encoding='utf-8') as json_file:
@@ -27,9 +27,9 @@ def create_clients(**kwargs):
 
 
 def create_broker(**kwargs):
-    filename = kwargs.get('filename', settings.APPS_DIR / 'real_estate/fake_broker.json')
+    filename = kwargs.get('filename', settings.APPS_DIR / 'demo/fake_brokers.json')
     if not os.path.exists(filename):
-        raise RealEstateException('File not found')
+        raise RealEstateException("File not found")
     with open(filename, 'r', encoding='utf-8') as json_file:
         broker_list = json.load(json_file)
     for broker_data in broker_list:
@@ -37,9 +37,9 @@ def create_broker(**kwargs):
             broker = Broker.objects.get(national_id=broker_data['national_id'])
             broker_data['created'] = False
             broker_data['id'] = broker.id
-        except Client.DoesNotExist:
+        except Broker.DoesNotExist:
             broker_data['full_name'] = f'{broker_data["first_name"]} {broker_data["last_name"]}'
-            broker = Client.objects.create(**broker_data)
+            broker = Broker.objects.create(**broker_data)
             broker_data['created'] = True
             broker_data['id'] = broker.id
     return broker_list
