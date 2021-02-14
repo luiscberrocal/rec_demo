@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from ..real_estate.exceptions import RealEstateException
-from ..real_estate.models import Client, Broker
+from ..real_estate.models import Client, Broker, Company
 
 
 def create_clients(**kwargs):
@@ -18,9 +18,14 @@ def create_broker(**kwargs):
     return results
 
 
+def create_companies(**kwargs):
+    results = _create_people(Company, **kwargs)
+    return results
+
+
 def _create_people(RECModel, **kwargs):
     model_name = RECModel.__name__.lower()
-    filename = kwargs.get('filename', settings.APPS_DIR / f'demo/fake_{model_name}s.json')
+    filename = kwargs.get('filename', settings.APPS_DIR / f'demo/fake_{model_name}_data.json')
     delete = kwargs.get('delete', False)
     user = kwargs.get('user', get_user_model().objects.first())
     if user is None:
@@ -33,7 +38,10 @@ def _create_people(RECModel, **kwargs):
     for model_data in model_list:
         model_data['created_by'] = user
         try:
-            rec_model = RECModel.objects.get(national_id=model_data['national_id'])
+            if model_name in ['client', 'broker']:
+                rec_model = RECModel.objects.get(national_id=model_data['national_id'])
+            else:
+                rec_model = RECModel.objects.get(name=model_data['name'])
             if delete:
                 rec_model.delete()
                 raise RECModel.DoesNotExist
@@ -41,9 +49,9 @@ def _create_people(RECModel, **kwargs):
                 model_data['created'] = False
                 model_data['id'] = rec_model.id
         except RECModel.DoesNotExist:
-            model_data['full_name'] = f'{model_data["first_name"]} {model_data["last_name"]}'
+            if model_name in ['client', 'broker']:
+                model_data['full_name'] = f'{model_data["first_name"]} {model_data["last_name"]}'
             rec_model = RECModel.objects.create(**model_data)
             model_data['created'] = True
             model_data['id'] = rec_model.id
     return model_list
-

@@ -1,7 +1,7 @@
 from test_plus import TestCase
 
-from ..faker import create_clients, create_broker
-from ...real_estate.models import Client, Broker
+from ..faker import create_clients, create_broker, create_companies
+from ...real_estate.models import Client, Broker, Company
 from ...users.tests.factories import SimpleUserFactory
 
 
@@ -43,4 +43,10 @@ class TestFaker(TestCase):
         self.assertEqual(Broker.objects.filter(broker_type=Broker.NATURAL_TYPE).count(), 5)
         self.assertEqual(Broker.objects.filter(created_by__isnull=True).count(), 0)
 
-
+    def test_create_companies(self):
+        companies = create_companies()
+        self.assertEqual(len(companies), 4)
+        for broker in companies:
+            self.assertIsNotNone(broker['id'])
+            self.assertEqual(broker['created'], True)
+        self.assertEqual(Company.objects.count(), 4)
