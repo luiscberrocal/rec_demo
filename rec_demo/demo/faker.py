@@ -7,6 +7,7 @@ from slugify import slugify
 
 from ..real_estate.exceptions import RealEstateException
 from ..real_estate.models import Client, Broker, Company, RealEstateProject
+from ..real_estate.utils import create_spaces
 
 
 def create_clients(**kwargs):
@@ -78,6 +79,10 @@ def _create_people(RECModel, **kwargs):
                 raise RealEstateException(msg)
 
             rec_model = RECModel.objects.create(**model_data)
+            if model_name == 'realestateproject':
+                floors = spaces_data.pop('floors')
+                create_spaces(rec_model, floors, **spaces_data)
+
             model_data['created'] = True
             model_data['id'] = rec_model.id
     return model_list

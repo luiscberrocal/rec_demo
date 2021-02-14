@@ -1,7 +1,7 @@
 from test_plus import TestCase
 
 from ..faker import create_clients, create_broker, create_companies, create_real_estate_projects
-from ...real_estate.models import Client, Broker, Company, RealEstateProject
+from ...real_estate.models import Client, Broker, Company, RealEstateProject, RealEstateSpace
 from ...real_estate.tests.factories import CompanyFactory
 from ...users.tests.factories import SimpleUserFactory
 
@@ -57,3 +57,4 @@ class TestFaker(TestCase):
         projects = create_real_estate_projects(company=company)
         self.assertEqual(len(projects), 6)
         self.assertEqual(RealEstateProject.objects.count(), 6)
+        self.assertEqual(RealEstateSpace.objects.count(), 280)
