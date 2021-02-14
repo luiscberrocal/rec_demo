@@ -8,38 +8,31 @@ from rec_demo.real_estate.models import Client, Broker
 
 
 def create_clients(**kwargs):
-    filename = kwargs.get('filename', settings.APPS_DIR / 'demo/fake_clients.json')
-    if not os.path.exists(filename):
-        raise RealEstateException('File not found')
-    with open(filename, 'r', encoding='utf-8') as json_file:
-        client_list = json.load(json_file)
-    for client_data in client_list:
-        try:
-            client = Client.objects.get(national_id=client_data['national_id'])
-            client_data['created'] = False
-            client_data['id'] = client.id
-        except Client.DoesNotExist:
-            client_data['full_name'] = f'{client_data["first_name"]} {client_data["last_name"]}'
-            client = Client.objects.create(**client_data)
-            client_data['created'] = True
-            client_data['id'] = client.id
-    return client_list
+    results = _create_people(Client, **kwargs)
+    return results
 
 
 def create_broker(**kwargs):
-    filename = kwargs.get('filename', settings.APPS_DIR / 'demo/fake_brokers.json')
+    results = _create_people(Broker, **kwargs)
+    return results
+
+
+def _create_people(RECModel, **kwargs):
+    model_name = RECModel.__name__.lower()
+    filename = kwargs.get('filename', settings.APPS_DIR / f'demo/fake_{model_name}s.json')
     if not os.path.exists(filename):
-        raise RealEstateException("File not found")
+        raise RealEstateException(f"File {filename} not found for {model_name}")
     with open(filename, 'r', encoding='utf-8') as json_file:
-        broker_list = json.load(json_file)
-    for broker_data in broker_list:
+        model_list = json.load(json_file)
+    for model_data in model_list:
         try:
-            broker = Broker.objects.get(national_id=broker_data['national_id'])
-            broker_data['created'] = False
-            broker_data['id'] = broker.id
-        except Broker.DoesNotExist:
-            broker_data['full_name'] = f'{broker_data["first_name"]} {broker_data["last_name"]}'
-            broker = Broker.objects.create(**broker_data)
-            broker_data['created'] = True
-            broker_data['id'] = broker.id
-    return broker_list
+            rec_model = RECModel.objects.get(national_id=model_data['national_id'])
+            model_data['created'] = False
+            model_data['id'] = rec_model.id
+        except RECModel.DoesNotExist:
+            model_data['full_name'] = f'{model_data["first_name"]} {model_data["last_name"]}'
+            rec_model = RECModel.objects.create(**model_data)
+            model_data['created'] = True
+            model_data['id'] = rec_model.id
+    return model_list
+
