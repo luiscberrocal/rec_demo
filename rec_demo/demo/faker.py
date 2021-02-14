@@ -3,9 +3,10 @@ import os
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from slugify import slugify
 
 from ..real_estate.exceptions import RealEstateException
-from ..real_estate.models import Client, Broker, Company
+from ..real_estate.models import Client, Broker, Company, RealEstateProject
 
 
 def create_clients(**kwargs):
@@ -23,11 +24,20 @@ def create_companies(**kwargs):
     return results
 
 
+def create_real_estate_projects(**kwargs):
+    company = kwargs.get('company', Company.objects.first())
+    if company is None:
+        raise RealEstateException('To create real estate projects a company must exist')
+    results = _create_people(RealEstateProject, **kwargs)
+    return results
+
+
 def _create_people(RECModel, **kwargs):
     model_name = RECModel.__name__.lower()
     filename = kwargs.get('filename', settings.APPS_DIR / f'demo/fake_{model_name}_data.json')
     delete = kwargs.get('delete', False)
     user = kwargs.get('user', get_user_model().objects.first())
+    company = kwargs.get('company')
     if user is None:
         msg = 'A user must exist in the database for the created_by attribute'
         raise RealEstateException(msg)
@@ -51,6 +61,22 @@ def _create_people(RECModel, **kwargs):
         except RECModel.DoesNotExist:
             if model_name in ['client', 'broker']:
                 model_data['full_name'] = f'{model_data["first_name"]} {model_data["last_name"]}'
+            elif model_name == 'realestateproject':
+                spaces_data = dict()
+                to_del = [key for key in model_data if key not in ['name', 'company', 'created_by']]
+                for key in to_del:
+                    spaces_data[key] = model_data.get(key)
+                for key in to_del:
+                    del model_data[key]
+                model_data['short_name'] = slugify(model_data['name'])
+                model_data['company'] = company
+
+            elif model_name == 'company':
+                pass
+            else:
+                msg = f'Model {model_name} is not supported'
+                raise RealEstateException(msg)
+
             rec_model = RECModel.objects.create(**model_data)
             model_data['created'] = True
             model_data['id'] = rec_model.id

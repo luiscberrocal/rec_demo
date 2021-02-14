@@ -1,0 +1,65 @@
+[
+  {
+    "name": "PH Rossini",
+    "floors": 15,
+    "areas": [
+      "105",
+      "105",
+      "95",
+      "95"
+    ],
+    "parkings": 10,
+    "storage": 5
+  },
+  {
+    "name": "PH Carla",
+    "floors": 10,
+    "areas": [
+      "60",
+      "60",
+      "75"
+    ],
+    "parkings": 5,
+    "storage": 0
+  },
+  {
+    "name": "PH Tania",
+    "floors": 50,
+    "areas": [
+      "420",
+      "420"
+    ],
+    "parkings": 20,
+    "storage": 20
+  },
+  {
+    "name": "PH Eduardo",
+    "floors": 4,
+    "areas": [
+      "66",
+      "66"
+    ],
+    "parkings": 0,
+    "storage": 0
+  },
+  {
+    "name": "PH Ariadna",
+    "floors": 4,
+    "areas": [
+      "76",
+      "76"
+    ],
+    "parkings": 2,
+    "storage": 4
+  },
+  {
+    "name": "PH Kenia",
+    "floors": 4,
+    "areas": [
+      "98",
+      "76"
+    ],
+    "parkings": 0,
+    "storage": 0
+  }
+]
